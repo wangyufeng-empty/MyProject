@@ -25,10 +25,10 @@ ArrayList goodsInfo = (ArrayList)session.getAttribute("goodsInfo");
 	            <!-- Start Product  -->
 	            <div class="grid-item">
 	                <div class="product-card">
-	                    <a class="product-thumb" href="#">
+	                    <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
 	                        <img src="assets/images/shop/products/01.jpg" alt="Product">
 	                    </a>
-	                    <h3 class="product-title"><a href="#"><%=goods_name %></a></h3>
+	                    <h3 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>"><%=goods_name %></a></h3>
 	                    <h4 class="product-price"><%= goods_price %>元</h4>
 	                     <h6 class="product-price">库存：<%=goods_stock %>件</h6>
 	                    <div class="product-buttons">

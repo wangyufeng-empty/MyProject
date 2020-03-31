@@ -86,11 +86,11 @@ if(cartsInfo!=null)
 					<!--  第1列 -->
                     <td>
                         <div class="product-item">
-                            <a class="product-thumb" href="#">
+                            <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
                                 <img src="assets/images/shop/cart/01.jpg" alt="Product">
                             </a>
                             <div class="product-info">
-                                <h4 class="product-title"><a href="#"><%=goods_name %></a></h4>
+                                <h4 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>"><%=goods_name %></a></h4>
                                 <span><em>发布者：</em><%=goods_publisher%></span><span><em>分类：</em> <%=goods_category%></span>
                             </div>
                         </div>

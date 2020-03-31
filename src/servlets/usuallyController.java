@@ -1039,9 +1039,29 @@ public class usuallyController extends HttpServlet {
 					e.printStackTrace();
 			}
 		}
+
+		/***************************  26-查看商品详情 *****************************************/
+		else if(url.equals("商品详情"))  //25-获取页面中的“下架商品”功能的请求申请
+		{
+		try {
+				String goods_id = request.getParameter("goods_id");//从各个界面获取想要加入购物车的   货物ID
+				Goods goods = new Goods();
+				goods.setGoodsId(goods_id);
+				Map goodsInfo = goods.getGoodsInfo();//获取到一条货物信息
+				session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
+				response.sendRedirect("OneGoods-Detail-Demo.jsp"); 	
+			
+			} 
+		catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		
-		
-		
+			
+			
+			
+		}
 		
 			
 			

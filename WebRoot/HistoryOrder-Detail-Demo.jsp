@@ -107,7 +107,7 @@ String order_id = (String)session.getAttribute("historyOrder_id");
 					<!--  第1列 -->
                     <td>
                         <div class="product-item">
-                            <a class="product-thumb" href="#">
+                            <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
                                 <img src="assets/images/shop/cart/02.jpg" alt="Product">
                             </a>
                             <div class="product-info">

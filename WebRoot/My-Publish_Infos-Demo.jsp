@@ -69,12 +69,12 @@ ArrayList myPublish_infos = (ArrayList)session.getAttribute("myPublish_infos");
 					<!--  第1列 -->
                     <td>
                         <div class="product-item">
-                            <a class="product-thumb" href="#">
+                            <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
                                 <img src="assets/images/shop/cart/01.jpg" alt="Product">
                             </a>
                             <div class="product-info">
                                 <h4 class="product-title">
-                                     <a href="#"><%=goods_name %></a>
+                                     <a href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>"><%=goods_name %></a>
                                 </h4>
                                 <span><em>价格：</em><%=goods_price%></span><span><em>分类：</em> <%=goods_category%></span>
                                

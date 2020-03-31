@@ -27,7 +27,7 @@ ArrayList goodsInfo = (ArrayList)session.getAttribute("goodsInfo"); //查询结�
 %>        
 	            <div class="col-md-4 col-sm-6 home-cat">
 	                <div class="card">
-	                    <a class="card-img-tiles" href="#">
+	                    <a class="card-img-tiles" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
 	                        <div class="inner">
 	                            <div class="main-img">
 	                                <img src="assets/images/shop/categories/01.jpg" alt="Category">
