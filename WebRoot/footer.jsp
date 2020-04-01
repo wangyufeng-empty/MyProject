@@ -50,7 +50,7 @@
 <!-- Modernizr JS -->
 <script src="assets/js/modernizr.min.js"></script>
 <!-- JQuery JS -->
-<script src="assets/js/jquery.min.js"></script>
+<script src="js/jquery-1.11.0.min.js"></script>
 <!-- Popper JS -->
 <script src="assets/js/popper.min.js"></script>
 <!-- Bootstrap JS -->

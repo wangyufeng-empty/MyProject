@@ -145,6 +145,23 @@ public class user_info
 		db.close();
 		return userinfo;
 	}
+
+	//通过账号返回一条用户信息
+	public Map getUserinfoByNickname() throws ClassNotFoundException, SQLException{
+		Map userinfo = null;
+		String sql = "select * from user_info where user_name=?";//数据库里面的user_id就是userName
+		String[] params = {nickname};
+
+		DBUtil db = new DBUtil();
+		db.getConnection();   //所有的方法都要先与数据库建立连接
+
+		List userinfoList = db.getList(sql, params);
+		if(userinfoList != null && userinfoList.size() > 0){
+			userinfo = (Map)userinfoList.get(0);
+		}
+		db.close();
+		return userinfo;
+	}
 	
 	//返回用户选择的密保问题
 	public String getUserQuestion() throws ClassNotFoundException, SQLException

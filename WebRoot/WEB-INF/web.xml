@@ -25,6 +25,14 @@
     <servlet-name>retrivePasswordController</servlet-name>
     <servlet-class>servlets.retrivePasswordController</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>uploadFile</servlet-name>
+    <servlet-class>servlets.UploadServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>downLoadFile</servlet-name>
+    <servlet-class>servlets.DownLoadServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>userLoginController</servlet-name>
     <url-pattern>/userLoginController</url-pattern>
@@ -40,5 +48,13 @@
   <servlet-mapping>
     <servlet-name>retrivePasswordController</servlet-name>
     <url-pattern>/retrivePasswordController</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>uploadFile</servlet-name>
+    <url-pattern>/uploadFile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>downLoadFile</servlet-name>
+    <url-pattern>/downLoadFile</url-pattern>
   </servlet-mapping>
 </web-app>
