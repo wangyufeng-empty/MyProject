@@ -2,7 +2,7 @@
 <% request.setCharacterEncoding("utf-8"); response.setContentType("text/html;charset=utf-8"); response.setCharacterEncoding("utf-8");%>
 <%@ include file="filter.jsp" %> 
 <html lang="zxx">
-<body>
+<body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 
@@ -19,7 +19,7 @@ String goods_category = (String)OneGoodsInfo.get("goods_category");  //发布分
 int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //库存
 %>
 
-<div class="offcanvas-wrapper">
+<div>
     <!-- Start Page Title -->
     <div class="page-title">
         <div class="container">
@@ -142,7 +142,9 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
                             <i class="icon-heart"></i>
                         </button>
                         <button class="btn btn-primary" data-toast="" data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="成功加入购物车!" onclick="location.href='usuallyController?url=<%="加入购物车"%>&goods_id=<%=goods_id%>&backUrl=<%="OneGoods-Detail-Demo.jsp"%>' "><i class="icon-bag"></i> 加入购物车</button>
-                        <button class="btn btn-primary" data-toast="" data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="你" data-toast-message="成功连接客服!" ><i class="icon-bag"></i> 联系卖家 </button>
+                        <button type="button" publisher="<%=goods_publisher %>" class="btn btn-primary contactPublisher" >
+                            <i class="icon-bag"></i> 联系卖家
+                        </button>
                     </div>
                 </div>
             </div>
