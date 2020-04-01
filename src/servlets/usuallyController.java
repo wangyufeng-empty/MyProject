@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import beans.*;
+import net.sf.json.JSONObject;
 
 public class usuallyController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -1061,6 +1062,39 @@ public class usuallyController extends HttpServlet {
 			
 			
 			
+		}
+
+		else if(url.equals("userInfo"))  //查询用户信息
+		{
+			String jsonObj = "";
+			Map<String,Object> resultMap = new HashMap<String,Object>();
+			try {
+				response.setContentType("text/json;charset=utf-8");
+				out = response.getWriter();
+				String username = request.getParameter("username").toString();
+				Map<String,Object> dataMap = new HashMap<String,Object>();
+				user_info userInfo = new user_info();
+				userInfo.setNickname(username);
+				Map userMap = userInfo.getUserinfoByNickname();
+				dataMap.put("name",username);//昵称
+				dataMap.put("id",userMap == null ? "" : userMap.get("user_id").toString());//ID
+				dataMap.put("type","friend");
+				//头像
+				dataMap.put("avatar","http://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg");
+				resultMap.put("data",dataMap);
+				resultMap.put("status", "success");
+				jsonObj = JSONObject.fromObject(resultMap).toString();
+				out.print(jsonObj);
+			}catch (Exception e) {
+				resultMap.put("status", "failed");
+				jsonObj = JSONObject.fromObject(resultMap).toString();
+				out.print(jsonObj);
+			}finally {
+				if (out != null) {
+					out.flush();
+					out.close();
+				}
+			}
 		}
 		
 			

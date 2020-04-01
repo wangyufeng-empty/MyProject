@@ -2,7 +2,11 @@
 <% request.setCharacterEncoding("utf-8"); response.setContentType("text/html;charset=utf-8"); response.setCharacterEncoding("utf-8");%>
 
 <!-- 此页面是所有网页的头部信息 -->
-
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+    String baseWsPath = request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 
 <head>
     <meta charset="utf-8">
@@ -30,11 +34,11 @@
     <link rel="stylesheet" media="screen" href="assets/css/izitoast.css">
     <!-- Main Style CSS -->
     <link rel="stylesheet" media="screen" href="assets/css/style.css">
-    <script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
+    <script src="js/jquery-1.11.0.min.js"></script>
     
 	<script src="layer/layer/layer.js"></script>
 	<link rel="stylesheet" href="layui/css/layui.css">
-	<script src="layui/layui.all.js"></script>
+	<script src="layui/layui.js"></script>
 </head>
 <%--/********************************技术亮点：以后所有信息可以直接显示，不用重新白屏显示，然后跳转************************************************/ --%>
 <%  
@@ -74,6 +78,8 @@
 String username = (String)session.getAttribute("userName"); //从登录servlet获取用户名
 String userId = (String)session.getAttribute("userId");  //从登录servlet获取用户ID号
 %>
+<input type="hidden" id="baseWsPath" value="<%=baseWsPath%>"/>
+<input type="hidden" id="basePath" value="<%=basePath%>"/>
 <!-- 开始顶部侧拉菜单 -->
 <div class="offcanvas-container" id="shop-categories">
     <div class="offcanvas-header">
@@ -203,6 +209,8 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
                                 <img src="assets/images/account/user-ava-sm.jpg" >
                             </div>
                             <div class="user-info">
+                                <input type="hidden" id="username" value="<%= username%>"/>
+                                <input type="hidden" id="userId" value="<%=userId%>"/>
                                 <h6 class="user-name"><%= username%></h6>
                                 <span class="text-xs text-muted">普通用户</span>
                             </div>
@@ -222,5 +230,6 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
     <!-- End Toolbar -->
     
 </header>
+<script src="layui/im.js"></script>
 
 <!-- End NavBar -->
