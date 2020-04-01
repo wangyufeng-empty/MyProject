@@ -33,9 +33,10 @@
     <footer class="site-footer">
        
             <!-- Start Copyright -->
-            <p class="footer-copyright text-center">© 2019 王宇峰 | 保留所有权利 </p>
+            <p class="footer-copyright text-center">copyright 2020 王宇峰 | 保留所有权利 </p>
+            <p class="footer-copyright text-center">用途：毕业设计；作者：王宇峰；学校：燕山大学</p>
             <!-- End Copyright -->
-        </div>
+        
     </footer>
     <!-- End Footer -->
 
