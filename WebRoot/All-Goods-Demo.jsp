@@ -4,7 +4,7 @@
 <!-- 此页面用来显示所有商品信息 -->
 
 <html lang="zxx">
-<body>
+<body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 
