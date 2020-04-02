@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" import="java.util.*,beans.*" pageEncoding="utf-8" %>
 <% request.setCharacterEncoding("utf-8"); response.setContentType("text/html;charset=utf-8"); response.setCharacterEncoding("utf-8");%>
 <%@ include file="filter.jsp" %> 
-<html lang="zxx">
-<body>
+<html lang="zxx" >
+<body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 

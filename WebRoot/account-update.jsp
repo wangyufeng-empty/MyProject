@@ -17,7 +17,7 @@ String selfBlessing = (String)userinfo.get("self_blessing");
 %>
 
 <html lang="zxx">
-<body>
+<body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 

@@ -2,8 +2,8 @@
 <% request.setCharacterEncoding("utf-8"); response.setContentType("text/html;charset=utf-8"); response.setCharacterEncoding("utf-8");%>
 <%@ include file="filter.jsp" %> 
 <!-- 此页面完成点击核算后跳转的用户信息确认 -->
-<html lang="zxx">
-<body>
+<html lang="zxx" >
+<body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 <!-- 主体部分 -->

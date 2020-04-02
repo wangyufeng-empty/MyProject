@@ -39,17 +39,20 @@ public class UploadServlet extends HttpServlet {
         /*
          * 创建工厂，同时指定缓存大小和临时目录
          */
-
-        DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 20, new File("E:/image/"));
+        File tempFile = new File("E:/temp/");
+        if(!tempFile.exists()){
+        	tempFile.mkdirs();
+        }
+        DiskFileItemFactory factory = new DiskFileItemFactory(1024 * 20, tempFile);
         /*
          * 创建解析器
          *   同时指定单个文件的大小限制
          */
         ServletFileUpload sfu = new ServletFileUpload(factory);
         //限制单个文件大小为1M
-        sfu.setFileSizeMax(1024 * 1024);
+        sfu.setFileSizeMax(1024 * 1024 * 6);
         //设置总上传文件大小(有时候一次性上传多个文件，需要有一个上限,此处为10M)
-        sfu.setSizeMax(10*1024*1024);
+        sfu.setSizeMax(600*1024*1024);
         /*
          * 解析，得到List<FileItem>
          */

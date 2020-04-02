@@ -89,7 +89,7 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="size">发布时间</label>
-                            <select class="form-control" id="color">
+                            <select class="form-control" id="goods_issuDate">
                                 <option><%=goods_issuDate %></option>                             
                             </select>
                         </div>
@@ -97,7 +97,7 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
                     <div class="col-sm-5">
                         <div class="form-group">
                             <label for="color">发布者</label>
-                            <select class="form-control" id="color">
+                            <select class="form-control" id="goods_publisher">
                                 <option><%=goods_publisher%></option>                                
                             </select>
                         </div>
@@ -105,7 +105,7 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label for="quantity">库存：</label>                       
-                            <select class="form-control" id="color">
+                            <select class="form-control" id="goods_stock">
                                 <option><%=goods_stock %>件</option>                                
                             </select>
                         </div>

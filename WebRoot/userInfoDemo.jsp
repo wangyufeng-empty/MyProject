@@ -31,7 +31,7 @@ String userEmail = (String)userInfo.get("user_email");//取出邮箱
 <script src="js/home.js" type="text/javascript"></script>
 
 </head>
-<body>
+<body style="height: 100%">
 
 
 <div id="julyingGridMenu" class="gridMenu">

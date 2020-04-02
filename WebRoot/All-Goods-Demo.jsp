@@ -3,8 +3,8 @@
 <%@ include file="filter.jsp" %> 
 <!-- 此页面用来显示所有商品信息 -->
 
-<html lang="zxx">
-<body>
+<html lang="zxx" >
+<body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 
