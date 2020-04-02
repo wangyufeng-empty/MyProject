@@ -28,9 +28,9 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
             </div>
             <div class="column">
                 <ul class="breadcrumbs">
-                    <li><a href="index-1.html">主页</a></li>
+                    <li><a href="index.jsp">主页</a></li>
                     <li class="separator">&nbsp;</li>
-                    <li><a href="shop-grid-3.html">商品详情</a></li>
+                    <li><a href="OneGoods-Detail-Demo.jsp">商品详情</a></li>
                     <li class="separator">&nbsp;</li>
                     <li>商品详情</li>
                 </ul>
