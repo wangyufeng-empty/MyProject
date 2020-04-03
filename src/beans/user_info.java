@@ -146,7 +146,7 @@ public class user_info
 		return userinfo;
 	}
 
-	//通过账号返回一条用户信息
+	//通过名字返回一条用户信息
 	public Map getUserinfoByNickname() throws ClassNotFoundException, SQLException{
 		Map userinfo = null;
 		String sql = "select * from user_info where user_name=?";//数据库里面的user_id就是userName
@@ -214,7 +214,7 @@ public class user_info
 		
 	}
 	
-	//返回用户密码，返回字符串,可以用于检查密码是否正确
+	//返回用户密码，（字符串）,可以用于检查密码是否正确
 	public String getUserPassword() throws ClassNotFoundException, SQLException{
 		String password = null;
 		HashMap userinfo = (HashMap)this.getUserinfo();

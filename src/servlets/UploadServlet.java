@@ -68,7 +68,7 @@ public class UploadServlet extends HttpServlet {
         try {
             writer = response.getWriter();
             // 这个方法可能会抛出异常！它会检查单个文件的大小，如果超出了1m，那么这个方法抛出异常。
-            List<FileItem> fileItemList = sfu.parseRequest(request);
+            List<FileItem> fileItemList = sfu.parseRequest(request);  //创建list对象
             if(fileItemList != null && fileItemList.size() > 0){
                 /*
                  * 保存上传的文件

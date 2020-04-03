@@ -1072,8 +1072,8 @@ public class usuallyController extends HttpServlet {
 				response.setContentType("text/json;charset=utf-8");
 				out = response.getWriter();
 				String username = request.getParameter("username").toString();
-				Map<String,Object> dataMap = new HashMap<String,Object>();
-				user_info userInfo = new user_info();
+				Map<String,Object> dataMap = new HashMap<String,Object>();  //创建数据的json格式
+				user_info userInfo = new user_info();  //创建用户对象，获取用户ID
 				userInfo.setNickname(username);
 				Map userMap = userInfo.getUserinfoByNickname();
 				dataMap.put("name",username);//昵称
