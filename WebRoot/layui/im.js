@@ -3,19 +3,38 @@ var baseWsPath = $("#baseWsPath").val();
 var mineName = $("#username").val();
 var mineId = $("#userId").val();
 var socket = null;  // 判断当前浏览器是否支持WebSocket
-if ('WebSocket' in window) {
-	socket = new WebSocket("ws://"+baseWsPath+"/LLWS/"+mineId);
-} else {
-	alert('该浏览器不支持本系统即时通讯功能，推荐使用谷歌或火狐浏览器！');
-}
 var mine =  {
     "username": mineName //我的昵称
     ,"id": mineId //我的ID
     ,"status": "online" //在线状态 online：在线、hide：隐身
     ,"remark": "在深邃的编码世界，做一枚轻盈的纸飞机" //我的签名
     ,"avatar": "https://q.qlogo.cn/qqapp/101235792/B704597964F9BD0DB648292D1B09F7E8/100" //我的头像
+    ,"basePath": basePath
 }
-layui.use('layim', function(layim){
+if ('WebSocket' in window) {
+	socket = new WebSocket("ws://"+baseWsPath+"/LLWS/"+mineId);
+} else {
+	alert('该浏览器不支持本系统即时通讯功能，推荐使用谷歌或火狐浏览器！');
+}
+// 连接发生错误的回调方法
+socket.onerror = function() {
+    console.log("llws连接失败!");
+};
+// 连接成功建立的回调方法
+socket.onopen = function(event) {
+    console.log("llws连接成功!");
+}
+// 连接关闭的回调方法
+socket.onclose = function() {
+    console.log("llws关闭连接!");
+}
+
+// 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+$(window).on('beforeunload',function(){
+    socket.close();
+});
+layui.use('layim', function(){
+    var layim = layui.layim;
     //先来个客服模式压压精
     layim.config({
         brief: true //是否简约模式（如果true则不显示主面板）
@@ -31,16 +50,16 @@ layui.use('layim', function(layim){
             url: basePath+'/uploadFile'
             ,type: '' //默认post
         }
+        ,chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
     });
 
-	// 连接发生错误的回调方法
-	socket.onerror = function() {
-		console.log("llws连接失败!");
-	};
-	// 连接成功建立的回调方法
-	socket.onopen = function(event) {
-		console.log("llws连接成功!");
-	}
+    /**
+     * layim建立就绪
+     * 简约模式（即brief: true时）不会触发该事件
+     * init直接赋值mine、friend的情况下（只有设置了url才会执行 ready 事件）
+     */
+    layim.on('ready',function(){
+    });
 
 	// 接收到消息的回调方法
     socket.onmessage = function(res) {
@@ -67,18 +86,6 @@ layui.use('layim', function(layim){
 
     }
 
-	// 连接关闭的回调方法
-	socket.onclose = function() {
-		console.log("llws关闭连接!");
-	}
-	// 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
-    /*	window.onbeforeunload = function() {
-		socket.close();
-	}*/
-    $(window).on('beforeunload',function(){
-        socket.close();
-    });
-
     // 监听发送消息
     layim.on('sendMessage', function(data){
 	   var obj={
@@ -102,14 +109,23 @@ layui.use('layim', function(layim){
 		socket.send(JSON.stringify(obj));  	//发送消息倒Socket服务
    });
 
+    setTimeout(function(mid){
+        //获取离线消息
+        $.post(basePath+"/message?url=OfflineMsg&userId="+mid,function(res){
+            if(res.status == 'success'){
+                var data = res.data;
+                $.each(data,function(k,v){
+                    layim.getMessage(v);
+                });
+            }else{
+                console.log("拉取离线消息失败！");
+            }
+        });
+    },1000,mineId);
+
   //监听在线状态的切换事件
   layim.on('online', function(data){
     console.log(data);
-  });
-
-  //layim建立就绪
-  layim.on('ready',function(){
-
   });
 
   //监听查看群员

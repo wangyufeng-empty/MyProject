@@ -55,6 +55,7 @@ layui.use(['layim', 'laypage'], function(){
   ,mineId = parent.layui.layim.cache().mine.id
   ,friendId = GetQueryString("id")
   ,talktype = GetQueryString("type")
+  ,basePath = parent.layui.layim.cache().mine.basePath
 
   //聊天记录的分页此处不做演示，你可以采用laypage，不了解的同学见文档：http://www.layui.com/doc/modules/laypage.html
   
@@ -96,11 +97,11 @@ layui.use(['layim', 'laypage'], function(){
       $.ajax({
           async:false,
           type: "POST",
-          url: '/message/msghis',
+          url: basePath+'/message?url=msgHis',
           data: {"mineId":mineId,"friendId":friendId,"type":talktype,"cur":cur,"pageSize":pageSize},
           dataType: "json",
           success: function(data){
-              if(data.code != 0){
+              if(data.status != 'success'){
                   return layer.msg(data.msg);
               }
               var html = laytpl(LAY_tpl.value).render({
@@ -117,11 +118,11 @@ layui.use(['layim', 'laypage'], function(){
       $.ajax({
           async:false,
           type: "POST",
-          url: '/message/getMsgTotal',
+          url: basePath+'/message?url=getMsgTotal',
           data: {"mineId":mineId,"friendId":friendId,"type":talktype},
           dataType: "json",
           success: function(data){
-              if(data.code != 0){
+              if(data.status != 'success'){
                   return layer.msg(data.msg);
               }
               var total = data.total;

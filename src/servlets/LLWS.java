@@ -1,5 +1,6 @@
 package servlets;
 
+import beans.FriendMessage;
 import net.sf.json.JSONObject;
 
 import javax.websocket.*;
@@ -86,7 +87,8 @@ public class LLWS {
     	   	    	   toMessage.put("id", jsonObject.getJSONObject("to").getString("id"));
     	   	    }        
                switch (type) {
-    		   		case "friend":           							 //单聊,记录到mongo
+    		   		case "friend":           							 //单聊
+						FriendMessage friendMessage = new FriendMessage();
     			    	  if(mapUS.containsKey(toId+"")){               //如果在线，及时推送
 							  session = mapUS.get(toId+"");
 							  synchronized(session) {
@@ -97,10 +99,21 @@ public class LLWS {
 								}
 
 							  }
+							  friendMessage.setIs_read(1);
 							  System.out.println("单聊-来自客户端的消息:" + toMessage.toString());
     			    	  }else{                                        //如果不在线 就记录到数据库，下次对方上线时推送给对方。
+							  friendMessage.setIs_read(0);
 							  System.out.println("单聊-对方不在线，消息已存入数据库:" + toMessage.toString());
     			    	  }
+						friendMessage.setFrom_user_id(jsonObject.getJSONObject("mine").getString("id"));
+						friendMessage.setTo_user_id(jsonObject.getJSONObject("to").getString("id"));
+						friendMessage.setContent(toMessage.getString("content"));
+						friendMessage.setSend_time(time);
+						try{
+							friendMessage.addOneGoodsPicture();
+						}catch (Exception e){
+							e.printStackTrace();
+						}
     		   			break;
     		   		default:
     		   			break;
