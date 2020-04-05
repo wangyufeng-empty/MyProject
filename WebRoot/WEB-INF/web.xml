@@ -33,6 +33,10 @@
     <servlet-name>downLoadFile</servlet-name>
     <servlet-class>servlets.DownLoadServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>messageController</servlet-name>
+    <servlet-class>servlets.MessageController</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>userLoginController</servlet-name>
     <url-pattern>/userLoginController</url-pattern>
@@ -56,5 +60,9 @@
   <servlet-mapping>
     <servlet-name>downLoadFile</servlet-name>
     <url-pattern>/downLoadFile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>messageController</servlet-name>
+    <url-pattern>/message</url-pattern>
   </servlet-mapping>
 </web-app>

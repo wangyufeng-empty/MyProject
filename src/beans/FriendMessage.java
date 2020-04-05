@@ -65,7 +65,7 @@ public class FriendMessage {
 	public int addOneGoodsPicture() throws ClassNotFoundException, SQLException
 	{
 		int result = 0;
-		String sql = "insert into from_message values(null,?,?,?,?,?)";
+		String sql = "insert into friend_message values(null,?,?,?,?,?)";
 		Object[] params = {from_user_id,to_user_id,content,send_time,is_read};		
 		DBUtil db = new DBUtil();//
 		db.getConnection();	
@@ -73,8 +73,5 @@ public class FriendMessage {
 		db.close();
 		return result;
 	}
-	
-	
-	
-	
+
 }
