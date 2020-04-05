@@ -64,7 +64,7 @@ function check()
 				</button></span>
                 
 <!--                <i class="layui-icon">&#xe624;</i>     -->
-                
+                 
                     <div class="gallery-wrapper">
                         <div class="gallery-item active"><a href="assets/images/shop/single/01.jpg" data-hash="one" data-size="1000x667"></a></div>
                         <div class="gallery-item"><a href="assets/images/shop/single/02.jpg" data-hash="two" data-size="1000x667"></a></div>
