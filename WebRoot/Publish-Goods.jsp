@@ -53,21 +53,35 @@ function check()
     <!-- Start Product Content -->
     <div class="container padding-top-1x padding-bottom-3x">
         <div class="row">
-            <!-- Start Product Gallery -->
+        <!--                                              在这里上传多张图片，并预览                                      -->
+           <!-- Start Product Gallery -->
             <div class="col-md-6">
-                <div class="product-gallery"><span class="product-badge text-danger">请上传图片</span>
+                <div class="product-gallery"><span class="product-badge text-danger">20% Off</span>
                     <div class="gallery-wrapper">
                         <div class="gallery-item active"><a href="assets/images/shop/single/01.jpg" data-hash="one" data-size="1000x667"></a></div>
+                        <div class="gallery-item"><a href="assets/images/shop/single/02.jpg" data-hash="two" data-size="1000x667"></a></div>
+                        <div class="gallery-item"><a href="assets/images/shop/single/03.jpg" data-hash="three" data-size="1000x667"></a></div>
+                        <div class="gallery-item"><a href="assets/images/shop/single/04.jpg" data-hash="four" data-size="1000x667"></a></div>
+                        <div class="gallery-item"><a href="assets/images/shop/single/05.jpg" data-hash="five" data-size="1000x667"></a></div>
                     </div>
                     <div class="product-carousel owl-carousel">
                         <div data-hash="one"><img src="assets/images/shop/single/01.jpg" alt="Product"></div>
-                       
+                        <div data-hash="two"><img src="assets/images/shop/single/02.jpg" alt="Product"></div>
+                        <div data-hash="three"><img src="assets/images/shop/single/03.jpg" alt="Product"></div>
+                        <div data-hash="four"><img src="assets/images/shop/single/04.jpg" alt="Product"></div>
+                        <div data-hash="five"><img src="assets/images/shop/single/05.jpg" alt="Product"></div>
                     </div>
-                    
+                    <ul class="product-thumbnails">
+                        <li class="active"><a href="#one"><img src="assets/images/shop/single/th01.jpg" alt="Product"></a></li>
+                        <li><a href="#two"><img src="assets/images/shop/single/th02.jpg" alt="Product"></a></li>
+                        <li><a href="#three"><img src="assets/images/shop/single/th03.jpg" alt="Product"></a></li>
+                        <li><a href="#four"><img src="assets/images/shop/single/th04.jpg" alt="Product"></a></li>
+                        <li><a href="#five"><img src="assets/images/shop/single/th05.jpg" alt="Product"></a></li>
+                    </ul>
                 </div>
             </div>
             <!-- End Product Gallery -->
-            
+            <!--                                                   结束上传多张图片                                            -->
             
             <!-- Start Product Info -->
             <div class="col-md-6 single-shop">
