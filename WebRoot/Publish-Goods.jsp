@@ -4,9 +4,11 @@
 <!-- 此页面用来显示所有商品信息 -->
 
 <html lang="zxx" >
-<body style="height: 100%">
+
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
+<body style="height: 100%">
+
 <!--  主体部分  -->
 <script language="javascript">
 function check()
@@ -53,10 +55,16 @@ function check()
     <!-- Start Product Content -->
     <div class="container padding-top-1x padding-bottom-3x">
         <div class="row">
-        <!--                                              在这里上传多张图片，并预览                                      -->
-           <!-- Start Product Gallery -->
+<!--                                                      在这里上传多张图片，并预览                                      -->
+<!--            Start Product Gallery -->
             <div class="col-md-6">
-                <div class="product-gallery"><span class="product-badge text-danger">20% Off</span>
+                <div class="product-gallery">
+                <span class="product-badge text-danger"> <button type="button" class="layui-btn" id="test1">
+  				<i class="layui-icon">&#xe67c;</i>点击上传商品图片
+				</button></span>
+                
+<!--                <i class="layui-icon">&#xe624;</i>     -->
+                
                     <div class="gallery-wrapper">
                         <div class="gallery-item active"><a href="assets/images/shop/single/01.jpg" data-hash="one" data-size="1000x667"></a></div>
                         <div class="gallery-item"><a href="assets/images/shop/single/02.jpg" data-hash="two" data-size="1000x667"></a></div>
@@ -80,8 +88,8 @@ function check()
                     </ul>
                 </div>
             </div>
-            <!-- End Product Gallery -->
-            <!--                                                   结束上传多张图片                                            -->
+<!--             End Product Gallery -->
+<!--                                                               结束上传多张图片                                            -->
             
             <!-- Start Product Info -->
             <div class="col-md-6 single-shop">
@@ -135,9 +143,12 @@ function check()
                     <div class="col-6">
                         <hr class="mt-2 mb-3">
                         <div class="d-flex flex-wrap justify-content-between align-items-center">                        
-                            <button class="btn btn-primary " type="submit">发布</button>
+                           <button class="btn btn-primary " type="submit" >发布</button>
                         </div>
                     </div>
+                    
+                
+                    
                 </form>
             </div>
            
@@ -152,6 +163,17 @@ function check()
 <!--固定页脚部分 -->
 <%@ include file="footer.jsp"%>
 </body>
+<script>
+	$(function(){
+		$("#case1").upload();
+		$("#case2").upload();
+		$("#case3").upload(
+			function(_this,data){
+				alert(data)
+			}
+		)
+	})
+</script>
 </html>
 
 
