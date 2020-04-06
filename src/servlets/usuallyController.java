@@ -1057,11 +1057,8 @@ public class usuallyController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		
-			
-			
-			
+		
 		}
 
 		else if(url.equals("userInfo"))  //查询用户信息
