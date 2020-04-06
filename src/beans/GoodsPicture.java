@@ -50,7 +50,7 @@ public class GoodsPicture {
 	public int addOneGoodsPicture() throws ClassNotFoundException, SQLException
 	{
 		int result = 0;
-		String sql = "insert into historyOrder_info values(null,?,?)";
+		String sql = "insert into goods_picture values(null,?,?)";
 		Object[] params = {goods_id,product_image};
 		
 		DBUtil db = new DBUtil();
