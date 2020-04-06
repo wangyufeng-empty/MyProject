@@ -928,6 +928,16 @@ public class usuallyController extends HttpServlet {
 			int result = goods.addOneGoodsInfo();
 			if(result == 1)
 			{
+				String goodsPics = request.getParameter("goodsPictures") == null ? "" : request.getParameter("goodsPictures").toString().trim();
+				if(!goodsPics.equals("")){
+					String [] goodPicArr =  goodsPics.split(",");
+					for (String pic : goodPicArr) {
+						GoodsPicture goodsPicture = new GoodsPicture();
+						goodsPicture.setGoods_id(goods.getGoodsId());
+						goodsPicture.setProduct_image(pic);
+						goodsPicture.addOneGoodsPicture();
+					}
+				}
 				String message ="您的二手商品信息发布成功，请留意商城！";
 				session.setAttribute("successMessage", message);
 				response.sendRedirect("Publish-Goods.jsp");

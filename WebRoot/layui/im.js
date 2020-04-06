@@ -43,11 +43,11 @@ layui.use('layim', function(){
             mine:mine
         }
         ,uploadImage: {
-            url: basePath+'/uploadFile'
+            url: basePath+'/uploadFile?url=layim'
             ,type: '' //默认post
         }
         ,uploadFile: {
-            url: basePath+'/uploadFile'
+            url: basePath+'/uploadFile?url=layim'
             ,type: '' //默认post
         }
         ,chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
@@ -153,7 +153,7 @@ $('.contactPublisher').on('click', function(){
             layim.chat(data);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            lert("请求异常");
+            alert("请求异常");
         }
     });
 });

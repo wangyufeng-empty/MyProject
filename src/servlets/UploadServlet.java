@@ -17,8 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -33,6 +32,7 @@ public class UploadServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("utf-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = null;
@@ -66,52 +66,108 @@ public class UploadServlet extends HttpServlet {
             baseurl = baseurl+"/"+contextPath;
         }
         try {
+            String url = request.getParameter("url") == null ? "" : request.getParameter("url").toString().trim();
             writer = response.getWriter();
             // 这个方法可能会抛出异常！它会检查单个文件的大小，如果超出了1m，那么这个方法抛出异常。
             List<FileItem> fileItemList = sfu.parseRequest(request);  //创建list对象
             if(fileItemList != null && fileItemList.size() > 0){
-                /*
-                 * 保存上传的文件
-                 */
-                // 得到文件表单项对象　
-                FileItem item = fileItemList.get(0);//这里只保存第一个文件，即不支持多文件上传
-                // 得到保存文件的根目录，获取的是真实路径！
-                String realpath = this.getServletContext().getRealPath("/uploadFile");
-                // 目录打散
-                // * 得到文件名称，通过文件名称得到hashcode
-                //   > 得到文件名称
-                String filename = StringFilter(item.getName());
-                //   > 处理绝对路径问题
-                int index = filename.lastIndexOf("\\");
-                if(index != -1) {
-                    filename = filename.substring(index+1);
-                }
-                //通过文件名称得到hashCode, 转发成16进制
-                String hCode = Integer.toHexString(filename.hashCode());
-                //从hCode中提取前两个字母，用来作为目录名称
-                String dir1 = hCode.charAt(0) + "";
-                String dir2 = hCode.charAt(1) + "";
-                // 连接到realpath后，得到文件的保存路径！
-                File savedir = new File(realpath, dir1 + "/" + dir2);
-                // 创建目录链
-                savedir.mkdirs();
+                if(url.equals("layim")){
+                    Calendar cal = Calendar.getInstance();
+                    /*
+                     * 保存上传的文件
+                     */
+                    // 得到文件表单项对象　
+                    FileItem item = fileItemList.get(0);//这里只保存第一个文件，即不支持多文件上传
+                    // 得到保存文件的根目录，获取的是真实路径！
+                    String realpath = this.getServletContext().getRealPath("/uploadFile");
+                    // 目录打散
+                    // * 得到文件名称，通过文件名称得到hashcode
+                    //   > 得到文件名称
+                    String filename = StringFilter(item.getName());
+                    //   > 处理绝对路径问题
+                    int index = filename.lastIndexOf("\\");
+                    if(index != -1) {
+                        filename = filename.substring(index+1);
+                    }
+                    //通过文件名称得到hashCode, 转发成16进制
+                    String hCode = Integer.toHexString(filename.hashCode());
+                    //从hCode中提取前两个字母，用来作为目录名称
+                    String dir1 = hCode.charAt(0) + "";
+                    String dir2 = hCode.charAt(1) + "";
+                    // 连接到realpath后，得到文件的保存路径！
+                    File savedir = new File(realpath, dir1 + "/" + dir2);
+                    // 创建目录链
+                    savedir.mkdirs();
 
-                // 处理文件同名问题
-                filename = UUID.randomUUID().toString().replaceAll("-","") + "_" + filename;
-                //使用路径和文件名创建目录文件
-                File destFile = new File(savedir, filename);
-                //保存文件
-                item.write(destFile);
-                UFile uf=new UFile();
-                uf.setName(filename);
-                String downLoadPath = URLEncoder.encode(savedir+"/"+filename, "UTF-8");
-                String downLoadfileName = URLEncoder.encode(filename, "UTF-8");
-                uf.setSrc(baseurl+"/downLoadFile?downLoadPath="+downLoadPath+"&fileName="+downLoadfileName);
-                uploadFile.setData(uf);
+                    long timeInMill = cal.getTimeInMillis();
+                    // 处理文件同名问题
+                    filename = filename.substring(0,filename.lastIndexOf("."))+"_"+timeInMill+filename.substring(filename.lastIndexOf("."));
+                    //使用路径和文件名创建目录文件
+                    File destFile = new File(savedir, filename);
+                    //保存文件
+                    item.write(destFile);
+                    UFile uf=new UFile();
+                    uf.setName(filename);
+                    String downLoadPath = URLEncoder.encode(savedir+"/"+filename, "UTF-8");
+                    String downLoadfileName = URLEncoder.encode(filename, "UTF-8");
+                    uf.setSrc(baseurl+"/downLoadFile?downLoadPath="+downLoadPath+"&fileName="+downLoadfileName);
+                    uploadFile.setData(uf);
+
+                    uploadFile.setCode(0);
+                    uploadFile.setMsg("成功");
+                    writer.write(JSONObject.fromObject(uploadFile).toString());
+                }else if(url.equals("multipleUpload")){//多文件上传
+                    List<Map<String,String>> fileLinkList = new ArrayList<Map<String,String>>();
+                    System.out.println("总文件数"+fileItemList.size());
+                    for (FileItem item : fileItemList) {
+                        Calendar cal = Calendar.getInstance();
+                        // 得到保存文件的根目录，获取的是真实路径！
+                        String realpath = this.getServletContext().getRealPath("/uploadFile");
+                        // 目录打散
+                        // * 得到文件名称，通过文件名称得到hashcode
+                        //   > 得到文件名称
+                        String filename = StringFilter(item.getName());
+                        //   > 处理绝对路径问题
+                        int index = filename.lastIndexOf("\\");
+                        if(index != -1) {
+                            filename = filename.substring(index+1);
+                        }
+                        //通过文件名称得到hashCode, 转发成16进制
+                        String hCode = Integer.toHexString(filename.hashCode());
+                        //从hCode中提取前两个字母，用来作为目录名称
+                        String dir1 = hCode.charAt(0) + "";
+                        String dir2 = hCode.charAt(1) + "";
+                        // 连接到realpath后，得到文件的保存路径！
+                        File savedir = new File(realpath, dir1 + "/" + dir2);
+                        // 创建目录链
+                        savedir.mkdirs();
+
+                        long timeInMill = cal.getTimeInMillis();
+                        // 处理文件同名问题
+                        filename = filename.substring(0,filename.lastIndexOf("."))+"_"+timeInMill+filename.substring(filename.lastIndexOf("."));
+                        //使用路径和文件名创建目录文件
+                        File destFile = new File(savedir, filename);
+                        //保存文件
+                        item.write(destFile);
+                        String fileLink = "uploadFile/"+dir1 + "/" + dir2+"/"+filename;
+                        Map<String,String> fileMap = new HashMap<String,String>();
+                        fileMap.put("src",fileLink);
+                        fileMap.put("name",filename);
+                        fileMap.put("identifier",timeInMill+"");
+                        fileLinkList.add(fileMap);
+                    }
+                    Map<String,Object> resultMap = new HashMap<String,Object>();
+                    resultMap.put("code",0);
+                    resultMap.put("msg","上传成功！");
+                    resultMap.put("data",fileLinkList);
+                    writer.write(JSONObject.fromObject(resultMap).toString());
+                }else{
+                    Map<String,Object> resultMap = new HashMap<String,Object>();
+                    resultMap.put("code",-1);
+                    resultMap.put("msg","参数解析失败！");
+                    writer.write(JSONObject.fromObject(resultMap).toString());
+                }
             }
-            uploadFile.setCode(0);
-            uploadFile.setMsg("成功");
-            writer.write(JSONObject.fromObject(uploadFile).toString());
         } catch (FileUploadException e) {
             uploadFile.setCode(-1);
             uploadFile.setMsg(e.getMessage());
