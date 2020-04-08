@@ -16,7 +16,7 @@ public class BaseDaoWithBeanImpl<T> extends BaseDaoImpl implements IbaseDaoWithB
 		//泛型转换
 		//ParameterizedType表示参数类型，即T。而参数可以有多个，我们取第一个也就是T
 		ParameterizedType parameterizedType =
-				(ParameterizedType) this.getClass().getGenericSuperclass();//这里打印parameterizedType得到的是BaseAction<ElecTest>
+				(ParameterizedType) this.getClass().getGenericSuperclass();//这里打印parameterizedType得到的是BaseDaoWithBeanImpl<Bean>
 		//得到泛型T的真实类型的Class对象，用于通过反射创建实例
 		Class entityClass = (Class) parameterizedType.getActualTypeArguments()[0];////获取真实的类型参数们！就是<>之内的类型
 		List<T> List = qr.query(sql, new BeanListHandler<T>(entityClass));
@@ -28,7 +28,7 @@ public class BaseDaoWithBeanImpl<T> extends BaseDaoImpl implements IbaseDaoWithB
 		//泛型转换
 		//ParameterizedType表示参数类型，即T。而参数可以有多个，我们取第一个也就是T
 		ParameterizedType parameterizedType =
-				(ParameterizedType) this.getClass().getGenericSuperclass();//这里打印parameterizedType得到的是BaseAction<ElecTest>
+				(ParameterizedType) this.getClass().getGenericSuperclass();//这里打印parameterizedType得到的是BaseDaoWithBeanImpl<Bean>
 		//得到泛型T的真实类型的Class对象，用于通过反射创建实例
 		Class entityClass = (Class) parameterizedType.getActualTypeArguments()[0];////获取真实的类型参数们！就是<>之内的类型
 		List<T> List = qr.query(sql, new BeanListHandler<T>(entityClass),params);
