@@ -43,11 +43,11 @@ layui.use('layim', function(){
             mine:mine
         }
         ,uploadImage: {
-            url: basePath+'/uploadFile?url=layim'
+            url: basePath+'/uploadFile?url=layim'    ////消息传到uploadFile   进行图片上传
             ,type: '' //默认post
         }
         ,uploadFile: {
-            url: basePath+'/uploadFile?url=layim'
+            url: basePath+'/uploadFile?url=layim'  ////消息传到uploadFile   进行文件上传
             ,type: '' //默认post
         }
         ,chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
@@ -65,7 +65,7 @@ layui.use('layim', function(){
     socket.onmessage = function(res) {
         console.log("llws收到消息啦:" +res.data);
         res = eval("("+res.data+")");
-        if(res.type == 'friend' || res.type == 'group'){
+        if(res.type == 'friend' || res.type == 'group'){   //可以扩展功能为群聊
             layim.getMessage(res);
         }else if(res.type == 'system'){
             layim.msgbox(res.num);
@@ -111,7 +111,7 @@ layui.use('layim', function(){
 
     setTimeout(function(mid){
         //获取离线消息
-        $.post(basePath+"/message?url=OfflineMsg&userId="+mid,function(res){
+        $.post(basePath+"/message?url=OfflineMsg&userId="+mid,function(res){   //消息传到MessageController
             if(res.status == 'success'){
                 var data = res.data;
                 $.each(data,function(k,v){

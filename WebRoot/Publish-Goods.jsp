@@ -87,7 +87,7 @@
                 <div class="product-gallery">
                 <span class="product-badge text-danger"> <button type="button" class="layui-btn" id="uploadImages">
   				<i class="layui-icon">&#xe67c;</i>上传图片
-				</button></span>
+				</button><span>&nbsp;&nbsp;&nbsp;<i class="layui-icon">&nbsp;&nbsp;&nbsp;&#xe609;&nbsp;你上传的第一张图片将作为封面&nbsp;&#xe609;</i></span></span>
 
                     <!--                <i class="layui-icon">&#xe624;</i>     -->
                     <div class="product-carousel" id="showImgDiv">

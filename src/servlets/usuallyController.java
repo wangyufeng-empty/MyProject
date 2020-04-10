@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.*;
-
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -94,8 +94,43 @@ public class usuallyController extends HttpServlet {
 					session.setAttribute("message", message);
 					response.sendRedirect("index.jsp"); 
 				}
-				else
-				{
+				else  //关键字搜索成功
+					{
+						/*更新智能推荐表------------------------------------------------
+						    需要添加的内容有 搜索字符串
+						 * 需要设计只保存最近6次的记录
+						 * 需要提前set：记录、记录时间、ID
+						 */
+						int result = 0;
+						String userId = (String)session.getAttribute("userId"); //用户id
+						String search_record = "" + search_key;   
+						CollectInfoFor_IR collectInfo_search = new CollectInfoFor_IR(); //实例化对象
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						long timeStamp = (new Date().getTime());	 //时间戳	
+						String search_record_time = dateFormat.format(timeStamp+6000); //时间戳转化为标准时间格式,这里+6000防止第一次记录会被覆盖
+						
+						//先看看表格有没有初始化
+						collectInfo_search.setUser_id(userId); //ID
+						List OneUserAllCollection = collectInfo_search.GetOneUserAllCollection_ById();
+						if(OneUserAllCollection.isEmpty()){ //初始化表格	 注意arraylist的判空方式为 isEmpty					
+							for(int i=1; i<=6; i++,timeStamp+=1000){   //初始化这些数据的时候每一项加1秒	
+								String nowtime = dateFormat.format(timeStamp);
+								collectInfo_search.setCircle_id(i);  //设置循环ID 1-6
+								collectInfo_search.setFavorite_record_time(nowtime);
+								collectInfo_search.setPurchase_record_time(nowtime);
+								collectInfo_search.setSearch_record_time(nowtime);
+								collectInfo_search.setView_details_record_time(nowtime);
+								result = collectInfo_search.AddOneInfo_Initialization();								
+							}
+							if(result==1){System.out.println(userId+": CollectInfo_forIR 初始化成功！");}
+						}
+						
+						collectInfo_search.setSearch_record(search_record); //search_record
+						collectInfo_search.setSearch_record_time(search_record_time);
+						result = collectInfo_search.UpdateOneInfo_ByRecordTime("search_record");
+						if(result==1){System.out.println(userId+": search_record 收集成功");}							
+						/*结束更新智能推荐表----------------------------------------------------------*/
+						
 					request.setAttribute("url", "searchResultSuccess");//发送给jsp的url以显示不同的内容
 					session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
 					request.getRequestDispatcher("site-searchResult.jsp").forward(request, response);//请求转发
@@ -321,6 +356,7 @@ public class usuallyController extends HttpServlet {
 				String goods_category = (String)goodsInfo.get("goods_category");  //4
 				int goods_stock = Integer.parseInt((String)goodsInfo.get("goods_stock")); // 5
 				double goods_price = Double.parseDouble((String)goodsInfo.get("goods_price"));  //6
+				String goods_pubilsher = (String)goodsInfo.get("goods_publisher"); //7
 				/**************************************/
 				
 				/*************设置收藏属性************/
@@ -337,8 +373,42 @@ public class usuallyController extends HttpServlet {
 					/*************执行更新**************/
 					int result = wishList.addWishListInfo();
 					/**********************************/
-					if(result == 1)
+					if(result == 1) //成功加入收藏
 					{
+						/*更新智能推荐表------------------------------------------------
+						    需要添加的内容有 商品名、发布者、分类
+						 * 需要设计只保存最近6次的记录
+						 * 需要提前set：记录、记录时间、ID
+						 */
+						String favorite_record = "" + goods_name + ";" + goods_pubilsher + ";" + goods_category;   
+						CollectInfoFor_IR collectInfo_favorite = new CollectInfoFor_IR(); //实例化对象
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						long timeStamp = (new Date().getTime());	 //时间戳	
+						String favorite_record_time = dateFormat.format(timeStamp+6000); //时间戳转化为标准时间格式,这里+6000防止第一次记录会被覆盖
+						
+						//先看看表格有没有初始化
+						collectInfo_favorite.setUser_id(userId); //ID
+						List OneUserAllCollection = collectInfo_favorite.GetOneUserAllCollection_ById();
+						if(OneUserAllCollection.isEmpty()){ //初始化表格	 注意arraylist的判空方式为 isEmpty					
+							for(int i=1; i<=6; i++,timeStamp+=1000){   //初始化这些数据的时候每一项加1秒	
+								String nowtime = dateFormat.format(timeStamp);
+								collectInfo_favorite.setCircle_id(i);  //设置循环ID 1-6
+								collectInfo_favorite.setFavorite_record_time(nowtime);
+								collectInfo_favorite.setPurchase_record_time(nowtime);
+								collectInfo_favorite.setSearch_record_time(nowtime);
+								collectInfo_favorite.setView_details_record_time(nowtime);
+								result = collectInfo_favorite.AddOneInfo_Initialization();								
+							}
+							if(result==1){System.out.println(userId+": CollectInfo_forIR 初始化成功！");}
+						}
+						
+						collectInfo_favorite.setFavorite_record(favorite_record); //favorite_record
+						collectInfo_favorite.setFavorite_record_time(favorite_record_time);
+						result = collectInfo_favorite.UpdateOneInfo_ByRecordTime("favorite_record");
+						if(result==1){System.out.println(userId+": favorite_record 收集成功");}
+								
+						/*结束更新智能推荐表-------------------------------------------------*/
+						
 						List WiListInfos = wishList.getAllWishListInfo();
 						session.setAttribute("WiListInfos", WiListInfos);//加入全局会话
 						String message = goods_name+"   成功加入收藏了哦！";
@@ -679,20 +749,29 @@ public class usuallyController extends HttpServlet {
 			//首先取出购物车的相关信息
 			goodsCart.setUser_id(userId);//设置用户ID
 			List goodsCartInfo = goodsCart.getAllCartInfo();
+			String goods_id = "";
+			String goods_name = "";
+			int selectedQuantity = 0;
+			double subtotal = 0.0;
+			String goods_publisher = "";
+			String purchase_record = "",goods_category = "";
 			for(Object goodsCart_Info:goodsCartInfo)   //一件货物就创建一个记录，记录着订单号的对应关系
 			{
 				Map goodscart = (HashMap)goodsCart_Info;
-				String goods_id = (String) goodscart.get("goods_id"); //1
-				String goods_name = (String) goodscart.get("goods_name");  //2
-				int selectedQuantity = Integer.parseInt(goodscart.get("selectedQuantity").toString());  //3
-				double subtotal = Double.parseDouble(goodscart.get("subtotal").toString());  //4
-				historyOrder.setOrder_id(order_id);  //5   这个在上面生成了
+				goods_id = (String) goodscart.get("goods_id"); //1
+				goods_name = (String) goodscart.get("goods_name");  //2
+				selectedQuantity = Integer.parseInt(goodscart.get("selectedQuantity").toString());  //3
+				subtotal = Double.parseDouble(goodscart.get("subtotal").toString());  //4
+				goods_publisher = (String)goodscart.get("goods_publisher");  //5 (智能表需要的信息)
+				goods_category = (String)goodscart.get("goods_category");//6(智能表需要的信息)
+				historyOrder.setOrder_id(order_id);  //7   这个在上面生成了
 				historyOrder.setGoods_id(goods_id);
 				historyOrder.setGoods_name(goods_name);
 				historyOrder.setSelectedQuantity(selectedQuantity);
 				historyOrder.setSubtotal(subtotal);
 				int result_addHistoryOrder = historyOrder.addOneOrderInfo();
-				if(result_addHistoryOrder==1){}
+				if(result_addHistoryOrder==1)
+				{purchase_record = purchase_record + ";" + goods_name + ";" + goods_publisher + ";" + goods_category;}
 				else
 					return;
 				/***********依次将商品库存-已选数量*****/
@@ -714,6 +793,41 @@ public class usuallyController extends HttpServlet {
 			
 			if(result_addOrder == 1&& result_delete!=0)
 			{
+				/*更新智能推荐表----------------------------------------------------------
+				    需要添加的内容有 商品名、发布者、分类
+				 * 需要设计只保存最近6次的记录
+				 * 需要提前set：记录、记录时间、ID
+				 * 相同的货物信息只会收集一次，确保信息不冗余
+				 */
+				int result = 0;
+				//String userId = (String)session.getAttribute("userId"); //用户id 
+				CollectInfoFor_IR collectInfo_purchase = new CollectInfoFor_IR(); //实例化对象
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				long timeStamp = (new Date().getTime());	 //时间戳	
+				String purchase_record_time = dateFormat.format(timeStamp+6000); //时间戳转化为标准时间格式,这里+6000防止第一次记录会被覆盖
+				
+				//先看看表格有没有初始化
+				collectInfo_purchase.setUser_id(userId); //ID
+				List OneUserAllCollection = collectInfo_purchase.GetOneUserAllCollection_ById();
+				if(OneUserAllCollection.isEmpty()){ //初始化表格	 注意arraylist的判空方式为 isEmpty					
+					for(int i=1; i<=6; i++,timeStamp+=1000){   //初始化这些数据的时候每一项加1秒	
+						String nowtime = dateFormat.format(timeStamp);
+						collectInfo_purchase.setCircle_id(i);  //设置循环ID 1-6
+						collectInfo_purchase.setFavorite_record_time(nowtime);
+						collectInfo_purchase.setPurchase_record_time(nowtime);
+						collectInfo_purchase.setSearch_record_time(nowtime);
+						collectInfo_purchase.setView_details_record_time(nowtime);
+						result = collectInfo_purchase.AddOneInfo_Initialization();								
+					}
+					if(result==1){System.out.println(userId+": CollectInfo_forIR 初始化成功！");}
+				}
+				
+				collectInfo_purchase.setPurchase_record(purchase_record); //purchase_record
+				collectInfo_purchase.setPurchase_record_time(purchase_record_time);
+				result = collectInfo_purchase.UpdateOneInfo_ByRecordTime("purchase_record");
+				if(result==1){System.out.println(userId+": purchase_record 收集成功");}							
+				/*结束更新智能推荐表----------------------------------------------------------*/
+				
 				String message ="订单提交成功啦！";
 				session.setAttribute("successMessage", message);
 				response.sendRedirect("Order-Complete.jsp");
@@ -928,6 +1042,7 @@ public class usuallyController extends HttpServlet {
 			int result = goods.addOneGoodsInfo();
 			if(result == 1)
 			{
+				/*处理上传图片的功能*/
 				String goodsPics = request.getParameter("goodsPictures") == null ? "" : request.getParameter("goodsPictures").toString().trim();
 				if(!goodsPics.equals("")){
 					String [] goodPicArr =  goodsPics.split(",");
@@ -1052,16 +1167,62 @@ public class usuallyController extends HttpServlet {
 		}
 
 		/***************************  26-查看商品详情 *****************************************/
-		else if(url.equals("商品详情"))  //25-获取页面中的“下架商品”功能的请求申请
+		else if(url.equals("商品详情"))  //26-获取页面中的“查看商品详情”功能的请求申请
 		{
 		try {
 				String goods_id = request.getParameter("goods_id");//从各个界面获取想要加入购物车的   货物ID
-				Goods goods = new Goods();
-				goods.setGoodsId(goods_id);
+				Goods goods = new Goods();				
+				goods.setGoodsId(goods_id);				
 				Map goodsInfo = goods.getGoodsInfo();//获取到一条货物信息
-				session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
-				response.sendRedirect("OneGoods-Detail-Demo.jsp"); 	
+				
+				/*取出商品图片*/
+				GoodsPicture goods_pictures = new GoodsPicture();  //实例化商品图片
+				goods_pictures.setGoods_id(goods_id);
+				List<String> goodsPictures_list = goods_pictures.getMultipleGoodsPictures(); //取出这件商品的所有图片了
+				session.setAttribute("goodsPictures_list", goodsPictures_list);//把结果集发送给显示货物的界面
+				/*结束取出商品图片*/
 			
+				/*更新智能推荐表----------------------------------------------------------
+				    需要添加的内容有 商品名、发布者、分类
+				* 需要设计只保存最近6次的记录
+				* 需要提前set：记录、记录时间、ID
+				* 
+				*/
+				int result = 0;
+				String goods_name = (String)goodsInfo.get("goods_name");
+				String goods_publisher = (String)goodsInfo.get("goods_publisher");
+				String goods_category = (String)goodsInfo.get("goods_category");
+				String userId = (String)session.getAttribute("userId"); //用户id 
+				String viewDetails_record = ""+goods_name+";"+goods_publisher+";"+goods_category;
+				CollectInfoFor_IR collectInfo_viewDetails = new CollectInfoFor_IR(); //实例化对象
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				long timeStamp = (new Date().getTime());	 //时间戳	
+				String viewDetails_record_time = dateFormat.format(timeStamp+6000); //时间戳转化为标准时间格式,这里+6000防止第一次记录会被覆盖
+				
+				//先看看表格有没有初始化
+				collectInfo_viewDetails.setUser_id(userId); //ID
+				List OneUserAllCollection = collectInfo_viewDetails.GetOneUserAllCollection_ById();
+				if(OneUserAllCollection.isEmpty()){ //初始化表格	 注意arraylist的判空方式为 isEmpty					
+					for(int i=1; i<=6; i++,timeStamp+=1000){   //初始化这些数据的时候每一项加1秒	
+						String nowtime = dateFormat.format(timeStamp);
+						collectInfo_viewDetails.setCircle_id(i);  //设置循环ID 1-6
+						collectInfo_viewDetails.setFavorite_record_time(nowtime);
+						collectInfo_viewDetails.setPurchase_record_time(nowtime);
+						collectInfo_viewDetails.setSearch_record_time(nowtime);
+						collectInfo_viewDetails.setView_details_record_time(nowtime);
+						result = collectInfo_viewDetails.AddOneInfo_Initialization();								
+					}
+					if(result==1){System.out.println(userId+": CollectInfo_forIR 初始化成功！");}
+				}
+				
+				collectInfo_viewDetails.setView_details_record(viewDetails_record); //viewDetails_record
+				collectInfo_viewDetails.setView_details_record_time(viewDetails_record_time);
+				result = collectInfo_viewDetails.UpdateOneInfo_ByRecordTime("viewDetails_record");
+				if(result==1){System.out.println(userId+": viewDetails_record 收集成功");}							
+				/*结束更新智能推荐表----------------------------------------------------------*/
+				
+				session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
+				response.sendRedirect("OneGoods-Detail-Demo.jsp"); 				
 			} 
 		catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block

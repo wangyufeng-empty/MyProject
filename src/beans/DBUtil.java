@@ -2,82 +2,35 @@ package beans;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
-
+import java.text.SimpleDateFormat;
+/*
+ * 数据库应用中，连接的产生和关闭是非常耗时间的，
+ * 所以我们应该尽量去避免这样的操作
+ * 以后可以使用数据库连接池解决
+ * 
+ * 现在我们使单例模式，只有一个连接
+ * 
+ * 单例模式第一件事让类的构造方法私有化
+ */
 
 public class DBUtil {
-	private String driver;
-	private String url;
-	private String username;
-	private String password;
-	private Connection con;
+	private static final String driver = "com.mysql.jdbc.Driver";
+	private static final String url = "jdbc:mysql://localhost:3306/SecondHandShopping_web";
+	private static final String username = "root";
+	private static final String password = "123456";
+	private static DBUtil dbutil = null;
+	private static Connection con;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-	public DBUtil() throws ClassNotFoundException, SQLException {   //定义构造方法，初始化链接参数
-		super();
-		driver = "com.mysql.jdbc.Driver";
-		url="jdbc:mysql://localhost:3306/SecondHandShopping_web";   //初始化一个URL,后续可以用set函数修改
-		username = "root";
-		password = "123456";
+	private DBUtil(){   //定义构造方法，初始化链接参数
+		getConnection();
 	}
 
-	public String getDriver() {
-		return driver;
-	}
+	
 
-	public void setDriver(String driver) {
-		this.driver = driver;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Connection getCon() {
-		return con;
-	}
-
-	public void setCon(Connection con) {
-		this.con = con;
-	}
-
-	public PreparedStatement getPstmt() {
-		return pstmt;
-	}
-
-	public void setPstmt(PreparedStatement pstmt) {
-		this.pstmt = pstmt;
-	}
-
-	public ResultSet getRs() {
-		return rs;
-	}
-
-	public void setRs(ResultSet rs) {
-		this.rs = rs;
-	}
-
-    public Connection getConnection() throws SQLException,ClassNotFoundException  //在这里第一步获取连接对象
+    public Connection getConnection()  //在这里第一步获取连接对象
 	{
 		
     	try{
@@ -86,9 +39,21 @@ public class DBUtil {
 		}
 		catch(ClassNotFoundException e){
 			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return con;
 	}
+    
+    public static DBUtil getDBUtil(){
+    	if(dbutil == null){
+    		dbutil = new DBUtil();
+    	}
+    	return dbutil;
+    }
+    
+
 	private PreparedStatement getPreparedStatement(String sql) throws ClassNotFoundException   //在这里第二步获取语句对象
 	{
 		try{
@@ -242,32 +207,17 @@ public class DBUtil {
 
 	
 	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException    //用来测试通用性sql语句回填和通用数组
+	public static void main(String[] args) throws ClassNotFoundException, SQLException    //用来测试
 	{
-		String a = "asdf";
-		double b = 2.2;
-		int c = 1;
-		Object[] params = {a,b,c};
-		for(int i=0;i<params.length;i++)
-		{
-			String type = DBUtil.getType(params[i]);
-			if(type.equals("class java.lang.Integer"))
-			{
-				System.out.println(params[i]+"这个变量的类型是："+type);
-				System.out.println("转化以后是："+DBUtil.getType(Double.parseDouble(params[i].toString())));
-			}
-			if(type.equals("class java.lang.Double"))
-			{
-				System.out.println(params[i]+"这个变量的类型是："+type);
-				System.out.println("转化以后是："+DBUtil.getType(Double.parseDouble(params[i].toString())));
-			}
-			if(type.equals("class java.lang.String"))
-			{
-				System.out.println(params[i]+"这个变量的类型是："+type);
-				System.out.println("转化以后是："+DBUtil.getType(params[i].toString()));
-			}		
-		}
-		
+		long timeStamp;
+		 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 timeStamp = (new Date().getTime());
+		 for(int i=1; i<6; i++,timeStamp+=1000){
+			 System.out.println(i+": timeStamp = "+ timeStamp);
+			 String nowtime = dateFormat.format(timeStamp);
+			 System.out.println(i+": nowtime = "+ nowtime);
+		 }
+		 
 	}
 }
 

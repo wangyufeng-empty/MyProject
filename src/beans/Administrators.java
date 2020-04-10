@@ -8,8 +8,7 @@ public class Administrators {
 		private String adminPsw = null;	//admin_psw
 		private String adminName = null;//昵称admin_name	
 		private String adminSex = null;    //admin_sex
-		private DBUtil db;//定义一个数据库对象
-			
+		public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象			
 		public String getAdminId() {
 			return adminId;
 		}
@@ -56,8 +55,8 @@ public class Administrators {
 			String sql = "select * from administrator_info where admin_id=?";
 			String[] params = {adminId};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();   //所有的方法都要先与数据库建立连接
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/   //所有的方法都要先与数据库建立连接
 			
 			admininfo = db.getMap(sql, params);
 			return admininfo;
@@ -72,8 +71,8 @@ public class Administrators {
 
 			String[] params = {adminId};
 
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			
 			Map m = db.getMap(sql, params);
 			if(m != null)
@@ -119,8 +118,8 @@ public class Administrators {
 			String sql = "insert into administrator_info values(?,?,?,?)";
 			String[] params = {adminId,adminPsw,adminName,adminSex};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			
 			result = db.update(sql, params);//调用数据库操作方法，执行更新
 			return result;
@@ -133,8 +132,8 @@ public class Administrators {
 			String sql = "update administrator_info set admin_id=?,admin_psw=?,admin_name=?,admin_sex=? where admin_id=?";  
 			String[] params = {adminId,adminPsw,adminName,adminSex,adminId};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 				
 			result = db.update(sql, params);
 			return result;
@@ -146,8 +145,8 @@ public class Administrators {
 			int result = 0;
 			String sql = "update administrator_info set admin_psw=? where admin_id=?";
 			String[] params ={adminPsw,adminId};
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			result = db.update(sql, params);
 			return result;
 		}

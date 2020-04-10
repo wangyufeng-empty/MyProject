@@ -36,6 +36,11 @@
     <link rel="stylesheet" media="screen" href="assets/css/style.css">
     <script src="js/jquery-1.11.0.min.js"></script>
     
+    <script src="js/jquery.min.js"></script>
+	<script src="js/jQuery.upload.min.js"></script>
+	<link rel="stylesheet" href="css/upload.css">
+    
+    
 	<script src="layer/layer/layer.js"></script>
 	<link rel="stylesheet" href="layui/css/layui.css">
 	<script src="layui/layui.js"></script>

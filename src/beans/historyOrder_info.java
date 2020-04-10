@@ -10,7 +10,7 @@ public class historyOrder_info {
 	private String goods_name = null;	//goods_name
 	private int selectedQuantity = 0; //selectedQuantity  已选数量
 	private double subtotal = 0;  //这件商品的小计价格
-	private DBUtil db;//定义一个数据库对象
+	public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 	public String getOrder_id() {
 		return order_id;
 	}
@@ -54,8 +54,8 @@ public class historyOrder_info {
 		String sql = "select * from historyOrder_info where order_id=?";
 		String[] params = {order_id};
 		
-		DBUtil db = new DBUtil();
-		db.getConnection();   //所有的方法都要先与数据库建立连接
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/   //所有的方法都要先与数据库建立连接
 		
 		orderInfo = db.getList(sql, params);
 		db.close();
@@ -70,8 +70,8 @@ public class historyOrder_info {
 		String sql = "insert into historyOrder_info values(null,?,?,?,?,?)";
 		Object[] params = {order_id,goods_id,goods_name,selectedQuantity,subtotal};
 		
-		DBUtil db = new DBUtil();
-		db.getConnection();
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/
 		
 		result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新   复合更新
 		db.close();
@@ -86,8 +86,8 @@ public class historyOrder_info {
 		String sql = "delete from historyorder_info where order_id=?";
 		String[] params = {order_id};
 		
-		DBUtil db = new DBUtil();
-		db.getConnection();
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/
 		
 		int result = db.update(sql, params);
 		db.close();

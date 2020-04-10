@@ -14,7 +14,7 @@ public class FriendMessage {
 	private String content;
 	private String send_time;
 	private int is_read;
-	private DBUtil db;//定义一个数据库对象
+	public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 	public String getFrom_user_id() {
 		return from_user_id;
 	}
@@ -52,8 +52,8 @@ public class FriendMessage {
 		String sql = "select * from friend_message where from_user_id=? and to_user_id=? limit 0,10";
 		String[] params = {from_user_id,to_user_id};
 		
-		DBUtil db = new DBUtil();  //创建数据库对象
-		db.getConnection();   //所有的方法都要先与数据库建立连接
+//		DBUtil db = new DBUtil();  //创建数据库对象
+//		db.getConnection();   //所有的方法都要先与数据库建立连接
 		
 		friend_message = db.getList(sql, params);  //getList方法
 		db.close();
@@ -67,8 +67,8 @@ public class FriendMessage {
 		int result = 0;
 		String sql = "insert into friend_message values(null,?,?,?,?,?)";
 		Object[] params = {from_user_id,to_user_id,content,send_time,is_read};		
-		DBUtil db = new DBUtil();//
-		db.getConnection();	
+//		DBUtil db = new DBUtil();//
+//		db.getConnection();	
 		result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新   复合更新
 		db.close();
 		return result;
