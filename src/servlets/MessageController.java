@@ -3,6 +3,8 @@ package servlets;
 import beans.DBUtil;
 import beans.FriendMessage;
 import net.sf.json.JSONObject;
+import service.IFriendMessageService;
+import service.impl.FriendMessageServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +23,7 @@ import java.util.*;
  * @Description: 离线消息、历史消息
  */
 public class MessageController extends HttpServlet {
+    private IFriendMessageService friendMessageService = FriendMessageServiceImpl.getInstance();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,6 +47,10 @@ public class MessageController extends HttpServlet {
                 PreparedStatement pstmt = null;
                 ResultSet rs = null;
                 try {
+                    String testSql = "select fm.*,ui.user_name from friend_message fm LEFT JOIN user_info ui ON fm.from_user_id = ui.user_id WHERE to_user_id = ? and is_read = ?";
+                    Object [] params = {userId,1};
+                    List<FriendMessage> friendMessageList = friendMessageService.findBeanListBySql(testSql,params);
+
                     List<JSONObject> retlist=new ArrayList<JSONObject>();
                     DBUtil db = new DBUtil();
                     conn = db.getConnection();
