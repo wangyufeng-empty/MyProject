@@ -101,10 +101,7 @@ public class WishList_Info {
 		int result = 0;
 		String sql = "insert into user_favorites values(?,?,?,?,?,?)";
 		Object[] params = {user_id,goods_id,goods_name,goods_category,goods_stock,goods_price};
-		
-		/*DBUtil db = new DBUtil();*/
-		/*db.getConnection();*/
-		
+	
 		result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新   复合更新
 		db.close();
 		return result;

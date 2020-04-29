@@ -49,7 +49,6 @@ public class usuallyController extends HttpServlet {
 	 	} 
 		 
 		String url = request.getParameter("url");  //获取请求的路径，配合hidden或者链接 ?name=value 使用
-	
 		/**********************************1-请求为侧拉菜单“分类浏览”的计算机书籍类*************************/
 		
 		if(url.equals("计算机书籍")||url.equals("耳机")||url.equals("电脑")||url.equals("相机")||url.equals("单片机")||url.equals("开发软件/工具"))   //1-请求为侧拉菜单“分类浏览”
@@ -96,40 +95,32 @@ public class usuallyController extends HttpServlet {
 				}
 				else  //关键字搜索成功
 					{
-						/*更新智能推荐表------------------------------------------------
-						    需要添加的内容有 搜索字符串
-						 * 需要设计只保存最近6次的记录
-						 * 需要提前set：记录、记录时间、ID
-						 */
-						int result = 0;
-						String userId = (String)session.getAttribute("userId"); //用户id
+						/*更新智能推荐表------------------------------------------------*/
 						String search_record = "" + search_key;   
-						CollectInfoFor_IR collectInfo_search = new CollectInfoFor_IR(); //实例化对象
-						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						long timeStamp = (new Date().getTime());	 //时间戳	
-						String search_record_time = dateFormat.format(timeStamp+6000); //时间戳转化为标准时间格式,这里+6000防止第一次记录会被覆盖
-						
-						//先看看表格有没有初始化
-						collectInfo_search.setUser_id(userId); //ID
-						List OneUserAllCollection = collectInfo_search.GetOneUserAllCollection_ById();
-						if(OneUserAllCollection.isEmpty()){ //初始化表格	 注意arraylist的判空方式为 isEmpty					
-							for(int i=1; i<=6; i++,timeStamp+=1000){   //初始化这些数据的时候每一项加1秒	
-								String nowtime = dateFormat.format(timeStamp);
-								collectInfo_search.setCircle_id(i);  //设置循环ID 1-6
-								collectInfo_search.setFavorite_record_time(nowtime);
-								collectInfo_search.setPurchase_record_time(nowtime);
-								collectInfo_search.setSearch_record_time(nowtime);
-								collectInfo_search.setView_details_record_time(nowtime);
-								result = collectInfo_search.AddOneInfo_Initialization();								
-							}
-							if(result==1){System.out.println(userId+": CollectInfo_forIR 初始化成功！");}
-						}
-						
-						collectInfo_search.setSearch_record(search_record); //search_record
-						collectInfo_search.setSearch_record_time(search_record_time);
-						result = collectInfo_search.UpdateOneInfo_ByRecordTime("search_record");
-						if(result==1){System.out.println(userId+": search_record 收集成功");}							
+						String userId = (String)session.getAttribute("userId");  //得到用户ID
+						CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+						CollectInfo.setUser_id(userId); //初始化ID
+						CollectInfo.Update_IR_Table(search_record, "search_record");  //高级复杂函数			
 						/*结束更新智能推荐表----------------------------------------------------------*/
+						try {
+								/*获取原始推荐文本*/
+								String IR_Original_String = CollectInfo.GetIR_Original_String();
+								//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+								/*获取词频最高的前6个关键词*/
+								AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();					
+								String[] keyArrays = new String[6];
+								keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+								System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+								/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+								IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+								IR.setUser_id(userId);
+								List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+								session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
+								
+								} catch (Throwable e) {						
+									e.printStackTrace();
+							}						
+							/*-----------------------------------------------------*/
 						
 					request.setAttribute("url", "searchResultSuccess");//发送给jsp的url以显示不同的内容
 					session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
@@ -375,39 +366,31 @@ public class usuallyController extends HttpServlet {
 					/**********************************/
 					if(result == 1) //成功加入收藏
 					{
-						/*更新智能推荐表------------------------------------------------
-						    需要添加的内容有 商品名、发布者、分类
-						 * 需要设计只保存最近6次的记录
-						 * 需要提前set：记录、记录时间、ID
-						 */
+						/*开始更新智能推荐表----------------------------------*/
 						String favorite_record = "" + goods_name + ";" + goods_pubilsher + ";" + goods_category;   
-						CollectInfoFor_IR collectInfo_favorite = new CollectInfoFor_IR(); //实例化对象
-						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						long timeStamp = (new Date().getTime());	 //时间戳	
-						String favorite_record_time = dateFormat.format(timeStamp+6000); //时间戳转化为标准时间格式,这里+6000防止第一次记录会被覆盖
+						CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+						CollectInfo.setUser_id(userId); //初始化ID
+						CollectInfo.Update_IR_Table(favorite_record, "favorite_record");
+						/*结束更新智能推荐表----------------------------------*/
+						try {
+						/*获取原始推荐文本*/
+						String IR_Original_String = CollectInfo.GetIR_Original_String();
+						//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+						/*获取词频最高的前6个关键词*/
+						AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();					
+						String[] keyArrays = new String[6];
+						keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+						System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+						/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+						IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+						IR.setUser_id(userId);
+						List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+						session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
 						
-						//先看看表格有没有初始化
-						collectInfo_favorite.setUser_id(userId); //ID
-						List OneUserAllCollection = collectInfo_favorite.GetOneUserAllCollection_ById();
-						if(OneUserAllCollection.isEmpty()){ //初始化表格	 注意arraylist的判空方式为 isEmpty					
-							for(int i=1; i<=6; i++,timeStamp+=1000){   //初始化这些数据的时候每一项加1秒	
-								String nowtime = dateFormat.format(timeStamp);
-								collectInfo_favorite.setCircle_id(i);  //设置循环ID 1-6
-								collectInfo_favorite.setFavorite_record_time(nowtime);
-								collectInfo_favorite.setPurchase_record_time(nowtime);
-								collectInfo_favorite.setSearch_record_time(nowtime);
-								collectInfo_favorite.setView_details_record_time(nowtime);
-								result = collectInfo_favorite.AddOneInfo_Initialization();								
-							}
-							if(result==1){System.out.println(userId+": CollectInfo_forIR 初始化成功！");}
-						}
-						
-						collectInfo_favorite.setFavorite_record(favorite_record); //favorite_record
-						collectInfo_favorite.setFavorite_record_time(favorite_record_time);
-						result = collectInfo_favorite.UpdateOneInfo_ByRecordTime("favorite_record");
-						if(result==1){System.out.println(userId+": favorite_record 收集成功");}
-								
-						/*结束更新智能推荐表-------------------------------------------------*/
+						} catch (Throwable e) {						
+							e.printStackTrace();
+						}						
+						/*-----------------------------------------------------*/
 						
 						List WiListInfos = wishList.getAllWishListInfo();
 						session.setAttribute("WiListInfos", WiListInfos);//加入全局会话
@@ -793,40 +776,30 @@ public class usuallyController extends HttpServlet {
 			
 			if(result_addOrder == 1&& result_delete!=0)
 			{
-				/*更新智能推荐表----------------------------------------------------------
-				    需要添加的内容有 商品名、发布者、分类
-				 * 需要设计只保存最近6次的记录
-				 * 需要提前set：记录、记录时间、ID
-				 * 相同的货物信息只会收集一次，确保信息不冗余
-				 */
-				int result = 0;
-				//String userId = (String)session.getAttribute("userId"); //用户id 
-				CollectInfoFor_IR collectInfo_purchase = new CollectInfoFor_IR(); //实例化对象
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				long timeStamp = (new Date().getTime());	 //时间戳	
-				String purchase_record_time = dateFormat.format(timeStamp+6000); //时间戳转化为标准时间格式,这里+6000防止第一次记录会被覆盖
-				
-				//先看看表格有没有初始化
-				collectInfo_purchase.setUser_id(userId); //ID
-				List OneUserAllCollection = collectInfo_purchase.GetOneUserAllCollection_ById();
-				if(OneUserAllCollection.isEmpty()){ //初始化表格	 注意arraylist的判空方式为 isEmpty					
-					for(int i=1; i<=6; i++,timeStamp+=1000){   //初始化这些数据的时候每一项加1秒	
-						String nowtime = dateFormat.format(timeStamp);
-						collectInfo_purchase.setCircle_id(i);  //设置循环ID 1-6
-						collectInfo_purchase.setFavorite_record_time(nowtime);
-						collectInfo_purchase.setPurchase_record_time(nowtime);
-						collectInfo_purchase.setSearch_record_time(nowtime);
-						collectInfo_purchase.setView_details_record_time(nowtime);
-						result = collectInfo_purchase.AddOneInfo_Initialization();								
-					}
-					if(result==1){System.out.println(userId+": CollectInfo_forIR 初始化成功！");}
-				}
-				
-				collectInfo_purchase.setPurchase_record(purchase_record); //purchase_record
-				collectInfo_purchase.setPurchase_record_time(purchase_record_time);
-				result = collectInfo_purchase.UpdateOneInfo_ByRecordTime("purchase_record");
-				if(result==1){System.out.println(userId+": purchase_record 收集成功");}							
+				/*更新智能推荐表----------------------------------------------------------*/	
+				CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+				CollectInfo.setUser_id(userId); //初始化ID
+				CollectInfo.Update_IR_Table(purchase_record, "purchase_record");  //高级复杂函数			
 				/*结束更新智能推荐表----------------------------------------------------------*/
+				try {
+						/*获取原始推荐文本*/
+						String IR_Original_String = CollectInfo.GetIR_Original_String();
+						//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+						/*获取词频最高的前6个关键词*/
+						AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();					
+						String[] keyArrays = new String[6];
+						keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+						System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+						/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+						IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+						IR.setUser_id(userId);
+						List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+						session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
+						
+						} catch (Throwable e) {						
+							e.printStackTrace();
+					}						
+					/*-----------------------------------------------------*/
 				
 				String message ="订单提交成功啦！";
 				session.setAttribute("successMessage", message);
@@ -1182,44 +1155,36 @@ public class usuallyController extends HttpServlet {
 				session.setAttribute("goodsPictures_list", goodsPictures_list);//把结果集发送给显示货物的界面
 				/*结束取出商品图片*/
 			
-				/*更新智能推荐表----------------------------------------------------------
-				    需要添加的内容有 商品名、发布者、分类
-				* 需要设计只保存最近6次的记录
-				* 需要提前set：记录、记录时间、ID
-				* 
-				*/
-				int result = 0;
+				/*更新智能推荐表----------------------------------------------------------*/
+				  
 				String goods_name = (String)goodsInfo.get("goods_name");
 				String goods_publisher = (String)goodsInfo.get("goods_publisher");
 				String goods_category = (String)goodsInfo.get("goods_category");
 				String userId = (String)session.getAttribute("userId"); //用户id 
 				String viewDetails_record = ""+goods_name+";"+goods_publisher+";"+goods_category;
-				CollectInfoFor_IR collectInfo_viewDetails = new CollectInfoFor_IR(); //实例化对象
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				long timeStamp = (new Date().getTime());	 //时间戳	
-				String viewDetails_record_time = dateFormat.format(timeStamp+6000); //时间戳转化为标准时间格式,这里+6000防止第一次记录会被覆盖
-				
-				//先看看表格有没有初始化
-				collectInfo_viewDetails.setUser_id(userId); //ID
-				List OneUserAllCollection = collectInfo_viewDetails.GetOneUserAllCollection_ById();
-				if(OneUserAllCollection.isEmpty()){ //初始化表格	 注意arraylist的判空方式为 isEmpty					
-					for(int i=1; i<=6; i++,timeStamp+=1000){   //初始化这些数据的时候每一项加1秒	
-						String nowtime = dateFormat.format(timeStamp);
-						collectInfo_viewDetails.setCircle_id(i);  //设置循环ID 1-6
-						collectInfo_viewDetails.setFavorite_record_time(nowtime);
-						collectInfo_viewDetails.setPurchase_record_time(nowtime);
-						collectInfo_viewDetails.setSearch_record_time(nowtime);
-						collectInfo_viewDetails.setView_details_record_time(nowtime);
-						result = collectInfo_viewDetails.AddOneInfo_Initialization();								
-					}
-					if(result==1){System.out.println(userId+": CollectInfo_forIR 初始化成功！");}
-				}
-				
-				collectInfo_viewDetails.setView_details_record(viewDetails_record); //viewDetails_record
-				collectInfo_viewDetails.setView_details_record_time(viewDetails_record_time);
-				result = collectInfo_viewDetails.UpdateOneInfo_ByRecordTime("viewDetails_record");
-				if(result==1){System.out.println(userId+": viewDetails_record 收集成功");}							
+				CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+				CollectInfo.setUser_id(userId); //初始化ID
+				CollectInfo.Update_IR_Table(viewDetails_record, "viewDetails_record");  //高级复杂函数，更新信息收集表			
 				/*结束更新智能推荐表----------------------------------------------------------*/
+				try {
+						/*获取原始推荐文本*/
+						String IR_Original_String = CollectInfo.GetIR_Original_String();
+						//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+						/*获取词频最高的前6个关键词*/
+						AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();		
+						String[] keyArrays = new String[6];
+						keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+						System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+						/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+						IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+						IR.setUser_id(userId);
+						List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+						session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
+						
+						} catch (Throwable e) {						
+							e.printStackTrace();
+					}						
+					/*-----------------------------------------------------*/
 				
 				session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
 				response.sendRedirect("OneGoods-Detail-Demo.jsp"); 				

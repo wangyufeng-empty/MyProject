@@ -7,7 +7,8 @@
 
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%List IR_Goods_Infos = (List)session.getAttribute("IR_Goods_Infos"); %>
 <div class="offcanvas-wrapper">
     <!-- 开始图片轮播 -->
     <div class="hero-slider home-1-hero">
@@ -85,7 +86,7 @@
     
     <!-- 开始首页推荐商品 -->
     <section class="container padding-top-3x">
-        <h3 class="text-center mb-30">为您推荐</h3>
+        <h3 class="text-center mb-30">最新发布</h3>
         <div class="row">
         
         
@@ -162,137 +163,36 @@
     
     <!-- 开始推荐特征商品    商品可以进行拖动！！！！！！！-->
     <section class="container padding-top-3x padding-bottom-3x">
-        <h3 class="text-center mb-30">最新发布</h3>
+        <h3 class="text-center mb-30">为您推荐</h3>
         <div class="owl-carousel"
              data-owl-carousel='{"nav": false, "dots": false, "margin": 30, "responsive": {"0":{"items":1},"576":{"items":2},"768":{"items":3},"991":{"items":4},"1200":{"items":4}} }'>
              
              
-            <!-- Start Product #1 -->
-            <div class="grid-item">
-                <div class="product-card">
-                    <a class="product-thumb" href="#">
-                        <img src="assets/images/shop/products/01.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="#">数据库应用与设计</a></h3>
-                    <h4 class="product-price">69元</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="收藏">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="数据库应用与设计" data-toast-message="成功加入购物车!">加入购物车</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Product #1 -->
-            
-            
-            
-            
-            <!-- Start Product #2 -->
-           <div class="grid-item">
-                <div class="product-card">
-                    <a class="product-thumb" href="#">
-                        <img src="assets/images/shop/products/01.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="#">数据库应用与设计</a></h3>
-                    <h4 class="product-price">69元</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="收藏">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="数据库应用与设计" data-toast-message="成功加入购物车!">加入购物车</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Product #2 -->
-            
-            
-            <!-- Start Product #3 -->
-           <div class="grid-item">
-                <div class="product-card">
-                    <a class="product-thumb" href="#">
-                        <img src="assets/images/shop/products/01.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="#">数据库应用与设计</a></h3>
-                    <h4 class="product-price">69元</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="收藏">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="数据库应用与设计" data-toast-message="成功加入购物车!">加入购物车</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Product #3 -->
-            
-            
-            <!-- Start Product #4 -->
-           <div class="grid-item">
-                <div class="product-card">
-                    <a class="product-thumb" href="#">
-                        <img src="assets/images/shop/products/01.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="#">数据库应用与设计</a></h3>
-                    <h4 class="product-price">69元</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="收藏">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="数据库应用与设计" data-toast-message="成功加入购物车!">加入购物车</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Product #4 -->
-            
-            
-            <!-- Start Product #5 -->
-           <div class="grid-item">
-                <div class="product-card">
-                    <a class="product-thumb" href="#">
-                        <img src="assets/images/shop/products/01.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="#">数据库应用与设计</a></h3>
-                    <h4 class="product-price">69元</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="收藏">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="数据库应用与设计" data-toast-message="成功加入购物车!">加入购物车</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Product #5 -->
-            
-            
-            <!-- Start Product #6 -->
-            <div class="grid-item">
-                <div class="product-card">
-                    <a class="product-thumb" href="#">
-                        <img src="assets/images/shop/products/01.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="#">数据库应用与设计</a></h3>
-                    <h4 class="product-price">69元</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="收藏">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="数据库应用与设计" data-toast-message="成功加入购物车!">加入购物车</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Product #6 -->
+            <c:forEach items="${IR_Goods_Infos}" var="IR_Goods_Info">	
+                	
+				 <!-- Start Product  -->
+            	<div class="grid-item">
+                	<div class="product-card">
+                    	<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                        	<img src="assets/images/shop/categories/04.jpg" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                    	</a>
+                   		<h3 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">${IR_Goods_Info.goods_name}</a></h3>
+                    	<h4 class="product-price">${IR_Goods_Info.goods_price} 元</h4>
+                    	<div class="product-buttons">
+                        	<div class="product-buttons">
+                            	<button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="加入收藏" onclick="location.href='usuallyController?url=<%="加入收藏"%>&goods_id=${IR_Goods_Info.goods_id}&backUrl=<%="index.jsp"%>' ">
+                                	<i class="icon-heart"></i>
+                            	</button>
+                            	<button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="${IR_Goods_Info.goods_name}" data-toast-message="成功加入购物车!" onclick="location.href='usuallyController?url=<%="加入购物车"%>&goods_id=${IR_Goods_Info.goods_id}&backUrl=<%="index.jsp"%>' ">
+                            			<i class="icon-bag"></i>加入购物车</button>
+                        	</div>
+                    	</div>
+                	</div>
+            	</div>
+            	<!-- End Product #1 -->
+					
+			</c:forEach>
+             
         </div>
     </section>
     <!-- 结束推荐商品 -->

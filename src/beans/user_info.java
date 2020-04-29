@@ -135,10 +135,6 @@ public class user_info
 		Map userinfo = null;
 		String sql = "select * from user_info where user_id=?";//数据库里面的user_id就是userName
 		String[] params = {username};
-		
-		/*DBUtil db = new DBUtil();*/
-		/*db.getConnection();*/   //所有的方法都要先与数据库建立连接
-		
 		userinfo = db.getMap(sql, params);
 		db.close();
 		return userinfo;
