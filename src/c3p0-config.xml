@@ -4,10 +4,10 @@
 	<default-config>
 		<!-- 基本配置 -->
 		<property name="driverClass">com.mysql.jdbc.Driver</property>
-		<property name="jdbcUrl">jdbc:mysql://localhost:3305/SecondHandShopping_web?characterEncoding=utf-8
+		<property name="jdbcUrl">jdbc:mysql://localhost:3306/SecondHandShopping_web?characterEncoding=utf-8
 		</property>
 		<property name="user">root</property>
-		<property name="password">root</property>
+		<property name="password">123456</property>
 
 		<!--扩展配置 -->
 		<property name="checkoutTimeout">30000</property>

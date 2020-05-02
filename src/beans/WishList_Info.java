@@ -12,7 +12,7 @@ public class WishList_Info {
 	private String goods_category = null;//goods_category  种类
 	int goods_stock = 0;
 	double goods_price = 0;
-	private DBUtil db;//定义一个数据库对象
+	public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 	
 	public void setGoods_price(double goods_price) {
 		this.goods_price = goods_price;
@@ -42,8 +42,8 @@ public class WishList_Info {
 		List WishListInfo = null;
 		String sql = "select * from user_favorites where user_id=?";
 		String[] params = {user_id};
-		DBUtil db = new DBUtil();
-		db.getConnection();
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/
 		
 		WishListInfo = db.getList(sql, params);
 		db.close();
@@ -56,8 +56,8 @@ public class WishList_Info {
 		String sql = "select * from user_favorites where user_id=? and goods_id=?";
 		String[] params = {user_id,goods_id};
 		
-		DBUtil db = new DBUtil();
-		db.getConnection();   //所有的方法都要先与数据库建立连接
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/   //所有的方法都要先与数据库建立连接
 		
 		WishListInfo = db.getMap(sql, params);
 		db.close();
@@ -71,8 +71,8 @@ public class WishList_Info {
 		String sql = "delete from user_favorites where user_id=? and goods_id=?";
 		String[] params = {user_id,goods_id};
 		
-		DBUtil db = new DBUtil();
-		db.getConnection();
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/
 		
 		result = db.update(sql, params);
 		db.close();
@@ -86,8 +86,8 @@ public class WishList_Info {
 		String sql = "delete from user_favorites where user_id=?";
 		String[] params = {user_id};
 		
-		DBUtil db = new DBUtil();
-		db.getConnection();
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/
 		
 		result = db.update(sql, params);
 		db.close();
@@ -101,10 +101,7 @@ public class WishList_Info {
 		int result = 0;
 		String sql = "insert into user_favorites values(?,?,?,?,?,?)";
 		Object[] params = {user_id,goods_id,goods_name,goods_category,goods_stock,goods_price};
-		
-		DBUtil db = new DBUtil();
-		db.getConnection();
-		
+	
 		result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新   复合更新
 		db.close();
 		return result;

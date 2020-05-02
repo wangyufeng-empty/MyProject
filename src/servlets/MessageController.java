@@ -1,10 +1,8 @@
 package servlets;
 
 import beans.DBUtil;
-import beans.FriendMessage;
+import beans.*;
 import net.sf.json.JSONObject;
-import service.IFriendMessageService;
-import service.impl.FriendMessageServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,12 +16,10 @@ import java.util.*;
 
 /**
  * @Package: servlets
- * @Author: sxf
  * @Date: 2020-4-5
  * @Description: 离线消息、历史消息
  */
 public class MessageController extends HttpServlet {
-    private IFriendMessageService friendMessageService = FriendMessageServiceImpl.getInstance();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -41,18 +37,16 @@ public class MessageController extends HttpServlet {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             response.setContentType("text/json;charset=utf-8");
             out = response.getWriter();
-            if(url.equals("OfflineMsg")){//获取离线消息
+            //获取离线消息-----------------------
+            if(url.equals("OfflineMsg")){
                 String userId = request.getParameter("userId") == null ? "" : request.getParameter("userId").toString();
                 Connection conn = null;
                 PreparedStatement pstmt = null;
                 ResultSet rs = null;
                 try {
-                    String testSql = "select fm.*,ui.user_name from friend_message fm LEFT JOIN user_info ui ON fm.from_user_id = ui.user_id WHERE to_user_id = ? and is_read = ?";
-                    Object [] params = {userId,1};
-                    List<FriendMessage> friendMessageList = friendMessageService.findBeanListBySql(testSql,params);
-
                     List<JSONObject> retlist=new ArrayList<JSONObject>();
-                    DBUtil db = new DBUtil();
+                    //DBUtil db = new DBUtil();
+                    DBUtil db = DBUtil.getDBUtil();
                     conn = db.getConnection();
                     String sql = "select fm.*,ui.user_name from friend_message fm LEFT JOIN user_info ui ON fm.from_user_id = ui.user_id WHERE to_user_id = ? and is_read = ?";
                     pstmt = conn.prepareStatement(sql);
@@ -109,7 +103,9 @@ public class MessageController extends HttpServlet {
                     }
                 }
             }
-            if(url.equals("getMsgTotal")){//历史聊天记录总数
+            
+           //历史聊天记录总数  -----------------------------------------
+            if(url.equals("getMsgTotal")){
                 String mineId = request.getParameter("mineId") == null ? "" : request.getParameter("mineId").toString();
                 String friendId = request.getParameter("friendId") == null ? "" : request.getParameter("friendId").toString();
                 String type = request.getParameter("type") == null ? "" : request.getParameter("type").toString();
@@ -120,7 +116,8 @@ public class MessageController extends HttpServlet {
                     ResultSet rs = null;
                     try {
                         List<JSONObject> retlist=new ArrayList<JSONObject>();
-                        DBUtil db = new DBUtil();
+                        //DBUtil db = new DBUtil();
+                        DBUtil db = DBUtil.getDBUtil();
                         conn = db.getConnection();
                         String sql = "select count(id) total from friend_message where (from_user_id = ? and to_user_id = ?) or (from_user_id = ? and to_user_id = ?)";
                         pstmt = conn.prepareStatement(sql);
@@ -163,7 +160,8 @@ public class MessageController extends HttpServlet {
                     out.print(JSONObject.fromObject(resultMap).toString());
                 }
             }
-            if(url.equals("msgHis")){//历史聊天记录
+          //历史聊天记录-----------------------------------------
+            if(url.equals("msgHis")){
                 String mineId = request.getParameter("mineId") == null ? "" : request.getParameter("mineId").toString();
                 String friendId = request.getParameter("friendId") == null ? "" : request.getParameter("friendId").toString();
                 String type = request.getParameter("type") == null ? "" : request.getParameter("type").toString();
@@ -177,7 +175,8 @@ public class MessageController extends HttpServlet {
                     ResultSet rs = null;
                     try {
                         List<JSONObject> retlist=new ArrayList<JSONObject>();
-                        DBUtil db = new DBUtil();
+                       /* DBUtil db = new DBUtil();*/
+                        DBUtil db = DBUtil.getDBUtil();
                         conn = db.getConnection();
                         String sql = "SELECT fm.from_user_id AS id,( SELECT user_name FROM user_info WHERE user_id = fm.from_user_id ) AS username,fm.content,fm.send_time FROM friend_message fm " +
                                 "WHERE( fm.from_user_id = ? AND fm.to_user_id = ? ) OR ( fm.from_user_id = ? AND fm.to_user_id = ? ) ORDER BY fm.send_time DESC LIMIT ?,?";

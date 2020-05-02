@@ -56,7 +56,7 @@
 
 //登录操作
 function check() 
-{
+{ 
 	if (form_login.username.value == "") {
 	
 		layer.msg("请输入你的账号/学号");

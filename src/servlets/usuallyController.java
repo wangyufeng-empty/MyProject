@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.*;
-
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,7 +49,6 @@ public class usuallyController extends HttpServlet {
 	 	} 
 		 
 		String url = request.getParameter("url");  //获取请求的路径，配合hidden或者链接 ?name=value 使用
-	
 		/**********************************1-请求为侧拉菜单“分类浏览”的计算机书籍类*************************/
 		
 		if(url.equals("计算机书籍")||url.equals("耳机")||url.equals("电脑")||url.equals("相机")||url.equals("单片机")||url.equals("开发软件/工具"))   //1-请求为侧拉菜单“分类浏览”
@@ -94,8 +93,35 @@ public class usuallyController extends HttpServlet {
 					session.setAttribute("message", message);
 					response.sendRedirect("index.jsp"); 
 				}
-				else
-				{
+				else  //关键字搜索成功
+					{
+						/*更新智能推荐表------------------------------------------------*/
+						String search_record = "" + search_key;   
+						String userId = (String)session.getAttribute("userId");  //得到用户ID
+						CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+						CollectInfo.setUser_id(userId); //初始化ID
+						CollectInfo.Update_IR_Table(search_record, "search_record");  //高级复杂函数			
+						/*结束更新智能推荐表----------------------------------------------------------*/
+						try {
+								/*获取原始推荐文本*/
+								String IR_Original_String = CollectInfo.GetIR_Original_String();
+								//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+								/*获取词频最高的前6个关键词*/
+								AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();					
+								String[] keyArrays = new String[6];
+								keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+								System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+								/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+								IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+								IR.setUser_id(userId);
+								List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+								session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
+								
+								} catch (Throwable e) {						
+									e.printStackTrace();
+							}						
+							/*-----------------------------------------------------*/
+						
 					request.setAttribute("url", "searchResultSuccess");//发送给jsp的url以显示不同的内容
 					session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
 					request.getRequestDispatcher("site-searchResult.jsp").forward(request, response);//请求转发
@@ -321,6 +347,7 @@ public class usuallyController extends HttpServlet {
 				String goods_category = (String)goodsInfo.get("goods_category");  //4
 				int goods_stock = Integer.parseInt((String)goodsInfo.get("goods_stock")); // 5
 				double goods_price = Double.parseDouble((String)goodsInfo.get("goods_price"));  //6
+				String goods_pubilsher = (String)goodsInfo.get("goods_publisher"); //7
 				/**************************************/
 				
 				/*************设置收藏属性************/
@@ -337,8 +364,34 @@ public class usuallyController extends HttpServlet {
 					/*************执行更新**************/
 					int result = wishList.addWishListInfo();
 					/**********************************/
-					if(result == 1)
+					if(result == 1) //成功加入收藏
 					{
+						/*开始更新智能推荐表----------------------------------*/
+						String favorite_record = "" + goods_name + ";" + goods_pubilsher + ";" + goods_category;   
+						CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+						CollectInfo.setUser_id(userId); //初始化ID
+						CollectInfo.Update_IR_Table(favorite_record, "favorite_record");
+						/*结束更新智能推荐表----------------------------------*/
+						try {
+						/*获取原始推荐文本*/
+						String IR_Original_String = CollectInfo.GetIR_Original_String();
+						//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+						/*获取词频最高的前6个关键词*/
+						AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();					
+						String[] keyArrays = new String[6];
+						keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+						System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+						/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+						IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+						IR.setUser_id(userId);
+						List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+						session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
+						
+						} catch (Throwable e) {						
+							e.printStackTrace();
+						}						
+						/*-----------------------------------------------------*/
+						
 						List WiListInfos = wishList.getAllWishListInfo();
 						session.setAttribute("WiListInfos", WiListInfos);//加入全局会话
 						String message = goods_name+"   成功加入收藏了哦！";
@@ -679,20 +732,29 @@ public class usuallyController extends HttpServlet {
 			//首先取出购物车的相关信息
 			goodsCart.setUser_id(userId);//设置用户ID
 			List goodsCartInfo = goodsCart.getAllCartInfo();
+			String goods_id = "";
+			String goods_name = "";
+			int selectedQuantity = 0;
+			double subtotal = 0.0;
+			String goods_publisher = "";
+			String purchase_record = "",goods_category = "";
 			for(Object goodsCart_Info:goodsCartInfo)   //一件货物就创建一个记录，记录着订单号的对应关系
 			{
 				Map goodscart = (HashMap)goodsCart_Info;
-				String goods_id = (String) goodscart.get("goods_id"); //1
-				String goods_name = (String) goodscart.get("goods_name");  //2
-				int selectedQuantity = Integer.parseInt(goodscart.get("selectedQuantity").toString());  //3
-				double subtotal = Double.parseDouble(goodscart.get("subtotal").toString());  //4
-				historyOrder.setOrder_id(order_id);  //5   这个在上面生成了
+				goods_id = (String) goodscart.get("goods_id"); //1
+				goods_name = (String) goodscart.get("goods_name");  //2
+				selectedQuantity = Integer.parseInt(goodscart.get("selectedQuantity").toString());  //3
+				subtotal = Double.parseDouble(goodscart.get("subtotal").toString());  //4
+				goods_publisher = (String)goodscart.get("goods_publisher");  //5 (智能表需要的信息)
+				goods_category = (String)goodscart.get("goods_category");//6(智能表需要的信息)
+				historyOrder.setOrder_id(order_id);  //7   这个在上面生成了
 				historyOrder.setGoods_id(goods_id);
 				historyOrder.setGoods_name(goods_name);
 				historyOrder.setSelectedQuantity(selectedQuantity);
 				historyOrder.setSubtotal(subtotal);
 				int result_addHistoryOrder = historyOrder.addOneOrderInfo();
-				if(result_addHistoryOrder==1){}
+				if(result_addHistoryOrder==1)
+				{purchase_record = purchase_record + ";" + goods_name + ";" + goods_publisher + ";" + goods_category;}
 				else
 					return;
 				/***********依次将商品库存-已选数量*****/
@@ -714,6 +776,31 @@ public class usuallyController extends HttpServlet {
 			
 			if(result_addOrder == 1&& result_delete!=0)
 			{
+				/*更新智能推荐表----------------------------------------------------------*/	
+				CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+				CollectInfo.setUser_id(userId); //初始化ID
+				CollectInfo.Update_IR_Table(purchase_record, "purchase_record");  //高级复杂函数			
+				/*结束更新智能推荐表----------------------------------------------------------*/
+				try {
+						/*获取原始推荐文本*/
+						String IR_Original_String = CollectInfo.GetIR_Original_String();
+						//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+						/*获取词频最高的前6个关键词*/
+						AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();					
+						String[] keyArrays = new String[6];
+						keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+						System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+						/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+						IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+						IR.setUser_id(userId);
+						List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+						session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
+						
+						} catch (Throwable e) {						
+							e.printStackTrace();
+					}						
+					/*-----------------------------------------------------*/
+				
 				String message ="订单提交成功啦！";
 				session.setAttribute("successMessage", message);
 				response.sendRedirect("Order-Complete.jsp");
@@ -928,6 +1015,7 @@ public class usuallyController extends HttpServlet {
 			int result = goods.addOneGoodsInfo();
 			if(result == 1)
 			{
+				/*处理上传图片的功能*/
 				String goodsPics = request.getParameter("goodsPictures") == null ? "" : request.getParameter("goodsPictures").toString().trim();
 				if(!goodsPics.equals("")){
 					String [] goodPicArr =  goodsPics.split(",");
@@ -1052,26 +1140,61 @@ public class usuallyController extends HttpServlet {
 		}
 
 		/***************************  26-查看商品详情 *****************************************/
-		else if(url.equals("商品详情"))  //25-获取页面中的“下架商品”功能的请求申请
+		else if(url.equals("商品详情"))  //26-获取页面中的“查看商品详情”功能的请求申请
 		{
 		try {
 				String goods_id = request.getParameter("goods_id");//从各个界面获取想要加入购物车的   货物ID
-				Goods goods = new Goods();
-				goods.setGoodsId(goods_id);
+				Goods goods = new Goods();				
+				goods.setGoodsId(goods_id);				
 				Map goodsInfo = goods.getGoodsInfo();//获取到一条货物信息
-				session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
-				response.sendRedirect("OneGoods-Detail-Demo.jsp"); 	
+				
+				/*取出商品图片*/
+				GoodsPicture goods_pictures = new GoodsPicture();  //实例化商品图片
+				goods_pictures.setGoods_id(goods_id);
+				List<String> goodsPictures_list = goods_pictures.getMultipleGoodsPictures(); //取出这件商品的所有图片了
+				session.setAttribute("goodsPictures_list", goodsPictures_list);//把结果集发送给显示货物的界面
+				/*结束取出商品图片*/
 			
+				/*更新智能推荐表----------------------------------------------------------*/
+				  
+				String goods_name = (String)goodsInfo.get("goods_name");
+				String goods_publisher = (String)goodsInfo.get("goods_publisher");
+				String goods_category = (String)goodsInfo.get("goods_category");
+				String userId = (String)session.getAttribute("userId"); //用户id 
+				String viewDetails_record = ""+goods_name+";"+goods_publisher+";"+goods_category;
+				CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+				CollectInfo.setUser_id(userId); //初始化ID
+				CollectInfo.Update_IR_Table(viewDetails_record, "viewDetails_record");  //高级复杂函数，更新信息收集表			
+				/*结束更新智能推荐表----------------------------------------------------------*/
+				try {
+						/*获取原始推荐文本*/
+						String IR_Original_String = CollectInfo.GetIR_Original_String();
+						//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+						/*获取词频最高的前6个关键词*/
+						AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();		
+						String[] keyArrays = new String[6];
+						keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+						System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+						/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+						IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+						IR.setUser_id(userId);
+						List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+						session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
+						
+						} catch (Throwable e) {						
+							e.printStackTrace();
+					}						
+					/*-----------------------------------------------------*/
+				
+				session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
+				response.sendRedirect("OneGoods-Detail-Demo.jsp"); 				
 			} 
 		catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		
-			
-			
-			
+		
 		}
 
 		else if(url.equals("userInfo"))  //查询用户信息

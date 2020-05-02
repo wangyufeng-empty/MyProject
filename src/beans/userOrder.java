@@ -13,7 +13,7 @@ public class userOrder {                   /*****************************创建�
 		private double sum_account = 0; //sum_account   订单总价
 		private String order_state = null;   //order_state  订单状态
 		private String include_goodsId = null;  //这笔订单包含的货物有哪些
-		private DBUtil db;//定义一个数据库对象
+		public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 		
 		
 		
@@ -89,13 +89,7 @@ public class userOrder {                   /*****************************创建�
 			this.sum_account = sum_account;
 		}
 
-		public DBUtil getDb() {
-			return db;
-		}
-
-		public void setDb(DBUtil db) {
-			this.db = db;
-		}
+		
 			/************************以后还要对查询更加多样化，比如实现通过时间范围查询相应的订单信息********************/
 			//查询所有订单信息              返回list对象  到时候要用map 一个个循环取出来   p154
 			public List getAllOrderInfo() throws ClassNotFoundException, SQLException
@@ -103,8 +97,8 @@ public class userOrder {                   /*****************************创建�
 				List Orders = null;
 				String sql = "select * from order_info where user_id=?";
 				String[] params = {user_id};
-				DBUtil db = new DBUtil();
-				db.getConnection();
+				/*DBUtil db = new DBUtil();*/
+				/*db.getConnection();*/
 				
 				Orders = db.getList(sql, params);
 				db.close();
@@ -117,8 +111,8 @@ public class userOrder {                   /*****************************创建�
 			String sql = "select * from order_info where user_id=? and order_id=?";//数据库里面的user_id就是userName
 			String[] params = {user_id,order_id};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();   //所有的方法都要先与数据库建立连接
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/   //所有的方法都要先与数据库建立连接
 			
 			orderInfo = db.getMap(sql, params);
 			db.close();
@@ -132,11 +126,11 @@ public class userOrder {                   /*****************************创建�
 			String sql = "insert into order_info values(?,?,?,?,?,?,?,?,?)";
 			Object[] params = {user_id,order_id,order_time,consignee,tel_num,address,sum_account,order_state,include_goodsId};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			
 			result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新
-			db.close();
+			db.close();  //我每次都有手动关闭连接啊，怎么会连接过多呢
 			return result;
 		}
 		
@@ -147,9 +141,9 @@ public class userOrder {                   /*****************************创建�
 			String sql = "update order_info set consignee=?,tel_num=?,address=? where user_id=? and order_id=?"; 
 			String[] params = {consignee,tel_num,address,user_id,order_id};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
-				
+			///*DBUtil db = new DBUtil();*/
+			DBUtil db = DBUtil.getDBUtil();		
+			///*db.getConnection();*/				
 			result = db.update(sql, params);
 			db.close();
 			return result;
@@ -162,8 +156,8 @@ public class userOrder {                   /*****************************创建�
 			String sql = "update order_info set order_state=? where user_id=? and order_id=?"; 
 			String[] params = {order_state,user_id,order_id};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 				
 			result = db.update(sql, params);
 			db.close();
@@ -177,8 +171,8 @@ public class userOrder {                   /*****************************创建�
 			String sql = "delete from order_info where user_id=? and order_id=?";
 			String[] params = {user_id,order_id};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			
 			result = db.update(sql, params);
 			db.close();

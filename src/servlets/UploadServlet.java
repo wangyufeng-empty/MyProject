@@ -116,7 +116,9 @@ public class UploadServlet extends HttpServlet {
                     uploadFile.setCode(0);
                     uploadFile.setMsg("成功");
                     writer.write(JSONObject.fromObject(uploadFile).toString());
-                }else if(url.equals("multipleUpload")){//多文件上传
+                }
+                
+                else if(url.equals("multipleUpload")){//多文件上传
                     List<Map<String,String>> fileLinkList = new ArrayList<Map<String,String>>();
                     System.out.println("总文件数"+fileItemList.size());
                     for (FileItem item : fileItemList) {

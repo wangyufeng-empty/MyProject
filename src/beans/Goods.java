@@ -15,7 +15,7 @@ public class Goods {                  //商品类
 		private int goodsStock = 0;          //商品的库存，注意是int类型
 		
 
-		private DBUtil db;//定义一个数据库对象
+		public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 		
 		
 		public void setGoodsId_db(String goodsId_db) {
@@ -100,8 +100,8 @@ public class Goods {                  //商品类
 			String sql = "select * from goods_info where goods_id=?";//数据库里面的user_id就是userName
 			String[] params = {goodsId};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();   //所有的方法都要先与数据库建立连接
+//			DBUtil db = new DBUtil();
+//			db.getConnection();   //所有的方法都要先与数据库建立连接
 			
 			goodsinfo = db.getMap(sql, params);
 			db.close();
@@ -113,9 +113,9 @@ public class Goods {                  //商品类
 			List goodsInfo = null;
 			String sql = "select * from goods_info where goods_publisher=?";
 			String[] params = {goodsPublisher};
-			
-			DBUtil db = new DBUtil();
-			db.getConnection();   //所有的方法都要先与数据库建立连接
+//			
+//			DBUtil db = new DBUtil();
+//			db.getConnection();   //所有的方法都要先与数据库建立连接
 			
 			goodsInfo = db.getList(sql, params);
 			db.close();
@@ -128,9 +128,9 @@ public class Goods {                  //商品类
 			String sql = "select * from goods_info where goods_category=?";//数据库里面的user_id就是userName
 			String[] params = {goodsCategory};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();   //所有的方法都要先与数据库建立连接
-			
+//			DBUtil db = new DBUtil();
+//			db.getConnection();   //所有的方法都要先与数据库建立连接
+//			
 			goodsinfo = db.getList(sql, params);
 			db.close();
 			return goodsinfo;
@@ -141,9 +141,9 @@ public class Goods {                  //商品类
 			List goodsinfo = null;
 			String sql = "select * from goods_info where concat(goods_name,goods_publisher,goods_category,goods_describe)  like ?";//数据库里面的user_id就是userName
 			String[] params = {"%"+goodsName+"%"};   //在传递参数的时候进行模糊搜索，加%%
-			
-			DBUtil db = new DBUtil();
-			db.getConnection();   //所有的方法都要先与数据库建立连接
+//			
+//			DBUtil db = new DBUtil();
+//			db.getConnection();   //所有的方法都要先与数据库建立连接
 			
 			goodsinfo = db.getList(sql, params);
 			db.close();
@@ -156,9 +156,9 @@ public class Goods {                  //商品类
 			List Goods = null;
 			String sql = "select * from goods_info";
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
-			
+//			DBUtil db = new DBUtil();
+//			db.getConnection();
+//			
 			Goods = db.getList(sql, null);
 			db.close();
 			return Goods;
@@ -199,9 +199,9 @@ public class Goods {                  //商品类
 			int result = 0;
 			String sql = "insert into goods_info values(?,?,?,?,?,?,?,?)";
 			Object[] params = {goodsId,goodsName,goodsPublisher,goodsIssuDate,goodsCategory,goodsDescribe,goodsPrice,goodsStock};
-			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+//			
+//			DBUtil db = new DBUtil();
+//			db.getConnection();
 			
 			result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新   ****************这里采用的是复合型数组，参数回填更加灵活！******************
 			db.close();
@@ -216,8 +216,8 @@ public class Goods {                  //商品类
 			String sql = "update goods_info set goods_name=?,goods_publisher=?,goods_issuDate=?,goods_category=?,goods_describe=?,goods_price=?,goods_stock=? where goods_id=?"; 
 			Object[] params = {goodsName,goodsPublisher,goodsIssuDate,goodsCategory,goodsDescribe,goodsPrice,goodsStock,goodsId};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+//			DBUtil db = new DBUtil();
+//			db.getConnection();
 				
 			result = db.updateComplex(sql, params);    // ****************这里采用的是复合型数组，参数回填更加灵活！******************/
 			db.close();
@@ -231,9 +231,9 @@ public class Goods {                  //商品类
 			String sql = "update goods_info set goods_stock=? where goods_id=?";
 			Object[] params ={goodsStock,goodsId};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
-			
+//			DBUtil db = new DBUtil();
+//			db.getConnection();
+//			
 			result = db.updateComplex(sql, params);
 			db.close();
 			return result;
@@ -245,9 +245,9 @@ public class Goods {                  //商品类
 			int result = 0;
 			String sql = "update goods_info set goods_id=? where goods_id=?";
 			Object[] params ={goodsId_db,goodsId};
-			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+//			
+//			DBUtil db = new DBUtil();
+//			db.getConnection();
 			
 			result = db.updateComplex(sql, params);
 			db.close();
@@ -261,8 +261,8 @@ public class Goods {                  //商品类
 			String sql = "delete from goods_info where goods_id=?";
 			String[] params = {goodsId};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+//			DBUtil db = new DBUtil();
+//			db.getConnection();
 			
 			result = db.update(sql, params);
 			db.close();

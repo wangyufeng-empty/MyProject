@@ -1,6 +1,7 @@
 package beans;
 import java.sql.SQLException;
 import java.util.*;
+import beans.RealNameVerification;
 
 public class user_info 
 {
@@ -19,7 +20,8 @@ public class user_info
 	private String userQuestion_motherName = null; //用户问题，你妈妈的姓名
 	private String userQuestion_firstLove = null;  //用户问题，你的初恋
 	private String register_time = null; //register_time 注册时间
-	private DBUtil db;//定义一个数据库对象
+	private int account_state = 1;  //账号状态（1为正常，0为被封禁）
+	public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 	
 	public String getUserQuestion_motherName() {
 		return userQuestion_motherName;
@@ -33,10 +35,7 @@ public class user_info
 	public void setUserQuestion_firstLove(String userQuestion_firstLove) {
 		this.userQuestion_firstLove = userQuestion_firstLove;
 	}
-	public void UserInfo() throws ClassNotFoundException, SQLException
-	{
-		db = new DBUtil();
-	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -117,15 +116,17 @@ public class user_info
 		this.register_time = register_time;
 	}
 	
-	
+	public int getAccount_state() {
+		return account_state;
+	}
+	public void setAccount_state(int account_state) {
+		this.account_state = account_state;
+	}
 	//查询所有用户信息              返回list对象  到时候要用map 一个个循环取出来   p154
 	public List getAllUserInfo() throws ClassNotFoundException, SQLException
 	{
 		List Users = null;
 		String sql = "select * from user_info";
-		
-		DBUtil db = new DBUtil();
-		db.getConnection();
 		
 		Users = db.getList(sql, null);
 		db.close();
@@ -137,10 +138,6 @@ public class user_info
 		Map userinfo = null;
 		String sql = "select * from user_info where user_id=?";//数据库里面的user_id就是userName
 		String[] params = {username};
-		
-		DBUtil db = new DBUtil();
-		db.getConnection();   //所有的方法都要先与数据库建立连接
-		
 		userinfo = db.getMap(sql, params);
 		db.close();
 		return userinfo;
@@ -151,9 +148,6 @@ public class user_info
 		Map userinfo = null;
 		String sql = "select * from user_info where user_name=?";//数据库里面的user_id就是userName
 		String[] params = {nickname};
-
-		DBUtil db = new DBUtil();
-		db.getConnection();   //所有的方法都要先与数据库建立连接
 
 		List userinfoList = db.getList(sql, params);
 		if(userinfoList != null && userinfoList.size() > 0){
@@ -201,9 +195,6 @@ public class user_info
 
 		String[] params = {username};
 
-		DBUtil db = new DBUtil();
-		db.getConnection();
-		
 		Map m = db.getMap(sql, params);
 		if(m != null)
 		{
@@ -213,6 +204,24 @@ public class user_info
 		return exist;
 		
 	}
+	
+	//检查学号是否在学校数据库中（实名认证）     返回true或者false  (需要set_username、nickname)
+		public boolean isRealName() throws ClassNotFoundException, SQLException{
+			boolean isExist = false;
+			RealNameVerification student = new RealNameVerification();
+			student.setStudent_id(username);
+			Map student_info = student.getRealName_Student();
+			if(student_info == null){  //学号不在实名库中
+				return isExist;
+			}
+			
+			String student_name = (String)student_info.get("student_name"); //实名库的name
+			if(nickname.equals(student_name)){ //名字符合
+				isExist = true;
+			}
+			return isExist;
+			
+		}
 	
 	//返回用户密码，（字符串）,可以用于检查密码是否正确
 	public String getUserPassword() throws ClassNotFoundException, SQLException{
@@ -246,11 +255,8 @@ public class user_info
 	public int addUserRegister() throws ClassNotFoundException, SQLException
 	{
 		int result = 0;
-		String sql = "insert into user_info (user_id,user_name,user_psw,user_sex,user_grade,user_hobby,userQuestion_motherName,userQuestion_firstLove,register_time) values(?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into user_info (user_id,user_name,user_psw,user_sex,user_grade,user_hobby,userQuestion_motherName,userQuestion_firstLove,register_time) values(?,?,?,?,?,?,?,?,?,1)";
 		String[] params = {username,nickname,password,userSex,userGrade,userHobby,userQuestion_motherName,userQuestion_firstLove,register_time};
-		
-		DBUtil db = new DBUtil();
-		db.getConnection();
 		
 		result = db.update(sql, params);//调用数据库操作方法，执行更新
 		db.close();
@@ -263,10 +269,6 @@ public class user_info
 		int result = 0;
 		String sql = "update user_info set user_tel=?,user_email=?,user_address=?,user_grade=?,self_introduce=?,self_blessing=? where user_id=?";  //不用修改密保问题
 		String[] params = {user_tel,user_email,user_address,userGrade,self_introduce,self_blessing,username};
-		
-		DBUtil db = new DBUtil();
-		db.getConnection();
-			
 		result = db.update(sql, params);
 		db.close();
 		return result;
@@ -278,10 +280,7 @@ public class user_info
 		int result = 0;
 		String sql = "update user_info set user_tel=?,user_email=?,user_address=? where user_id=?";  //不用修改密保问题
 		String[] params = {user_tel,user_email,user_address,username};
-		
-		DBUtil db = new DBUtil();
-		db.getConnection();
-			
+	
 		result = db.update(sql, params);
 		db.close();
 		return result;
@@ -293,8 +292,6 @@ public class user_info
 		int result = 0;
 		String sql = "update user_info set user_psw=? where user_id=?";
 		String[] params ={password,username};
-		DBUtil db = new DBUtil();
-		db.getConnection();
 		result = db.update(sql, params);
 		db.close();
 		return result;
@@ -306,13 +303,21 @@ public class user_info
 		int result = 0;
 		String sql = "delete from user_info where user_id=?";
 		String[] params = {username};
-		
-		DBUtil db = new DBUtil();
-		db.getConnection();
-		
 		result = db.update(sql, params);
 		db.close();
 		return result;
+	}
+	
+	/*单独返回账号状态*/
+	public int accountState() throws ClassNotFoundException, SQLException
+	{
+		int accountState = 1;
+		
+		String sql = "select * from user_info where user_id=?";
+		String[] params = {username};
+		accountState = Integer.parseInt( db.getMap(sql, params).get("account_state").toString());   //把货物状态取出来
+		db.close();
+		return accountState;
 	}
 	
 }

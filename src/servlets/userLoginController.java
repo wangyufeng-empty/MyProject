@@ -4,6 +4,8 @@ package servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +16,9 @@ import javax.servlet.http.HttpSession;  //用来创建会话
 
 import beans.user_info;
 import beans.Administrators;
+import beans.AnsjSplitAndWordCount;
+import beans.IntelligentRecommendation;
+import beans.CollectInfoFor_IR;
 
 //@WebServlet("/userLoginController")
 public class userLoginController extends HttpServlet {
@@ -64,12 +69,44 @@ public class userLoginController extends HttpServlet {
 					
 					if(user_password.equals(password))  //用户密码正确
 					{
-						String userNickname = user.getUserNikename();//从数据库获取用户名		
-						session.setAttribute("userName", userNickname);     //用户名
-				        session.setAttribute("userPassword",password);    //用session对象容器装入你的账号和密码  
-				        session.setAttribute("userId", username);     //用户ID
-				        session.setAttribute("login_state","true"); //设置登录状态为  true 
-				        response.sendRedirect("index.jsp");				      
+						if(user.accountState()==1){  //并且账号状态为1，正常
+							
+							try {
+								CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
+								CollectInfo.setUser_id(username); //初始化ID
+								/*获取原始推荐文本*/
+								String IR_Original_String = CollectInfo.GetIR_Original_String();
+								//System.out.println("IR_Original_String 初始初始文本为：" + IR_Original_String);
+								/*获取词频最高的前6个关键词*/
+								AnsjSplitAndWordCount WordCount = new AnsjSplitAndWordCount();					
+								String[] keyArrays = new String[6];
+								keyArrays = WordCount.Ansj_SplitAndWordCount(IR_Original_String);
+								System.out.println("IR_Original_String处理后的IR_KeyWord为：" + Arrays.toString(keyArrays));
+								/*获取推荐商品的ID并入库,返回推荐商品的所有信息*/
+								IntelligentRecommendation IR = new IntelligentRecommendation();//实例化对象
+								IR.setUser_id(username);
+								List IR_Goods_Infos = IR.Generate_IR_GoodsId(keyArrays);  //传入关键词数组
+								session.setAttribute("IR_Goods_Infos", IR_Goods_Infos);  //最终传入会话，在页面可以获取推荐的商品的所有信息
+								
+								} catch (Throwable e) {						
+									e.printStackTrace();
+								}						
+							
+								String userNickname = user.getUserNikename();//从数据库获取用户名		
+								session.setAttribute("userName", userNickname);     //用户名
+						        session.setAttribute("userPassword",password);    //用session对象容器装入你的账号和密码  
+						        session.setAttribute("userId", username);     //用户ID
+						        session.setAttribute("login_state","true"); //设置登录状态为  true 
+						        response.sendRedirect("index.jsp");	
+							
+						}//end accountState=1
+						else //用户账号被封禁，无法登录
+						{
+							String message = "您的账户已被封禁，请联系管理员！";
+							session.setAttribute("message", message);
+							response.sendRedirect("login.jsp");	
+						}
+									      
 					}
 					else  //否则，密码错误
 					{
@@ -102,7 +139,8 @@ public class userLoginController extends HttpServlet {
 				        session.setAttribute("adminPassword",password);    //用session对象容器装入你的账号和密码  
 				        session.setAttribute("adminId", username);     
 				        session.setAttribute("login_state","true"); //设置登录状态为  true 
-				        response.sendRedirect("Manager-Index.jsp");
+				        //response.sendRedirect("Manager-Index.jsp");
+				        response.sendRedirect("http://localhost:8080/SecondHandShopping_BSM/html/index.html");
 					}
 					else  //否则，密码错误
 					{

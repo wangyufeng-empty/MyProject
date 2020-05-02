@@ -14,7 +14,7 @@ public class GoodsCart {
 		private double goods_price = 0;//goods_price
 		private int selectedQuantity = 0; //selectedQuantity  已选数量
 		private double subtotal = 0;  //这件商品的小计价格
-		private DBUtil db;//定义一个数据库对象
+		public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 		
 		
 		/*************************一堆get和set方法***************************/
@@ -97,8 +97,8 @@ public class GoodsCart {
 			List GoodsCart = null;
 			String sql = "select * from goodsCart_info where user_id=?";
 			String[] params = {user_id};
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			
 			GoodsCart = db.getList(sql, params);
 			db.close();
@@ -111,8 +111,8 @@ public class GoodsCart {
 			String sql = "select * from goodsCart_info where user_id=? and goods_id=?";
 			String[] params = {user_id,goods_id};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();   //所有的方法都要先与数据库建立连接
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/   //所有的方法都要先与数据库建立连接
 			
 			goodscartinfo = db.getMap(sql, params);
 			db.close();
@@ -164,8 +164,8 @@ public class GoodsCart {
 			String sql = "insert into goodsCart_info values(?,?,?,?,?,?,?,?)";
 			Object[] params = {user_id,goods_id,goods_name,goods_publisher,goods_category,goods_price,selectedQuantity,subtotal};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			
 			result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新   复合更新
 			db.close();
@@ -179,8 +179,8 @@ public class GoodsCart {
 			int result = 0;
 			String sql = "update goodsCart_info set selectedQuantity=? where user_id=? and goods_id=?";
 			Object[] params ={selectedQuantity,user_id,goods_id};
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			result = db.updateComplex(sql, params);
 			db.close();
 			return result;
@@ -192,8 +192,8 @@ public class GoodsCart {
 			int result = 0;
 			String sql = "update goodsCart_info set subtotal=? where user_id=? and goods_id=?";
 			Object[] params ={subtotal,user_id,goods_id};
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			result = db.updateComplex(sql, params);
 			db.close();
 			return result;
@@ -209,8 +209,8 @@ public class GoodsCart {
 			double Subtotal = goodsPrice * selected_Quantity;
 			String sql = "update goodsCart_info set subtotal=? where user_id=? and goods_id=?";
 			Object[] params ={Subtotal,user_id,goods_id};
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			result = db.updateComplex(sql, params);
 			db.close();
 			return result;
@@ -223,8 +223,8 @@ public class GoodsCart {
 			String sql = "delete from goodsCart_info where user_id=? and goods_id=?";
 			String[] params = {user_id,goods_id};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			
 			result = db.update(sql, params);
 			db.close();
@@ -238,8 +238,8 @@ public class GoodsCart {
 			String sql = "delete from goodsCart_info where user_id=?";
 			String[] params = {user_id};
 			
-			DBUtil db = new DBUtil();
-			db.getConnection();
+			/*DBUtil db = new DBUtil();*/
+			/*db.getConnection();*/
 			
 			result = db.update(sql, params);
 			db.close();

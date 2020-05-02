@@ -13,7 +13,7 @@ import java.util.*;
 public class GoodsPicture {
 	private String goods_id;  //商品ID
 	private String product_image; // 商品图片
-	private DBUtil db;//定义一个数据库对象
+	public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 
 	
 	public String getGoods_id() {
@@ -33,13 +33,13 @@ public class GoodsPicture {
 	}
 
 	//通过商品id返回1~n 条图片信息（返回一个商品的n张图片）
-	public List getMultipleGoodsPictures() throws ClassNotFoundException, SQLException{
-		List goods_pictures = null;
+	public List<String> getMultipleGoodsPictures() throws ClassNotFoundException, SQLException{
+		List<String> goods_pictures = null;
 		String sql = "select * from goods_picture where goods_id=?";
 		String[] params = {goods_id};
 		
-		DBUtil db = new DBUtil();
-		db.getConnection();   //所有的方法都要先与数据库建立连接
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/   //所有的方法都要先与数据库建立连接
 		
 		goods_pictures = db.getList(sql, params);
 		db.close();
@@ -53,8 +53,8 @@ public class GoodsPicture {
 		String sql = "insert into goods_picture values(null,?,?)";
 		Object[] params = {goods_id,product_image};
 		
-		DBUtil db = new DBUtil();
-		db.getConnection();
+		/*DBUtil db = new DBUtil();*/
+		/*db.getConnection();*/
 		
 		result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新   复合更新
 		db.close();

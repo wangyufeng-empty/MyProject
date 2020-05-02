@@ -5,9 +5,11 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%List IR_Goods_Infos = (List)session.getAttribute("IR_Goods_Infos"); %>
 <%
 Map OneGoodsInfo = (Map)session.getAttribute("goodsInfo"); //得到服务器端session的请求货物信息
+List<String> goodsPictures_list = (List<String>)session.getAttribute("goodsPictures_list");
 /*接下来分别获取需要的属性*/
 String goods_id = (String)OneGoodsInfo.get("goods_id");//商品id
 String goods_name = (String)OneGoodsInfo.get("goods_name");//商品名字
@@ -43,27 +45,26 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
         <div class="row">
             <!-- Start Product Gallery -->
             <div class="col-md-6">
-                <div class="product-gallery"><span class="product-badge text-danger">20% Off</span>
-                    <div class="gallery-wrapper">
-                        <div class="gallery-item active"><a href="assets/images/shop/single/01.jpg" data-hash="one" data-size="1000x667"></a></div>
-                        <div class="gallery-item"><a href="assets/images/shop/single/02.jpg" data-hash="two" data-size="1000x667"></a></div>
-                        <div class="gallery-item"><a href="assets/images/shop/single/03.jpg" data-hash="three" data-size="1000x667"></a></div>
-                        <div class="gallery-item"><a href="assets/images/shop/single/04.jpg" data-hash="four" data-size="1000x667"></a></div>
-                        <div class="gallery-item"><a href="assets/images/shop/single/05.jpg" data-hash="five" data-size="1000x667"></a></div>
+                <div class="product-gallery"><span class="product-badge text-danger">左右滑动查看图片</span>
+                
+                    <div class="product-carousel owl-carousel">                
+                       <c:forEach items="${goodsPictures_list}" var="goodsPicture">	               					
+							<div data-hash="${goodsPicture.product_image}"><img src="${goodsPicture.product_image}" alt="Product"></div>					
+					   </c:forEach>
                     </div>
-                    <div class="product-carousel owl-carousel">
-                        <div data-hash="one"><img src="assets/images/shop/single/01.jpg" alt="Product"></div>
-                        <div data-hash="two"><img src="assets/images/shop/single/02.jpg" alt="Product"></div>
-                        <div data-hash="three"><img src="assets/images/shop/single/03.jpg" alt="Product"></div>
-                        <div data-hash="four"><img src="assets/images/shop/single/04.jpg" alt="Product"></div>
-                        <div data-hash="five"><img src="assets/images/shop/single/05.jpg" alt="Product"></div>
-                    </div>
+                    
                     <ul class="product-thumbnails">
-                        <li class="active"><a href="#one"><img src="assets/images/shop/single/th01.jpg" alt="Product"></a></li>
-                        <li><a href="#two"><img src="assets/images/shop/single/th02.jpg" alt="Product"></a></li>
-                        <li><a href="#three"><img src="assets/images/shop/single/th03.jpg" alt="Product"></a></li>
-                        <li><a href="#four"><img src="assets/images/shop/single/th04.jpg" alt="Product"></a></li>
-                        <li><a href="#five"><img src="assets/images/shop/single/th05.jpg" alt="Product"></a></li>
+                    	<c:forEach items="${goodsPictures_list}" var="goodsPicture">	
+                			
+							<li><a href="#${goodsPicture.product_image}"><img src="${goodsPicture.product_image}" alt="Product"></a></li>
+					
+					    </c:forEach>
+					    
+<!--                         <li class="active"><a href="#one"><img src="assets/images/shop/single/th01.jpg" alt="Product"></a></li> -->
+<!--                         <li><a href="#two"><img src="assets/images/shop/single/th02.jpg" alt="Product"></a></li> -->
+<!--                         <li><a href="#three"><img src="assets/images/shop/single/th03.jpg" alt="Product"></a></li> -->
+<!--                         <li><a href="#four"><img src="assets/images/shop/single/th04.jpg" alt="Product"></a></li> -->
+<!--                         <li><a href="#five"><img src="assets/images/shop/single/th05.jpg" alt="Product"></a></li> -->
                     </ul>
                 </div>
             </div>
@@ -143,7 +144,7 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
                         </button>
                         <button class="btn btn-primary" data-toast="" data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="成功加入购物车!" onclick="location.href='usuallyController?url=<%="加入购物车"%>&goods_id=<%=goods_id%>&backUrl=<%="OneGoods-Detail-Demo.jsp"%>' "><i class="icon-bag"></i> 加入购物车</button>
                         <button type="button" publisher="<%=goods_publisher %>" class="btn btn-primary contactPublisher" >
-                            <i class="icon-bag"></i> 联系卖家
+                            <i class="layui-icon">&#xe626;</i> 联系卖家
                         </button>
                     </div>
                 </div>
@@ -198,98 +199,45 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
             </div>
         </div>
         
-        
-        
         <!-- End Product Tabs -->
-        <!-- 推荐相关产品                                                               以下是注释、、、、、、、
-         Start Related Products 
-        <h3 class="text-center padding-top-3x mb-30">Releted Products</h3>
+        
+        
+        													<!-- 推荐相关产品        -->                                                      
+      <!--    Start Related Products -->
+        <h3 class="text-center padding-top-3x mb-30">猜您喜欢</h3>
         <div class="owl-carousel" data-owl-carousel='{ "nav": false, "dots": false, "margin": 30, "responsive": {"0":{"items":1},"576":{"items":2},"768":{"items":3},"991":{"items":4},";1200":{"items":4}} }'>
-            Start Product #1 
-            <div class="grid-item">
-                <div class="product-card">
-                    <a class="product-thumb" href="shop-single-3.html">
-                        <img src="assets/images/shop/products/01.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="shop-single-3.html">iPhone X</a></h3>
-                    <h4 class="product-price">$749.99</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-             End Product #1 
-           Start Product #2 
-            <div class="grid-item">
-                <div class="product-card">
-                    <div class="rating-stars">
-                        <i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i>
-                    </div>
-                    <a class="product-thumb" href="shop-single-2.html">
-                        <img src="assets/images/shop/products/05.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="shop-single-2.html">Panasonic TX-32</a></h3>
-                    <h4 class="product-price">$949.50</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            End Product #2 
-           Start Product #3 
-            <div class="grid-item">
-                <div class="product-card">
-                    <a class="product-thumb" href="shop-single-3.html">
-                        <img src="assets/images/shop/products/09.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="shop-single-3.html">Sony HDR-AS50R</a></h3>
-                    <h4 class="product-price">$700.00</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            End Product #3 
-             Start Product #4 
-            <div class="grid-item">
-                <div class="product-card">
-                    <div class="rating-stars">
-                        <i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i>
-                    </div>
-                    <a class="product-thumb" href="shop-single-2.html">
-                        <img src="assets/images/shop/products/13.jpg" alt="Product">
-                    </a>
-                    <h3 class="product-title"><a href="shop-single-2.html">HP LaserJet Pro 200</a></h3>
-                    <h4 class="product-price">$249.50</h4>
-                    <div class="product-buttons">
-                        <div class="product-buttons">
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist">
-                                <i class="icon-heart"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            End Product #4                 
+        
+            <c:forEach items="${IR_Goods_Infos}" var="IR_Goods_Info">	
+            	<!--  Start Product  -->
+	            <div class="grid-item">
+	                <div class="product-card">
+	                    <div class="rating-stars">
+	                        <i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i>
+	                    </div>
+	                    <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+	                        <img src="assets/images/shop/products/05.jpg" alt="Product">
+	                    </a>
+	                    <h3 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">${IR_Goods_Info.goods_name}</a></h3>
+	                    <h4 class="product-price">${IR_Goods_Info.goods_price} 元</h4>
+	                    <div class="product-buttons">
+	                        <div class="product-buttons">
+	                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="加入收藏" onclick="location.href='usuallyController?url=<%="加入收藏"%>&goods_id=${IR_Goods_Info.goods_id}&backUrl=<%="OneGoods-Detail-Demo.jsp"%>' ">
+                                	<i class="icon-heart"></i>
+                            	</button>
+                            	<button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="${IR_Goods_Info.goods_name}" data-toast-message="成功加入购物车!" onclick="location.href='usuallyController?url=<%="加入购物车"%>&goods_id=${IR_Goods_Info.goods_id}&backUrl=<%="OneGoods-Detail-Demo.jsp"%>' ">
+                            			<i class="icon-bag"></i>加入购物车</button>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+          		<!--   End Product #2 -->
+            
+            </c:forEach>
+            
+         
         </div>
-        End Related Products         
-        -->
+      <!--  End Related Products   -->      
+       <!-- 结束智能推荐  -->
       
       
       
