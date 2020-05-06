@@ -54,7 +54,7 @@ function check()
             </div>
             <div class="column">
                 <ul class="breadcrumbs">
-                    <li><a href="index-1.html">主页</a></li>
+                    <li><a href="index.jsp">主页</a></li>
                     <li class="separator">&nbsp;</li>
                     <li>我的基本信息</li>
                 </ul>
@@ -137,13 +137,13 @@ function check()
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-phone">个人简介</label>
-                            <textarea class="form-control" name="selfIntroduce" value="<%=selfIntroduce %>" required></textarea> 
+                            <textarea class="form-control" name="selfIntroduce" placeholder="<%=selfIntroduce %>" required></textarea> 
                         </div>
                     </div>
                      <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-phone">对自己的寄语</label>
-                            <textarea class="form-control" name="selfBlessing" value="<%=selfBlessing %>" required></textarea> 
+                            <textarea class="form-control" name="selfBlessing" placeholder="<%=selfBlessing %>" required></textarea> 
                         </div>
                     </div>
                     

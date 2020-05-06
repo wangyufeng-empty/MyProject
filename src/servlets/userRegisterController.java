@@ -66,6 +66,7 @@ public class userRegisterController extends HttpServlet {
 		user.setUserSex(userSex);
 		user.setUserHobby(userHobby);
 		user.setUserGrade(userGrade);
+		user.setAccount_state(1);
 		if(userQuestion.equals("userQuestion_motherName"))  //是否问题为motherName，如果是->
 		{
 			user.setUserQuestion_motherName(userAnswer);  //把这个问题的答案赋值给用户属性

@@ -255,7 +255,7 @@ public class user_info
 	public int addUserRegister() throws ClassNotFoundException, SQLException
 	{
 		int result = 0;
-		String sql = "insert into user_info (user_id,user_name,user_psw,user_sex,user_grade,user_hobby,userQuestion_motherName,userQuestion_firstLove,register_time) values(?,?,?,?,?,?,?,?,?,1)";
+		String sql = "insert into user_info (user_id,user_name,user_psw,user_sex,user_grade,user_hobby,userQuestion_motherName,userQuestion_firstLove,register_time,account_state) values(?,?,?,?,?,?,?,?,?,1)";
 		String[] params = {username,nickname,password,userSex,userGrade,userHobby,userQuestion_motherName,userQuestion_firstLove,register_time};
 		
 		result = db.update(sql, params);//调用数据库操作方法，执行更新
@@ -311,7 +311,7 @@ public class user_info
 	/*单独返回账号状态*/
 	public int accountState() throws ClassNotFoundException, SQLException
 	{
-		int accountState = 1;
+		int accountState = 0;
 		
 		String sql = "select * from user_info where user_id=?";
 		String[] params = {username};

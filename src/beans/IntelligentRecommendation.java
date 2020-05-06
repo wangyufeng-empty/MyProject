@@ -92,7 +92,7 @@ public class IntelligentRecommendation {
 		
 		int result = 0;
 		List IR_GoodsIdS = null;  //创建一个动态数组保存ID
-		List AllIR = null;   //创建一个动态数组保存推荐表的所有信息
+		List AllIR = null;   //创建一个动态数组保存推荐商品的所有信息
 		String REGEXP_string = "";
 		/*拼接字符串*/
 		
@@ -124,13 +124,17 @@ public class IntelligentRecommendation {
 		
 		String[] params = {"%"+keyArrays[0]+"%","%"+keyArrays[1]+"%","%"+keyArrays[2]+"%","%"+keyArrays[3]+"%","%"+keyArrays[4]+"%","%"+keyArrays[5]+"%"};
 		System.out.println("params  :"+ Arrays.toString(params));
-		System.out.println("sql  :"+ sql);
 		
-		IR_GoodsIdS = db.getList(sql, params);  //获取到了推荐商品的LIST  <=10条
-		AllIR = this.GetAll_IR_ById();  //获取本表的一个用户的所有信息
+		/*获取到了推荐商品的LIST  <=10条*/
+		IR_GoodsIdS = db.getList(sql, params);  
+		System.out.println("IR_GoodsIdS.size():"+IR_GoodsIdS.size());
+		/*获取本表的一个用户的所有信息，在初始化之后必是10*/
+		AllIR = this.GetAll_IR_ById();  //
+		System.out.println("AllIR.size():"+AllIR.size());
 		
 		if(AllIR.size()==0||AllIR==null){  //推荐表为空,则推荐表使用插入方法，初始化插入10条信息
 			if(IR_GoodsIdS.size()<10){  //推荐数量不足10条，只可能是初始的时候,两段拼凑
+				
 				for(int i=0;i<IR_GoodsIdS.size();i++){
 					Map IR_GoodsId = (Map) IR_GoodsIdS.get(i);  //把LIST的对象一个个取出来转化为MAP				
 					this.setCircle_id(i+1);
@@ -159,18 +163,36 @@ public class IntelligentRecommendation {
 			
 		if(result==1){System.out.println(this.user_id + ": IntelligentRecommendation 初始化成功！");}		
 		
-		//推荐表已经有信息。采用更新的方法
+		/*此时AllIR.size()已经有了10条初始化信息。采用更新的方法，
+		 * 但是IR_GoodsId-推荐的商品数可能没有达到10条，故应分段存储*/
 		else{
-			for(int i=0;i<AllIR.size();i++){  
-				Map IR_GoodsId = (Map) IR_GoodsIdS.get(i);  //把LIST的对象一个个取出来转化为MAP
-				if(!IR_GoodsId.isEmpty()){ //map不为空
-					this.setRecommend_goods_id((String)IR_GoodsId.get("goods_id"));  //3 
+			if(IR_GoodsIdS.size()<10){  //推荐数量不足10条，只可能是初始操作的时候,两段拼凑
+				for(int i=0;i<IR_GoodsIdS.size();i++){
+					Map IR_GoodsId = (Map) IR_GoodsIdS.get(i);  //把LIST的对象一个个取出来转化为MAP				
 					this.setCircle_id(i+1);
+					this.setRecommend_goods_id((String)IR_GoodsId.get("goods_id"));  //3 
 					result = this.Update_IR_RIdAndKey();
-					if(result==1){System.out.println("更新了推荐表中的goods_id为：" + this.getRecommend_goods_id());}					
+					if(result==1){System.out.println(i+":更新了推荐表中的goods_id为：" + this.getRecommend_goods_id());}	
+				}
+				for(int j=IR_GoodsIdS.size();j<10;j++){
+					this.setCircle_id(j+1);
+					this.setRecommend_goods_id("NULL");  //3 
+					result = this.Update_IR_RIdAndKey();
+					if(result==1){System.out.println(j+":推荐数不足10条，自动修改ID为：" + this.getRecommend_goods_id());}	
+				}		
+			}//end if
+			else{  //推荐的数量大于等于10条
+				for(int i=0;i<AllIR.size();i++){  
+					Map IR_GoodsId = (Map) IR_GoodsIdS.get(i);  //把LIST的对象一个个取出来转化为MAP
+					if(!IR_GoodsId.isEmpty()){ //map不为空
+						this.setRecommend_goods_id((String)IR_GoodsId.get("goods_id"));  //3 
+						this.setCircle_id(i+1);
+						result = this.Update_IR_RIdAndKey();
+						if(result==1){System.out.println("更新了推荐表中的goods_id为：" + this.getRecommend_goods_id());}					
+					}
 				}
 			}
-		}
+		}//end else
 		
 		db.close();
 		return IR_GoodsIdS;

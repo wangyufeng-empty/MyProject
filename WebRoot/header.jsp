@@ -154,7 +154,7 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
         <div class="inner">
             <a class="offcanvas-toggle cats-toggle" href="#shop-categories" data-toggle="offcanvas"></a>
             <a class="offcanvas-toggle menu-toggle" href="#mobile-menu" data-toggle="offcanvas"></a>
-            <a class="site-logo" href="#"><img src="assets/images/logo/logo.png" alt="Inspina"></a>
+            <a class="site-logo" href="index.jsp"><img src="assets/images/logo/logo.png" alt="Inspina"></a>
         </div>
     </div>
                                                <!-- 结束LOGO部分 -->
