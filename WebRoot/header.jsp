@@ -6,6 +6,7 @@
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
     String baseWsPath = request.getServerName()+":"+request.getServerPort()+path+"/";
+    String identifier = UUID.randomUUID().toString().replace("-", "");
 %>
 
 <head>
@@ -44,9 +45,24 @@
 	<script src="layer/layer/layer.js"></script>
 	<link rel="stylesheet" href="layui/css/layui.css">
 	<script src="layui/layui.js"></script>
+    <style>
+        .ssdtitle{font-size:18px;}
+        .ssdtitle:before{
+            content:'';
+            background-image:url('images/msg.png');
+            background-size:25px 25px;
+            vertical-align:text-bottom;
+            display:inline-block;
+            width:25px;
+            height:25px;
+            border:0;
+            top:0;
+            left:0;
+        }
+    </style>
 </head>
 <%--/********************************技术亮点：以后所有信息可以直接显示，不用重新白屏显示，然后跳转************************************************/ --%>
-<%  
+<%
 	//这部分用来接收成功提示
 	String successMessage = "";
 	successMessage = (String)session.getAttribute("successMessage");
@@ -56,35 +72,36 @@
  	{
 %>
 		<script language="javascript">
-		layer.msg('<%=successMessage%>', {icon: 6});//这句话好坑，坑了我一晚上		    
+		layer.msg('<%=successMessage%>', {icon: 6});//这句话好坑，坑了我一晚上
 		</script>
-<% 
+<%
 		session.setAttribute("successMessage", "");  //把message从新设置为空
 	}
-	
+
 	//这部分用来接收一般错误提示
 	String message="";
     message=(String)session.getAttribute("message");
-    
+
     if("".equals(message)  || message==null)
     {}
  	else
  	{
 %>
 		<script language="javascript">
-		layer.msg('<%=message%>', {icon: 5});//这句话好坑，坑了我一晚上		    
+		layer.msg('<%=message%>', {icon: 5});//这句话好坑，坑了我一晚上
 		</script>
-<% 
+<%
 		session.setAttribute("message", "");  //把message从新设置为空
 	}
 %>
 
-<% 
+<%
 String username = (String)session.getAttribute("userName"); //从登录servlet获取用户名
 String userId = (String)session.getAttribute("userId");  //从登录servlet获取用户ID号
 %>
 <input type="hidden" id="baseWsPath" value="<%=baseWsPath%>"/>
 <input type="hidden" id="basePath" value="<%=basePath%>"/>
+<input type="hidden" id="identifier" value="<%=identifier%>"/>
 <!-- 开始顶部侧拉菜单 -->
 <div class="offcanvas-container" id="shop-categories">
     <div class="offcanvas-header">
@@ -236,5 +253,6 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
     
 </header>
 <script src="layui/im.js"></script>
+<script src="js/announcementWS.js"></script>
 
 <!-- End NavBar -->

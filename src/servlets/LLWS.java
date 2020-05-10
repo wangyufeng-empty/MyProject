@@ -24,13 +24,13 @@ public class LLWS {
 	public void onOpen(Session session,@PathParam("userId") String userId) {
 		String jsonString="{'content':'online','id':"+userId+",'type':'onlineStatus'}";
 		session.setMaxIdleTimeout(1800000);
-		for (String value : mapSU.values()) {
+		/*for (String value : mapSU.values()) {
 			try {
 				mapUS.get(value).getBasicRemote().sendText(jsonString);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		mapUS.put(userId+"",session);
 		mapSU.put(session,userId+"");
 		//更新redis中的用户在线状态
