@@ -6,6 +6,17 @@
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 
+<script language="javascript">
+function deleteOrder(order_id){
+	/*为了防止在js参数传递中被自动转化为科学计数法的数字，应该在
+	   html页面内给参数加上引号*/
+	console.log("deleteOrder:"+order_id);
+	layer.confirm('你确定要删除这个订单吗？',
+	function(){
+	window.location.href = "usuallyController?url=<%="删除订单" %>&order_id="+order_id;
+})
+}
+</script>
 <!-- 主体部分 -->
 <%
 ArrayList HistoryOrder_infos = (ArrayList)session.getAttribute("HistoryOrder_infos");
@@ -35,7 +46,7 @@ String order_id = (String)session.getAttribute("historyOrder_id");
             <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
                 <div class="w-100 text-center py-1 px-2"><span class='text-medium'>邮寄方式:</span>燕大快递</div>
                 <div class="w-100 text-center py-1 px-2"><span class='text-medium'>状态:</span> 出货检查</div>
-                <div class="w-100 text-center py-1 px-2"><span class='text-medium'>预计到达:</span> 2019年7月16日</div>
+                <div class="w-100 text-center py-1 px-2"><span class='text-medium'>预计到达:</span> 2020年6月7日</div>
             </div>
             <div class="card-body">
                 <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
@@ -83,7 +94,7 @@ String order_id = (String)session.getAttribute("historyOrder_id");
                     <th>名称</th>          
                     <th class="text-center">小计</th>
                     <th class="text-center">
-                        <a class="btn btn-sm btn-outline-danger" href="usuallyController?url=<%="删除订单" %>&order_id=<%=order_id %>">删除订单</a>
+                        <a class="btn btn-sm btn-outline-danger" onclick="deleteOrder('<%=order_id %>')">删除订单</a>
                     </th>
                 </tr>
                 </thead>

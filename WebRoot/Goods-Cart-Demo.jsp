@@ -6,23 +6,16 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
+<script src="js/SecondHandPages_JS/goodsCartJs.js"></script>
 <script type="text/javascript">
-function submiutSelectedQuantity(goods_id,selectedQuantity)
-{
-	//***************大坑，如果select下拉选择框在循环里，***********/
-	//***************一定不能在js中去获得值，**********************/
-	//****************一定要在调用函数时就及时传过去，才是动态的值,/
-	//******************否则一直都是第一个数据的值***************/
-	//alert(val);
-	window.location.href="usuallyController?url=<%="修改数量"%>&goods_id="+goods_id+"&selectedQuantity="+selectedQuantity;   //从这里请求servlet
-}
+
 </script>
 
 
 <% 
 String user_id = (String)session.getAttribute("userId"); //直接获得ID
 ArrayList cartsInfo = (ArrayList)session.getAttribute("cartsInfo"); 
-if(cartsInfo!=null)
+if(cartsInfo.size() != 0)
 {
 %>
 
@@ -36,7 +29,7 @@ if(cartsInfo!=null)
             </div>
             <div class="column">
                 <ul class="breadcrumbs">
-                    <li><a href="index-1.html">主页</a></li>
+                    <li><a href="index.jsp">主页</a></li>
                     <li class="separator">&nbsp;</li>
                     <li>购物车</li>
                 </ul>
@@ -63,7 +56,7 @@ if(cartsInfo!=null)
                     <th class="text-center">已选数量</th>
                     <th class="text-center">小计</th>
                     <th class="text-center">
-                        <a class="btn btn-sm btn-outline-danger" href="usuallyController?url=<%="清空购物车" %>&user_id=<%=user_id%>">清空购物车</a>
+                        <button class="btn btn-sm btn-outline-danger" id="clearGoodsCart">清空购物车</button>
                     </th>
                 </tr>
                 </thead>
@@ -101,7 +94,7 @@ if(cartsInfo!=null)
                         <div class="count-input">
                         
                           <!--这里实现了选择货物数量的动态传递参数，只要选择框发生改变，就调用函数改变“已选数量” -->
-                            <select id="updateSelectedQuantity_option" name="updateSelectedQuantity_option" class="form-control" onChange="submiutSelectedQuantity(<%=goods_id%>,this.options[this.options.selectedIndex].value)">
+                            <select id="updateSelectedQuantity_option" name="updateSelectedQuantity_option" class="form-control" onChange="submitSelectedQuantity(<%=goods_id%>,this.options[this.options.selectedIndex].value)">
                             	<option value="">点我</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -123,7 +116,7 @@ if(cartsInfo!=null)
                     
                    <!--  第6列 -->
                     <td class="text-center">
-                        <a class="remove-from-cart" href="usuallyController?url=<%="移除此项" %>&goods_id=<%=goods_id %>" data-toggle="tooltip" title="移除此项"><i class="icon-cross"></i></a>
+                        <a class="remove-from-cart" id="removeItem" onclick="removeItemFromCart(<%=goods_id %>)"  title="移除此项"><i class="icon-cross"></i></a>
                     </td>
                 </tr>
                 </tbody>

@@ -38,23 +38,7 @@
 <body style="height: 100%">
 
 <!--  主体部分  -->
-<script language="javascript">
-    function check() {
-        if (publishGoods.goods_stock.value > 20) {
-            layer.msg("发布数量请少于20件！");
-            publishGoods.goods_stock.focus();
-            return false;
-        }
-        var myeprice = publishGoods.goods_price.value;  //
-        var myReg = /\d+(\.\d+)?/;
-        if (!myReg.test(myeprice)) {
-            layer.msg("请输入正确的价格");
-            publishGoods.goods_price.focus();
-            return false;
-        }
-    }
-
-</script>
+<script src="js/SecondHandPages_JS/publishGoodsJs.js"></script>
 
 
 <!--  开始进行发布商品 -->
@@ -68,7 +52,7 @@
             </div>
             <div class="column">
                 <ul class="breadcrumbs">
-                    <li><a href="index-1.html">主页</a></li>
+                    <li><a href="index.jsp">主页</a></li>
                     <li class="separator">&nbsp;</li>
                     <li>发布商品</li>
                 </ul>
@@ -122,20 +106,20 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-fn">商品名</label>
-                            <input class="form-control" type="text" name="goods_name" required>
+                            <input class="form-control" type="text" name="goods_name" id="goods_name" required>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-fn">价格</label>
-                            <input class="form-control" type="text" name="goods_price" required>
+                            <input class="form-control" type="text" name="goods_price" id="goods_price" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-ln">发布的数量</label>
-                            <input class="form-control" type="text" name="goods_stock" required
+                            <input class="form-control" type="text" name="goods_stock" id="goods_stock" required
                                    oninput="value=value.replace(/[^\d]/g , '')">
                         </div>
                     </div>
@@ -155,7 +139,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="account-phone">添加商品简介</label>
-                            <textarea class="form-control" name="goods_describe" required></textarea>
+                            <textarea class="form-control" name="goods_describe" id="goods_describe" required></textarea>
                         </div>
                     </div>
 
@@ -164,7 +148,7 @@
                         <hr class="mt-2 mb-3">
                         <div class="d-flex flex-wrap justify-content-between align-items-center">
                             <input type="hidden" name="goodsPictures" id="goodsPictures" value="">
-                            <button class="btn btn-primary " type="button" onclick="submitGoods()">发布</button>
+                            <button class="btn btn-primary " type="button" id="publishGoods" onclick="submitGoods()">发布</button>
                         </div>
                     </div>
 

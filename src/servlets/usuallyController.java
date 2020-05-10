@@ -40,6 +40,7 @@ public class usuallyController extends HttpServlet {
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
 		
+		
 		//过滤
 		String login_state = (String)session.getAttribute("login_state");
 		String userName_check = (String)session.getAttribute("userName");
@@ -155,7 +156,11 @@ public class usuallyController extends HttpServlet {
 		/*******************************5-获取来自“修改/完善个人信息”功能的请求申请*************************/
 		else if(url.equals("updateProfile"))  //5-获取来自“修改/完善个人信息”功能的请求申请
 		{
-			String userId = request.getParameter("userId");
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			String userId = (String)session.getAttribute("userId");  //得到用户ID
 			String userTel = request.getParameter("userTel");
 			String userEmail = request.getParameter("userEmail");
 			String userAddress = request.getParameter("userAddress");
@@ -175,15 +180,17 @@ public class usuallyController extends HttpServlet {
 				int result = user.updateUser();
 				if(result == 1)  //更新、完善个人信息成功
 				{
-					String message = "修改成功了哦！";
-					session.setAttribute("successMessage", message);
-					response.sendRedirect("account-update.jsp"); 
+					returnMessage = "修改成功了哦！";
+					System.out.println(userId+": 修改个人信息成功");
+					returnJson.put("returnMessage", returnMessage);
+					returnJson.put("status", "success");
+					out.print(returnJson.toString());
 				}
 				else
 				{
-					String message = "修改失败，发生未知错误！";
-					session.setAttribute("message", message);
-					response.sendRedirect("account-update.jsp"); 
+					returnMessage ="修改失败，发生未知错误！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());
 				}
 					
 			} 
@@ -219,7 +226,12 @@ public class usuallyController extends HttpServlet {
 		//7-获取来自“加入购物车”功能的请求申请
 		else if(url.equals("加入购物车"))  
 		{ 	
-			String backUrl = request.getParameter("backUrl");//获取请求的具体路径
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			
+			//String backUrl = request.getParameter("backUrl");//获取请求的具体路径
 			String goods_id = request.getParameter("goods_id");//从各个界面获取想要加入购物车的   货物ID
 			String user_id = (String)session.getAttribute("userId");  //获取一下     用户ID号
 			
@@ -256,9 +268,9 @@ public class usuallyController extends HttpServlet {
 						selectedQuantity++;
 						if(selectedQuantity > 5)//选购数量一次性不能大于5件
 						{
-							String message = "加入失败！"+goods_name+"  购物车已有5件了哦！";
-							session.setAttribute("message", message);
-							response.sendRedirect(backUrl);
+							returnMessage = "加入失败！"+goods_name+"  购物车里已有5件了哦！";
+							returnJson.put("returnMessage", returnMessage);
+							out.print(returnJson.toString());
 						}
 						else  //选购数量不足五件
 						{
@@ -270,15 +282,18 @@ public class usuallyController extends HttpServlet {
 						
 							if(result_SelectedQuantity == 1 && result_Subtotal==1) //加入成功，已有记录的基础
 							{
-								String message = goods_name+"  成功加入购物车了哦！";
-								session.setAttribute("successMessage", message);
-								response.sendRedirect(backUrl); 	
+								System.out.println(user_id+":正在加入购物车"+goods_name);
+								returnMessage = goods_name+":成功加入购物车了哦！";
+								returnJson.put("returnMessage", returnMessage);
+								returnJson.put("status", "success");
+								out.print(returnJson.toString());
+								
 							}
 							else
 							{
-								String message = goods_name+"  添加失败，发生未知错误！";
-								session.setAttribute("message", message);
-								response.sendRedirect(backUrl); 								
+								returnMessage = goods_name+":添加失败，发生未知错误！";
+								returnJson.put("returnMessage", returnMessage);
+								out.print(returnJson.toString());															
 							}
 						}
 					}				
@@ -298,23 +313,25 @@ public class usuallyController extends HttpServlet {
 						int result = cart.addCartInfo();    //技术亮点，可以同时更新不同数据类型的一整条记录
 						if(result == 1) //加入成功，已有记录的基础
 						{
-							String message = goods_name+"  成功加入购物车了哦！";
-							session.setAttribute("successMessage", message);
-							response.sendRedirect(backUrl); 							
+							System.out.println(user_id+":正在加入购物车"+goods_name);
+							returnMessage = goods_name+":成功加入购物车了哦！";
+							returnJson.put("returnMessage", returnMessage);
+							returnJson.put("status", "success");
+							out.print(returnJson.toString());							
 						}
 						else
 						{
-							String message = goods_name+"  添加失败，发生未知错误！";
-							session.setAttribute("message", message);
-							response.sendRedirect(backUrl); 						
+							returnMessage = goods_name+":添加失败，发生未知错误！";
+							returnJson.put("returnMessage", returnMessage);
+							out.print(returnJson.toString());						
 						}
 					}
 				}
 				else  //库存为0，或者购物车已选数量达到库存上限，无法加入购物车
 				{
-					String message = goods_name+"  已选数量达到库存上限！";
-					session.setAttribute("message", message);
-					response.sendRedirect(backUrl); 	
+					returnMessage = goods_name+":已选数量达到库存上限！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());	
 				}
 			}
 			catch (ClassNotFoundException | SQLException e) 
@@ -327,6 +344,10 @@ public class usuallyController extends HttpServlet {
 		/**********  8-获取来自“加入收藏”功能的请求申请 （和加入购物车类似，就是界面不同）*********************/     //2019-7-10   已经写好类和界面，直接加入就行
 		else if(url.equals("加入收藏"))  // 8-获取来自“加入收藏”功能的请求申请 （和加入购物车类似，就是界面不同）
 		{
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			try 
 			{
 				/**************创建对象*******************/
@@ -335,9 +356,10 @@ public class usuallyController extends HttpServlet {
 				/*******************************************/
 				
 				/**************获取参数*******************/
-				String backUrl = request.getParameter("backUrl");//获取请求的具体路径
+				//String backUrl = request.getParameter("backUrl");//获取请求的具体路径
 				String goods_id = request.getParameter("goods_id");  //获取到货物ID   1
 				String userId = (String)session.getAttribute("userId");  //2
+				System.out.println(userId+":正在收藏 "+goods_id);
 				/******************************************/
 				
 				/*************取商品属性****************/
@@ -394,22 +416,26 @@ public class usuallyController extends HttpServlet {
 						
 						List WiListInfos = wishList.getAllWishListInfo();
 						session.setAttribute("WiListInfos", WiListInfos);//加入全局会话
-						String message = goods_name+"   成功加入收藏了哦！";
-						session.setAttribute("successMessage", message);
-						response.sendRedirect(backUrl); 							
+						
+						returnMessage = goods_name+" ：成功加入收藏！";
+						returnJson.put("returnMessage", returnMessage);
+						returnJson.put("status", "success");
+						out.print(returnJson.toString());	
+										
 					}
 					else
 					{
-						String message = goods_name+"   添加失败，发生未知错误！";
-						session.setAttribute("message", message);
-						response.sendRedirect(backUrl); 						
+						returnMessage = goods_name+" ：添加失败，发生未知错误！";
+						returnJson.put("returnMessage", returnMessage);
+						out.print(returnJson.toString());	
+									
 					}
 				}
 				else
 				{
-					String message = goods_name+"   已在您的收藏！";
-					session.setAttribute("message", message);
-					response.sendRedirect(backUrl); 	
+					returnMessage =  goods_name+" ：已在您的收藏！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());
 				}
 			}
 			catch (ClassNotFoundException | SQLException e) 
@@ -467,7 +493,11 @@ public class usuallyController extends HttpServlet {
 		/***************************  11-获取来自“清空购物车”功能的请求申请 **********************************/
 		else if(url.equals("清空购物车"))  // 11-获取来自“清空购物车”功能的请求申请 
 		{
-			String user_id = request.getParameter("user_id");  //链接传过来用户id
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			String user_id = (String)session.getAttribute("userId");  
 			ArrayList cartsInfo = null;
 			try 
 			{
@@ -477,9 +507,10 @@ public class usuallyController extends HttpServlet {
 				cartsInfo = (ArrayList) goodsCart.getAllCartInfo(); //查询结果list
 				session.setAttribute("cartsInfo", cartsInfo);//把结果集发送给显示购物车的界面，重新更新cartInfo,不然返回购物车还是显示原来的
 				
-				String message = "购物车已清空！";
-				session.setAttribute("successMessage", message);
-				response.sendRedirect("Goods-Cart-Demo.jsp");
+				returnMessage = "购物车已清空！";
+				returnJson.put("returnMessage", returnMessage);
+				returnJson.put("status", "success");
+				out.print(returnJson.toString());
 			} 
 			catch (ClassNotFoundException | SQLException e) 
 			{				
@@ -491,6 +522,10 @@ public class usuallyController extends HttpServlet {
 		/*******************修改数量需要额外判断库存是否充足***************/
 		else if(url.equals("修改数量"))  //12-获取来自购物车界面的“修改数量”功能的请求申请
 		{
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			String goods_id = request.getParameter("goods_id");
 			int selectedQuantity = Integer.parseInt(request.getParameter("selectedQuantity"));  //获取用户想要修改的数量
 			String user_id = (String)session.getAttribute("userId");
@@ -520,22 +555,23 @@ public class usuallyController extends HttpServlet {
 					session.setAttribute("cartsInfo", cartsInfo);//把结果集发送给显示购物车的界面，重新更新cartInfo,不然返回购物车还是显示原来的
 					if(result == 1 && result_Subtotal==1)
 					{
-						String message =goods_name+ "的数量修改成功啦！";
-						session.setAttribute("successMessage", message);
-						response.sendRedirect("Goods-Cart-Demo.jsp");
+						returnMessage =goods_name+ "的数量修改成功啦！";
+						returnJson.put("returnMessage", returnMessage);
+						returnJson.put("status", "success");					
+						out.print(returnJson.toString());
 					}
 					else
 					{
-						String message = "修改失败，发生未知错误！";
-						session.setAttribute("message", message);
-						response.sendRedirect("Goods-Cart-Demo.jsp");
+						returnMessage ="修改失败，发生未知错误！";
+						returnJson.put("returnMessage", returnMessage);						
+						out.print(returnJson.toString());					
 					}
 				}
 				else//所选数量大于库存
 				{
-					String message = goods_name+"   库存不足！";
-					session.setAttribute("message", message);
-					response.sendRedirect("Goods-Cart-Demo.jsp"); 
+					returnMessage =goods_name+"   库存不足！";
+					returnJson.put("returnMessage", returnMessage);						
+					out.print(returnJson.toString());			
 				}
 			} 
 			catch (ClassNotFoundException | SQLException e) 
@@ -548,6 +584,10 @@ public class usuallyController extends HttpServlet {
 		/***************************  13-获取来自购物车界面的“移除此项”功能的请求申请 **********************************/
 		else if(url.equals("移除此项"))  //13-获取来自购物车界面的“移除此项”功能的请求申请
 		{
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			//首先获取货物ID
 			String goods_id = request.getParameter("goods_id");
 			//获取会话的用户ID
@@ -565,15 +605,17 @@ public class usuallyController extends HttpServlet {
 				session.setAttribute("cartsInfo", cartsInfo);//把结果集发送给显示购物车的界面，重新更新cartInfo,不然返回购物车还是显示原来的
 				if(result == 1)
 				{
-					String message =goods_name+ "成功从您的购物车移除！";
-					session.setAttribute("successMessage", message);
-					response.sendRedirect("Goods-Cart-Demo.jsp");
+					returnMessage = goods_name+ "：成功从您的购物车移除！";
+					returnJson.put("returnMessage", returnMessage);
+					returnJson.put("status", "success");
+					out.print(returnJson.toString());					
 				}
 				else
 				{
-					String message ="移除操作失败！";
-					session.setAttribute("message", message);
-					response.sendRedirect("Goods-Cart-Demo.jsp");
+					returnMessage ="操作失败！";
+					returnJson.put("returnMessage", returnMessage);
+					returnJson.put("status", "success");
+					out.print(returnJson.toString());		
 				}
 			} 
 			catch (ClassNotFoundException | SQLException e) 
@@ -616,6 +658,11 @@ public class usuallyController extends HttpServlet {
 		/***************************  15-获取确认订单信息中的  “保存”  功能的请求申请 **********************************/
 		else if(url.equals("updateOrderInfo"))  //15-获取确认订单信息中的“保存”功能的请求申请
 		{
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			
 			/*********获取参数*********/
 			String userId = (String)session.getAttribute("userId");
 			String userTel = request.getParameter("userTel");
@@ -637,15 +684,18 @@ public class usuallyController extends HttpServlet {
 			{
 				Map userInfo = user.getUserinfo();
 				session.setAttribute("userInfo_order", userInfo);//更新session里的userinfo
-				String message ="保存成功！";
-				session.setAttribute("successMessage", message);
-				response.sendRedirect("CheckoutOrder-User-Info.jsp");
+				
+				returnMessage ="保存成功！";
+				System.out.println(userId+": 修改收货信息");
+				returnJson.put("returnMessage", returnMessage);
+				returnJson.put("status", "success");					
+				out.print(returnJson.toString());			
 			}
 			else
 			{
-				String message ="保存失败，未知错误！";
-				session.setAttribute("message", message);
-				response.sendRedirect("CheckoutOrder-User-Info.jsp");
+				returnMessage ="保存失败，未知错误！";		
+				returnJson.put("returnMessage", returnMessage);						
+				out.print(returnJson.toString());
 			}
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
@@ -874,6 +924,8 @@ public class usuallyController extends HttpServlet {
 				/**********创建对象************/
 				String userId = (String)session.getAttribute("userId");
 				String order_id = request.getParameter("order_id");
+				System.out.println(userId+":正在删除订单："+order_id);
+				/*******************************/
 				historyOrder.setOrder_id(order_id);
 				order.setOrder_id(order_id);	
 				order.setUser_id(userId);
@@ -915,6 +967,11 @@ public class usuallyController extends HttpServlet {
 		{
 			try 
 			{
+				/*回调信息*/
+				String returnMessage = "";
+				/*回调json对象*/
+				JSONObject returnJson = new JSONObject();
+				
 				WishList_Info WishList = new WishList_Info();
 				String userId = (String)session.getAttribute("userId");
 				WishList.setUser_id(userId);
@@ -923,15 +980,18 @@ public class usuallyController extends HttpServlet {
 				session.setAttribute("WiListInfos", WiListInfos);//修改全局会话
 				if(result != 0)
 				{
-					String message ="我的收藏已清空！";
-					session.setAttribute("successMessage", message);
-					response.sendRedirect("Wish-List-Demo.jsp");
+					returnMessage = "我的收藏已清空！";
+					System.out.println(userId+": 清空所有收藏");
+					returnJson.put("returnMessage", returnMessage);
+					returnJson.put("status", "success");
+					out.print(returnJson.toString());	
+					
 				}
 				else
 				{
-					String message ="你还没有收藏商品哦！";
-					session.setAttribute("message", message);
-					response.sendRedirect("Wish-List-Demo.jsp");
+					returnMessage = "你还没有收藏商品哦！";				
+					returnJson.put("returnMessage", returnMessage);				
+					out.print(returnJson.toString());	
 				}
 			}
 			catch (ClassNotFoundException | SQLException e) 
@@ -945,6 +1005,11 @@ public class usuallyController extends HttpServlet {
 		{
 			try 
 			{
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			
 			WishList_Info WishList = new WishList_Info();
 			String userId = (String)session.getAttribute("userId");
 			String goods_id = request.getParameter("goods_id");
@@ -956,15 +1021,18 @@ public class usuallyController extends HttpServlet {
 			session.setAttribute("WiListInfos", WiListInfos);//修改全局会话
 			if(result==1)
 			{
-				String message =goods_name+"    消失啦！";
-				session.setAttribute("successMessage", message);
-				response.sendRedirect("Wish-List-Demo.jsp");
+				returnMessage = goods_name+" :消失啦！";
+				System.out.println(userId+": 移除收藏："+goods_name);
+				returnJson.put("returnMessage", returnMessage);
+				returnJson.put("status", "success");
+				out.print(returnJson.toString());			
 			}
 			else
 			{
-				String message =goods_name+"    移除失败，未知错误！";
-				session.setAttribute("message", message);
-				response.sendRedirect("Wish-List-Demo.jsp");
+				returnMessage =goods_name+": 移除失败，未知错误！";	
+				returnJson.put("returnMessage", returnMessage);	
+				out.print(returnJson.toString());	
+				
 			}
 			}
 			catch (ClassNotFoundException | SQLException e) 
@@ -1079,6 +1147,10 @@ public class usuallyController extends HttpServlet {
 			{
 				//分页，sql语句    select * from limit 2,3;   从第二条开始，往后数三条记录   
 				//   动态sql语句，使用  if set  chose
+				/*回调信息*/
+				String returnMessage = "";
+				/*回调json对象*/
+				JSONObject returnJson = new JSONObject();
 				String goods_id = request.getParameter("goods_id");
 				String goods_publisher = (String)session.getAttribute("userName");  //获取此用户的姓名作为发布者
 				/**********/
@@ -1108,9 +1180,9 @@ public class usuallyController extends HttpServlet {
 							continue;
 						else
 						{
-							String message =goods_name+"ID冲突，未知错误！";
-							session.setAttribute("message", message);
-							response.sendRedirect("My-Publish_Infos-Demo.jsp");
+							returnMessage =goods_name+"ID冲突，未知错误！";
+							returnJson.put("returnMessage", returnMessage);
+							out.print(returnJson.toString());
 						}
 					}
 				}
@@ -1120,15 +1192,17 @@ public class usuallyController extends HttpServlet {
 				{			
 					List myPublish_infos = goods.getGoodsInfoByGoodsPublisher();			
 					session.setAttribute("myPublish_infos", myPublish_infos);   //更新会话
-					String message =goods_name+"已下架！";
-					session.setAttribute("successMessage", message);
-					response.sendRedirect("My-Publish_Infos-Demo.jsp");
+					returnMessage =goods_name+"已下架！";
+					returnJson.put("returnMessage", returnMessage);
+					returnJson.put("status", "success");
+					out.print(returnJson.toString());
+					
 				}
 				else
 				{
-					String message =goods_name+"下架失败，未知错误！";
-					session.setAttribute("message", message);
-					response.sendRedirect("My-Publish_Infos-Demo.jsp");
+					returnMessage =goods_name+"下架失败，未知错误！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());
 				}
 				
 			} 
@@ -1143,7 +1217,7 @@ public class usuallyController extends HttpServlet {
 		else if(url.equals("商品详情"))  //26-获取页面中的“查看商品详情”功能的请求申请
 		{
 		try {
-				String goods_id = request.getParameter("goods_id");//从各个界面获取想要加入购物车的   货物ID
+				String goods_id = request.getParameter("goods_id");// 货物ID
 				Goods goods = new Goods();				
 				goods.setGoodsId(goods_id);				
 				Map goodsInfo = goods.getGoodsInfo();//获取到一条货物信息

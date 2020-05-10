@@ -43,7 +43,7 @@ public class AnsjSplitAndWordCount {
 			
 		}
 		
-		//抽取一个目录下的中文文本，//fileList是目标文件夹的路径
+		
 		private static Map<String, Integer> getWordFrequence(String IR_Original_String) throws Throwable{
 			//System.out.println("开始提取目录下的文本");
 			Map<String, Integer> wordFrequence = new HashMap<>();    //创建一个string-int的键值对
@@ -144,7 +144,7 @@ public class AnsjSplitAndWordCount {
 		public static void main(String[] args) throws Throwable {
 //			//String filePath = "G:/Workspaces/MyEclipse 2017 CI/AnsjSplitAndWordCount/第二章.txt";//读取的中文文本目录
 		//String resultPath = "G:/Workspaces/MyEclipse 2017 CI/AnsjSplitAndWordCount/wordFreText_NlpAnalysis.txt";//结果文件的路径
-			Map<String, Integer> wordFreCount = getWordFrequence("‘中国军医大学’是最好的大学");
+			Map<String, Integer> wordFreCount = getWordFrequence("人工智能大数据边缘计算硬件边缘计算数据库技术");
 			//saveResult(wordFreCount,resultPath);
 
 			String[] keyArrays_entire = wordFreCount.keySet().toArray(new String[wordFreCount.size()]);  //把所有的key保存到数组里面
