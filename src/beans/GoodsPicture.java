@@ -13,6 +13,7 @@ import java.util.*;
 public class GoodsPicture {
 	private String goods_id;  //商品ID
 	private String product_image; // 商品图片
+	private Integer homePage_show = 0;//主页显示（1 是，0 否）
 	public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 
 	
@@ -30,6 +31,14 @@ public class GoodsPicture {
 
 	public void setProduct_image(String product_image) {
 		this.product_image = product_image;
+	}
+
+	public Integer getHomePage_show() {
+		return homePage_show;
+	}
+
+	public void setHomePage_show(Integer homePage_show) {
+		this.homePage_show = homePage_show;
 	}
 
 	//通过商品id返回1~n 条图片信息（返回一个商品的n张图片）
@@ -50,8 +59,8 @@ public class GoodsPicture {
 	public int addOneGoodsPicture() throws ClassNotFoundException, SQLException
 	{
 		int result = 0;
-		String sql = "insert into goods_picture values(null,?,?)";
-		Object[] params = {goods_id,product_image};
+		String sql = "insert into goods_picture values(null,?,?,?)";
+		Object[] params = {goods_id,product_image,homePage_show};
 		
 		/*DBUtil db = new DBUtil();*/
 		/*db.getConnection();*/
