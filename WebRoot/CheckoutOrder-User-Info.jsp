@@ -8,6 +8,7 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
+<script src="js/SecondHandPages_JS/checkOutOrderUserJs.js"></script> 
 <%
 double total_price = Double.parseDouble(session.getAttribute("total_price").toString());  //获得总价    
 Map userInfo = (Map)session.getAttribute("userInfo_order");//获取到用户的基本信息
@@ -18,6 +19,7 @@ String userTel = (String)userInfo.get("user_tel");//取出电话号码
 String userEmail = (String)userInfo.get("user_email");//取出邮箱
 String userAddress = (String)userInfo.get("user_address");//取出地址
 %>
+
 <!-- 主体部分 -->
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
@@ -56,14 +58,13 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
            
                 <!--开始填写表单，修改/完善个人基本信息，收货信息           ，待执行servlet验证       -->
                 <div align="center">
-                <form class="col" name="updateProfile" action="usuallyController" method="post" onsubmit="return check()">
+                <form class="col" name="updateProfile"  id="updateProfile" action="#" method="post" onsubmit="return false">
                 	<input type="hidden" name="url" value="updateOrderInfo">
-                	
                 	
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-fn">收货人</label>
-                            <input class="form-control" type="text" name="consignee" value="<%=consignee %>" required>
+                            <input class="form-control" type="text" name="consignee" id="consignee" value="<%=consignee %>" required>
                         </div>
                     </div>
                     
@@ -71,13 +72,13 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-fn">电话号码</label>
-                            <input class="form-control" type="text" name="userTel" value="<%=userTel %>" required>
+                            <input class="form-control" type="text" name="userTel" id="userTel" value="<%=userTel %>" required>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-ln">邮箱</label>
-                            <input class="form-control" type="email" name="userEmail" value="<%=userEmail %>" required>
+                            <input class="form-control" type="email" name="userEmail" id="userEmail" value="<%=userEmail %>" required>
                         </div>
                     </div>
                     
@@ -91,8 +92,9 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
                     <div class="col-12">
                         <hr class="mt-2 mb-3">
                         <div class="d-flex flex-wrap justify-content-between align-items-center">
-                            
-                           <button class="btn btn-primary margin-right-none" type="submit">保存信息/生成订单</button>
+                        
+<!--                             /*注意一个大坑，ID名不要和函数名重合、相同了*/ -->
+                           <input type="button" class="btn btn-primary margin-right-none" value="保存信息" id="savaUserTradeInfo" />
                         </div>
                     </div>
                 </form>

@@ -9,7 +9,7 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
-
+<script src="js/SecondHandPages_JS/indexJs.js"></script>
 <!-- 主体部分 -->
 <!-- Start Hero Products -->
     <section class="bg-secondary padding-top-3x padding-bottom-3x">
@@ -42,10 +42,12 @@
                         <h6 class="product-price">库存：<%=goods_stock %>件</h6>
                         <div class="product-buttons">
                         
-                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="加入收藏" onclick="location.href='usuallyController?url=<%="加入收藏"%>&goods_id=<%=goods_id%>&backUrl=<%="All-Goods-Demo.jsp"%>' ">
-                                <i class="icon-heart"></i>
+                            <button class="btn btn-outline-secondary btn-sm " data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="已选中!" title="加入收藏" id="<%=goods_id%>" onClick="collectGoods(this)" >
+                                	<i class="icon-heart" id="icon_heart"></i>
                             </button>
-                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="成功加入购物车" onclick="location.href='usuallyController?url=<%="加入购物车"%>&goods_id=<%=goods_id%>&backUrl=<%="All-Goods-Demo.jsp"%>' ">加入购物车</button>
+                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="已选中!" id="<%=goods_id%>" onclick="addToCart(this)">
+                            			<i class="icon-bag"></i>加入购物车
+                            </button>
                         </div>
                     </div>
                 </div>

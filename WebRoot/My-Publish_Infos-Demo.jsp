@@ -5,15 +5,7 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
-
-<script language="javascript">
-function tips(goods_id){
-	layer.confirm('你确定要下架这件商品吗？',
-	function(){
-	window.location.href = "usuallyController?url=<%="下架商品" %>&goods_id="+goods_id;
-})
-}
-</script>
+<script src="js/SecondHandPages_JS/myPublishDemoJs.js"></script>
 
 <!-- 主体部分 -->
 <%
@@ -87,7 +79,7 @@ ArrayList myPublish_infos = (ArrayList)session.getAttribute("myPublish_infos");
                     <td class="text-center text-lg text-medium"><%=goods_stock%></td>
                     <!--  第3列 -->
                     <td class="text-center">
-                        <a class="btn btn-sm btn-outline-danger" onClick="tips(<%=goods_id %>)">下架商品</a>
+                        <a class="btn btn-sm btn-outline-danger" id="<%=goods_id %>" onClick="deleteGoods(<%=goods_id %>)">下架商品</a>
                     </td>
                 </tr>
                 </tbody>

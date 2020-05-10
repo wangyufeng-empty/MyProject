@@ -7,6 +7,7 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
+<script src="js/SecondHandPages_JS/WishListJs.js"></script>
 <%
 ArrayList WiListInfos = (ArrayList)session.getAttribute("WiListInfos");
 user_info user = new user_info();
@@ -61,7 +62,7 @@ String userName = (String)session.getAttribute("userName");
                         <thead>
                         <tr>
                             <th>名称</th>
-                            <th class="text-center"><a class="btn btn-sm btn-outline-danger" href="usuallyController?url=<%="清空收藏"%>">清空收藏</a></th>
+                            <th class="text-center"><a class="btn btn-sm btn-outline-danger" id="deleteWishList">清空收藏</a></th>
                         </tr>
                         </thead>    
 <%	
@@ -88,7 +89,7 @@ String userName = (String)session.getAttribute("userName");
                                     </div>
                                 </div>
                             </td>
-                            <td class="text-center"><a class="remove-from-cart" href="usuallyController?url=<%="移除一个收藏"%>&goods_id=<%=goods_id %>&goods_name=<%=goods_name %>" data-toggle="tooltip" title="移除"><i class="icon-cross"></i></a></td>
+                            <td class="text-center"><a class="remove-from-cart" onclick="removeItemFromWishList('<%=goods_id %>','<%=goods_name %>')" data-toggle="tooltip" title="移除"><i class="icon-cross"></i></a></td>
                         </tr>
               <%} %>   
                         

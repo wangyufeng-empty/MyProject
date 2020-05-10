@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  //用来创建会话
 
 import beans.user_info;
+import net.sf.json.JSONObject;
 import beans.CollectInfoFor_IR;
 import beans.IntelligentRecommendation;
 
@@ -31,14 +32,22 @@ public class userRegisterController extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 PrintWriter out = response.getWriter();
-		 HttpSession session = request.getSession();
-		 response.setContentType("text/html;charset=utf-8");
-		 response.setCharacterEncoding("UTF-8"); 
-		 request.setCharacterEncoding("UTF-8"); 
+		 
+		 /*****设置请求时的编码格式*****/
+		request.setCharacterEncoding("utf-8");
+
+		/*****设置响应时的编码格式*****/
+		response.setCharacterEncoding("utf-8");
+		
+		/*****设置浏览器显示时的显示格式*****/
+		response.setContentType("text/html;charset=utf-8");	
+		
+		PrintWriter out = response.getWriter();
+		HttpSession session = request.getSession();
 		 /*新建一个用户对象*/
 		 user_info user = new user_info();
-		
+		 JSONObject resultJson = new JSONObject();  //创建一个json对象，用于存放处理结果
+		 String returnMessage = "";  //用于接收返回的消息
 		int result = 0;
 		String userId = request.getParameter("userId");//获取学号
 		String username = request.getParameter("userName");//获取姓名
@@ -81,10 +90,9 @@ public class userRegisterController extends HttpServlet {
 		try {
 				if(user.checkName())  //存在
 				{
-					String message = "该用户已被注册！";
-					session.setAttribute("message", message);
-					response.sendRedirect("register.jsp");
-					//response.sendRedirect("userExist.jsp");
+					returnMessage = "该用户已被注册！";
+					resultJson.put("returnMessage", returnMessage);
+					out.print(resultJson.toString());  //输出回ajax
 				}
 				else					
 				{
@@ -112,21 +120,22 @@ public class userRegisterController extends HttpServlet {
 							if(result==1){System.out.println(userId+": CollectInfo_forIR初始化成功！");}
 							/*结束初始化*/
 							
-							session.setAttribute("successMessage", "注册成功");    //返回登录界面，这个图标不一样
-							response.sendRedirect("login.jsp");					
-							//response.sendRedirect("registerSuccess.jsp");
+							returnMessage = "注册成功，快去登录吧";
+							resultJson.put("returnMessage", returnMessage);
+							out.print(resultJson.toString());  //输出回ajax				
 						}
 						else //注册失败
 						{
-							session.setAttribute("message", "注册失败");    //返回登录界面，这个图标不一样
-							response.sendRedirect("login.jsp");		
+							returnMessage = "注册失败";
+							resultJson.put("returnMessage", returnMessage);
+							out.print(resultJson.toString());  //输出回ajax						
 						}
 					}
 					else{  //实名认证失败
-						session.setAttribute("message", "实名认证失败！请咨询管理员或检查您的学号和姓名是否对应");    //返回注册界面，这个图标不一样
-						response.sendRedirect("register.jsp");		
+							returnMessage = "实名认证失败！请咨询管理员或检查您的学号和姓名是否对应";
+							resultJson.put("returnMessage", returnMessage);
+							out.print(resultJson.toString());  //输出回ajax		
 					}
-					
 						
 				}
 		} catch (ClassNotFoundException | SQLException e) {

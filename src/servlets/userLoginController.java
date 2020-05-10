@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;  //用来创建会话
 
 import beans.user_info;
+import net.sf.json.JSONObject;
 import beans.Administrators;
 import beans.AnsjSplitAndWordCount;
 import beans.IntelligentRecommendation;
@@ -49,6 +50,8 @@ public class userLoginController extends HttpServlet {
 		
 		user_info user = new user_info();//新建一个用户对象
 		Administrators admin = new Administrators();//新建一个管理员对象，用于判断登录的用户类型
+		String returnMessage = "";  //待返回的ajax信息
+		JSONObject returnJson = new JSONObject();  //待返回json
 		
 		String username = request.getParameter("username");//获取账号
 		String password = request.getParameter("password");//获取密码
@@ -97,29 +100,33 @@ public class userLoginController extends HttpServlet {
 						        session.setAttribute("userPassword",password);    //用session对象容器装入你的账号和密码  
 						        session.setAttribute("userId", username);     //用户ID
 						        session.setAttribute("login_state","true"); //设置登录状态为  true 
-						        response.sendRedirect("index.jsp");	
+						        //response.sendRedirect("index.jsp");//在前台含有ajax的时候会被拦截，无法跳转
+						        String goUrl = "index.jsp";
+								returnJson.put("goUrl", goUrl);
+								out.print(returnJson.toString());
 							
 						}//end accountState=1
 						else //用户账号被封禁，无法登录
 						{
-							String message = "您的账户已被封禁，请联系管理员！";
-							session.setAttribute("message", message);
-							response.sendRedirect("login.jsp");	
+							returnMessage = "您的账户已被封禁，请联系管理员！";
+							returnJson.put("returnMessage", returnMessage);
+							out.print(returnJson.toString());
 						}
 									      
 					}
 					else  //否则，密码错误
 					{
-						String message = "密码错误！";
-						session.setAttribute("message", message);
-						response.sendRedirect("login.jsp");
+						returnMessage = "密码错误！";
+						returnJson.put("returnMessage", returnMessage);
+						out.print(returnJson.toString());
+						
 					}
 				}
 				else //用户名不存在，提示注册
 				{
-					String message = "账号不存在，请先注册！";
-					session.setAttribute("message", message);
-					response.sendRedirect("login.jsp");
+					returnMessage = "账号不存在，请先注册！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());
 					
 				}
 			} //username==12
@@ -140,23 +147,23 @@ public class userLoginController extends HttpServlet {
 				        session.setAttribute("adminId", username);     
 				        session.setAttribute("login_state","true"); //设置登录状态为  true 
 				        //response.sendRedirect("Manager-Index.jsp");
-				        response.sendRedirect("http://localhost:8080/SecondHandShopping_BSM/html/index.html");
+				        //response.sendRedirect("http://wyfbuy.free.idcfengye.com/SecondHandShopping_BSM/html/index.html");
+				        String goUrl = "http://localhost:8080/SecondHandShopping_BSM/html/index.html";
+						returnJson.put("goUrl", goUrl);
+						out.print(returnJson.toString());
 					}
 					else  //否则，密码错误
 					{
-						String message = "密码错误！";
-						session.setAttribute("message", message);
-						response.sendRedirect("login.jsp");
-						
+						returnMessage = "密码错误！";
+						returnJson.put("returnMessage", returnMessage);
+						out.print(returnJson.toString());	
 					}
 				}
 				else //管理员不存在
 				{
-					String message = "管理员账号不存在，请联系开发者：王宇峰！";
-					session.setAttribute("message", message);
-					response.sendRedirect("login.jsp");
-					//request.setAttribute("url", "adminNoExist");//发送给jsp的url以显示不同的内容
-					//request.getRequestDispatcher("userNoExist.jsp").forward(request, response);
+					returnMessage = "管理员账号不存在，请联系开发者：王宇峰！";
+					returnJson.put("returnJson", returnMessage);
+					out.print(returnMessage.toString());	
 				}
 			}
 		}

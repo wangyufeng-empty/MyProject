@@ -7,7 +7,7 @@
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 
-
+<script src="js/SecondHandPages_JS/indexJs.js"></script>
 <!-- 获取参数开始 -->
 <%
 String sort = (String)session.getAttribute("sort");  //得到商品种类
@@ -38,11 +38,13 @@ ArrayList goodsInfo = (ArrayList)session.getAttribute("goodsInfo"); //查询结�
 	                        <h4 class="card-title"><%=goods_name %></h4>
 	                        <p class="text-muted">最低<%= goods_price%>元</p>
 	                        <p class="text-muted">库存<%= goods_stock%>件</p>
-	                         <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="加入收藏" onclick="location.href='usuallyController?url=<%="加入收藏"%>&goods_id=<%=goods_id%>&backUrl=<%="searchCategory.jsp"%>' ">
-	                          <i class="icon-heart"></i>
-	                         </button>
-	                        <a class="btn btn-outline-primary btn-sm" href="usuallyController?url=<%="加入购物车"%>&goods_id=<%=goods_id%>&backUrl=<%="searchCategory.jsp"%>">加入购物车</a>
-	                    </div>
+	                         <button class="btn btn-outline-secondary btn-sm " data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="已选中!" title="加入收藏" id="<%=goods_id%>" onClick="collectGoods(this)" >
+                                	<i class="icon-heart" id="icon_heart"></i>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="已选中!" id="<%=goods_id%>" onclick="addToCart(this)">
+                            			<i class="icon-bag"></i>加入购物车
+                            </button>
+                        </div>
 	                </div>
 	            </div>
 <%

@@ -6,6 +6,7 @@
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<script src="js/SecondHandPages_JS/indexJs.js"></script>
 <%List IR_Goods_Infos = (List)session.getAttribute("IR_Goods_Infos"); %>
 <%
 Map OneGoodsInfo = (Map)session.getAttribute("goodsInfo"); //得到服务器端session的请求货物信息
@@ -139,11 +140,13 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
                         </div>
                     </div>
                     <div class="sp-buttons mt-2 mb-2">
-                        <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="加入收藏" data-original-title="加入收藏" onclick="location.href='usuallyController?url=<%="加入收藏"%>&goods_id=<%=goods_id%>&backUrl=<%="OneGoods-Detail-Demo.jsp"%>' ">
-                            <i class="icon-heart"></i>
-                        </button>
-                        <button class="btn btn-primary" data-toast="" data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="成功加入购物车!" onclick="location.href='usuallyController?url=<%="加入购物车"%>&goods_id=<%=goods_id%>&backUrl=<%="OneGoods-Detail-Demo.jsp"%>' "><i class="icon-bag"></i> 加入购物车</button>
-                        <button type="button" publisher="<%=goods_publisher %>" class="btn btn-primary contactPublisher" >
+                        	<button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="已选中!" title="加入收藏" id="<%=goods_id%>" onClick="collectGoods(this)" >
+                                	<i class="icon-heart" id="icon_heart"></i>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="已选中!" id="<%=goods_id%>" onclick="addToCart(this)">
+                            		<i class="icon-bag"></i>加入购物车
+                            </button>
+                            <button type="button" publisher="<%=goods_publisher %>" class="btn btn-primary contactPublisher" >
                             <i class="layui-icon">&#xe626;</i> 联系卖家
                         </button>
                     </div>
@@ -221,11 +224,12 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
 	                    <h4 class="product-price">${IR_Goods_Info.goods_price} 元</h4>
 	                    <div class="product-buttons">
 	                        <div class="product-buttons">
-	                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="加入收藏" onclick="location.href='usuallyController?url=<%="加入收藏"%>&goods_id=${IR_Goods_Info.goods_id}&backUrl=<%="OneGoods-Detail-Demo.jsp"%>' ">
-                                	<i class="icon-heart"></i>
+	                            <button class="btn btn-outline-secondary btn-sm btn-wishlist" title="加入收藏" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="${IR_Goods_Info.goods_name}" data-toast-message="已选中!" id="${IR_Goods_Info.goods_id}" onClick="collectGoods(this)" >
+                                	<i class="icon-heart" id="icon_heart"></i>
                             	</button>
-                            	<button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="${IR_Goods_Info.goods_name}" data-toast-message="成功加入购物车!" onclick="location.href='usuallyController?url=<%="加入购物车"%>&goods_id=${IR_Goods_Info.goods_id}&backUrl=<%="OneGoods-Detail-Demo.jsp"%>' ">
-                            			<i class="icon-bag"></i>加入购物车</button>
+                            	<button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="${IR_Goods_Info.goods_name}" data-toast-message="已选中!" id="${IR_Goods_Info.goods_id}" onclick="addToCart(this)">
+                            			<i class="icon-bag"></i>加入购物车
+                            	</button>
 	                        </div>
 	                    </div>
 	                </div>
