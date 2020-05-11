@@ -181,7 +181,7 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
         <ul>
 <!--    class="active"  用来加亮标签 -->
             <li >
-                <a href="index.jsp"><span>主页</span></a>
+                <a href="usuallyController?url=<%="getAllRotationChart"%>"><span>主页</span></a>
             </li>
             
             <li>            

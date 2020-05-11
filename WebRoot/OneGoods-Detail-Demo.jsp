@@ -49,15 +49,15 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
                 <div class="product-gallery"><span class="product-badge text-danger">左右滑动查看图片</span>
                 
                     <div class="product-carousel owl-carousel">                
-                       <c:forEach items="${goodsPictures_list}" var="goodsPicture">	               					
-							<div data-hash="${goodsPicture.product_image}"><img src="${goodsPicture.product_image}" alt="Product"></div>					
+                       <c:forEach items="${goodsPictures_list}" var="goodsPicture" varStatus="status">	               					
+							<div data-hash="${status.count}"><img src="${goodsPicture.product_image}" alt="Product"></div>					
 					   </c:forEach>
                     </div>
                     
                     <ul class="product-thumbnails">
-                    	<c:forEach items="${goodsPictures_list}" var="goodsPicture">	
+                    	<c:forEach items="${goodsPictures_list}" var="goodsPicture" varStatus="status">	
                 			
-							<li><a href="#${goodsPicture.product_image}"><img src="${goodsPicture.product_image}" alt="Product"></a></li>
+							<li><a href="#${status.count}"><img src="${goodsPicture.product_image}" alt="Product"></a></li>
 					
 					    </c:forEach>
 					    

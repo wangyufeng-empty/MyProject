@@ -20,6 +20,7 @@ import beans.Administrators;
 import beans.AnsjSplitAndWordCount;
 import beans.IntelligentRecommendation;
 import beans.CollectInfoFor_IR;
+import beans.GoodsPicture;
 
 //@WebServlet("/userLoginController")
 public class userLoginController extends HttpServlet {
@@ -99,8 +100,13 @@ public class userLoginController extends HttpServlet {
 								session.setAttribute("userName", userNickname);     //用户名
 						        session.setAttribute("userPassword",password);    //用session对象容器装入你的账号和密码  
 						        session.setAttribute("userId", username);     //用户ID
-						        session.setAttribute("login_state","true"); //设置登录状态为  true 
-						        //response.sendRedirect("index.jsp");//在前台含有ajax的时候会被拦截，无法跳转
+						        session.setAttribute("login_state","true"); //设置登录状态为  true
+						        
+						        /*更新轮播图的session*/
+						        GoodsPicture goods_picture = new GoodsPicture();
+						        List RotationChartList = goods_picture.getAllRotationChart();
+								session.setAttribute("RotationChartList", RotationChartList);
+						       
 						        String goUrl = "index.jsp";
 								returnJson.put("goUrl", goUrl);
 								out.print(returnJson.toString());
@@ -148,7 +154,7 @@ public class userLoginController extends HttpServlet {
 				        session.setAttribute("login_state","true"); //设置登录状态为  true 
 				        //response.sendRedirect("Manager-Index.jsp");
 				        //response.sendRedirect("http://wyfbuy.free.idcfengye.com/SecondHandShopping_BSM/html/index.html");
-				        String goUrl = "http://localhost:8080/SecondHandShopping_BSM/html/index.html";
+				        String goUrl = "http://localhost:8080/SecondHandShopping_BSM/user/login?userName="+username+"&userPsw="+password;
 						returnJson.put("goUrl", goUrl);
 						out.print(returnJson.toString());
 					}

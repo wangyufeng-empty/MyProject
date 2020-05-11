@@ -70,5 +70,54 @@ public class GoodsPicture {
 		return result;
 	}
 	
+	/*获取所有homePage_show=1的list*/
+	public List getRCFromGoodsImg() throws ClassNotFoundException, SQLException{
+		List AllRotationChart = null;
+		String sql = "select * from goods_picture where homePage_show=1";
+		AllRotationChart = db.getList(sql, null);
+		return AllRotationChart;
+	}
 	
+	/*获取所有轮播图*/
+	public List getAllRotationChart() throws ClassNotFoundException, SQLException{
+		/*回调LIST对象*/
+		List returnList = new ArrayList<>();
+		
+		/*创建对象*/
+		//GoodsPicture AllRotationChartList = new GoodsPicture();
+		Goods GoodsInfo = new Goods();
+		/*接收所有轮播图,homePage_show=1的list*/			
+		List RCFromGoodsImg = this.getRCFromGoodsImg();		
+		System.out.println("轮播图RCFromGoodsImg:"+RCFromGoodsImg.toString());  ////////
+		/*需要的三个属性*/
+		String product_image = ""; //图片*
+		String goods_id="";  //借助id查找名字和价格
+		String goods_name="";//名字 *
+		double goods_price = 0.0;//价格 *
+		/**********开始循环取三个属性************/
+		for(int i=0;i<RCFromGoodsImg.size();i++){
+			/*用每个json对象暂存新的关系*/
+			Map oneMap = new HashMap<>();;
+			/*取每一条记录分别处理*/
+			Map RotationChart = (Map)RCFromGoodsImg.get(i);
+			product_image = RotationChart.get("product_image").toString(); // 1 取出的是商品图片路径 
+			goods_id = RotationChart.get("goods_id").toString(); 
+			
+			/*取另外两个属性*/
+			GoodsInfo.setGoodsId(goods_id);
+			Map goods_info = GoodsInfo.getGoodsInfo();
+			goods_name = goods_info.get("goods_name").toString(); // 2
+			goods_price = Double.parseDouble(goods_info.get("goods_price").toString()); // 3
+			/*把三个属性组成一个object放在JSONArray中*/
+			oneMap.put("goods_id", goods_id);
+			oneMap.put("product_image", product_image);
+			oneMap.put("goods_name", goods_name);
+			oneMap.put("goods_price", goods_price);
+			/*将map数据加入到LIST中*/
+			returnList.add(oneMap);
+		}// end for
+		System.out.println("轮播图returnList:"+returnList.toString());  ////////
+		/*返回LIST*/
+		return returnList;
+	}
 }

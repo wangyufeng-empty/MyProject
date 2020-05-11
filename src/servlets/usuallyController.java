@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import beans.*;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class usuallyController extends HttpServlet {
@@ -1270,7 +1271,8 @@ public class usuallyController extends HttpServlet {
 		
 		
 		}
-
+		
+		/***************************  27-查看用户信息，用于即时通讯*****************************************/
 		else if(url.equals("userInfo"))  //查询用户信息
 		{
 			String jsonObj = "";
@@ -1304,6 +1306,23 @@ public class usuallyController extends HttpServlet {
 			}
 		}
 		
+		/***************************  28-获得轮播图 *****************************************/
+		else if("getAllRotationChart".equals(url)){
+			System.out.println("获取轮播图");
+			GoodsPicture goods_picture = new GoodsPicture();
+			/*获取轮播图*/
+			try {
+			/*封装了获取轮播图的方法getAllRotationChart*/
+			List RotationChartList = goods_picture.getAllRotationChart();
+			session.setAttribute("RotationChartList", RotationChartList);
+			response.sendRedirect("index.jsp"); 		
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}
 			
 			
 		

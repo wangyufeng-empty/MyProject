@@ -4,84 +4,46 @@
 
 <html lang="zxx" >
 <body style="height: 100%">
-<script src="js/SecondHandPages_JS/indexJs.js"></script>
-<script src="js/jquery.js" type="text/javascript"></script>
+
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%List IR_Goods_Infos = (List)session.getAttribute("IR_Goods_Infos"); %>
+<script src="js/SecondHandPages_JS/indexJs.js"></script>
+<script src="js/jquery.js" type="text/javascript"></script>
 <div class="offcanvas-wrapper">
     <!-- 开始图片轮播 -->
-    <div class="hero-slider home-1-hero">
-        <div class="owl-carousel large-controls dots-inside" data-owl-carousel='{"nav": true, "dots": true, "loop": true, "autoplay": true, "autoplayTimeou": 7000}'>
-        
-            <!-- 开始第一张轮播 #1 -->
-            <div class="item">
-                <div class="container padding-top-3x">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="col-lg-5 col-md-6 padding-bottom-2x text-md-left text-center hidden-md-down">
-                        
-                            <div class="from-bottom">
-                                <img class="d-inline-block w-150 mb-4" src="assets/images/hero-slider/logo02.png" alt="Puma">
-                                <div class="h2 text-body text-normal mb-2 pt-1">JavaWeb实战开发教程</div>
-                                <div class="h2 text-body text-normal mb-4 pb-1">最低只要<span class="text-bold">59元</span></div>
-                            </div>
-                            
-                            <a class="btn btn-primary scale-up delay-1" href="#">立即购买</a>
-                        </div>
-                        <div class="col-md-6 padding-bottom-2x mb-3">
-                            <img class="d-block mx-auto" src="assets/images/hero-slider/02.jpg" alt="Puma Backpack">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- 结束第一张轮播 #1 -->
-            
-            
-            <!-- Start Slide #2 -->
-            <div class="item">
-                <div class="container padding-top-3x">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="col-lg-5 col-md-6 padding-bottom-2x text-md-left text-center hidden-md-down">
-                            <div class="from-bottom">
-                                <img class="d-inline-block w-200 mb-4" src="assets/images/hero-slider/logo01.png" alt="Converse">
-                                <div class="h2 text-body text-normal mb-2 pt-1">Python大数据人工智能开发教程</div>
-                                <div class="h2 text-body text-normal mb-4 pb-1">最低只要 <span class="text-bold">88元</span></div>
-                            </div>
-                            <a class="btn btn-primary scale-up delay-1" href="#">立即购买</a>
-                        </div>
-                        <div class="col-md-6 padding-bottom-2x mb-3">
-                            <img class="d-block mx-auto" src="assets/images/hero-slider/01.jpg" alt="Chuck Taylor All Star II">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Slide #2 -->
-            
-            
-            <!-- Start Slide #3 -->
-            <div class="item">
-                <div class="container padding-top-3x">
-                    <div class="row justify-content-center align-items-center">
-                        <div class="col-lg-5 col-md-6 padding-bottom-2x text-md-left text-center hidden-md-down">
-                            <div class="from-bottom">
-                                <img class="d-inline-block mb-4 home-1-hero-item" src="assets/images/hero-slider/logo03.png" alt="Motorola">
-                                <div class="h2 text-body text-normal mb-2 pt-1">LG 超大计算机显示屏</div>
-                                <div class="h2 text-body text-normal mb-4 pb-1">最低只要 <span class="text-bold">2288元</span></div>
-                            </div>
-                            <a class="btn btn-primary scale-up delay-1" href="#">立即购买</a>
-                        </div>
-                        <div class="col-md-6 padding-bottom-2x mb-3">
-                            <img class="d-block mx-auto" src="assets/images/hero-slider/03.png" alt="Moto 360">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Slide #3 -->
-            
-           </div> 
-        </div>
+<div id="rotationChart"> 
+  	
+  	<div class='hero-slider home-1-hero'>
+    <div class='owl-carousel large-controls dots-inside' data-owl-carousel='{"nav": true, "dots": true, "loop": true, "autoplay": true, "autoplayTimeou": 7000}'>
+    
+	   	 <c:forEach items="${sessionScope.RotationChartList}" var="RotationChart" varStatus="status">	
+			   	<!--开始一张图片 -->
+		        <div class='item'>
+		            <div class='container padding-top-3x'>
+		                <div class='row justify-content-center align-items-center'>
+		                    <div class='col-lg-5 col-md-6 padding-bottom-2x text-md-left text-center hidden-md-down'>
+		                        <div class='from-bottom'>
+		                            <img class='d-inline-block w-150 mb-4' src='assets/images/hero-slider/logo02.png' alt='Puma'>
+		                            <div class='h2 text-body text-normal mb-2 pt-1'>${RotationChart.goods_name }</div>
+		                            <div class='h2 text-body text-normal mb-4 pb-1'>最低只要
+		                                <span class='text-bold'>${RotationChart.goods_price }元</span></div>
+		                        </div>
+		                        <a class="btn btn-primary scale-up delay-1" href="usuallyController?url=商品详情&goods_id=${RotationChart.goods_id }">查看详情</a></div>
+		                    <div class='col-md-6 padding-bottom-2x mb-3'>
+		                        <img class='d-block mx-auto' src="${RotationChart.product_image }" alt='Puma Backpack'></div>
+		                </div>
+		            </div>
+		        </div>
+		        <!--结束一张图片 -->
+	   	 </c:forEach>
+		
     </div>
+</div>
+  	
+  	
+</div>
     <!-- End Main Slider -->
     
     
@@ -198,7 +160,8 @@
         </div>
     </section>
     <!-- 结束推荐商品 -->
-    
+   
+</div> 
 <!--固定页脚部分 -->
 <%@ include file="footer.jsp"%>
    
