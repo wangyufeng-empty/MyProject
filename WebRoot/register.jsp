@@ -11,6 +11,7 @@
 <link href="css/bootsnav.css" type="text/css" rel="stylesheet">
 <link href="css/normalize.css" type="text/css" rel="stylesheet">
 <link href="css/css.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="assets/css/loadGif.css"/>
 <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/bootsnav.js" type="text/javascript"></script>
@@ -24,6 +25,11 @@
 <title>注册校园二手交易网账号</title>
 </head>
 <body class="logobg_style" >
+<div class="hidden_div" id="coverDiv">
+</div>
+<div >
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
   	<div id="large-header" class="large-header login-page">
   		<canvas id="demo-canvas" width="1920" height="1080"></canvas>  
   		<div class="login-form"> 

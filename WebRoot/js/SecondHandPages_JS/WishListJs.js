@@ -1,4 +1,6 @@
 $(document).ready(function(){
+
+	
 	
 	$("#deleteWishList").on("click",function(){
 		console.log("clearGoodsCart");
@@ -13,6 +15,11 @@ $(document).ready(function(){
 				 cache: false,
 				 data:data,  //重点必须为一个变量如：data
 				 dataType:'json', 
+				 beforeSend: function (){
+	                 //ajax刷新前加载load动画
+					$("#coverDiv").css("display","block");
+					$("#loadgif").css("display","block");
+	             },
 				 success:function(data){  
 					 var returnJson = eval(data);				 
 					 if(returnJson.hasOwnProperty("status")){  //如果回调为成功的信息
@@ -25,7 +32,12 @@ $(document).ready(function(){
 				 },
 				 error:function(){ 
 					 alert("请求失败");
-				 }
+				 },
+				 complete:function () {			 
+	                 //完成以后隐藏load动画
+					$("#coverDiv").css("display","none");
+					$("#loadgif").css("display","none");
+	             }
 			});//end ajax
 		}); //end confirm
 		
@@ -46,6 +58,11 @@ function removeItemFromWishList(goods_id,goods_name){
 			 cache: false,
 			 data:data,  //重点必须为一个变量如：data
 			 dataType:'json', 
+			 beforeSend: function (){
+                 //ajax刷新前加载load动画
+				$("#coverDiv").css("display","block");
+				$("#loadgif").css("display","block");
+             },
 			 success:function(data){  
 				 var returnJson = eval(data);
 				 
@@ -56,7 +73,12 @@ function removeItemFromWishList(goods_id,goods_name){
 			 },
 			 error:function(){ 
 				 alert("请求失败");
-			 }
+			 },
+			 complete:function () {			 
+                 //完成以后隐藏load动画
+				$("#coverDiv").css("display","none");
+				$("#loadgif").css("display","none");
+             }
 		});//end ajax
 	}); //end confirm
 }//end function

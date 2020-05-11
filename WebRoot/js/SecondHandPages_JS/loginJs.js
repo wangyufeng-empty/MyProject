@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+	
 //登录操作
 $("#login").click(function(){
 	
@@ -34,6 +34,11 @@ $("#login").click(function(){
 		 cache: false,
 		 data:data,  //重点必须为一个变量如：data
 		 dataType:'json', 
+		 beforeSend: function (){
+             //ajax刷新前加载load动画
+			$("#coverDiv").css("display","block");
+			$("#loadgif").css("display","block");
+         },
 		 success:function(data){  
 			var returnJson = eval(data);
 			//判断返回的json中是否含有某个属性
@@ -49,7 +54,12 @@ $("#login").click(function(){
 		 error:function(){ 
 		  alert("请求失败");
 		  $("#login").removeAttr("disabled");
-		 }
+		 },
+		 complete:function () {			 
+             //完成以后隐藏load动画
+			$("#coverDiv").css("display","none");
+			$("#loadgif").css("display","none");
+         }
 	});  //end ajax
 });   //end click login
 	

@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	
+
 	/*注意一个大坑，ID名不要和函数名重合/相同了*/
 	$("#savaUserTradeInfo").attr("onclick","SavaUserTradeInfo()");
 	
@@ -51,6 +51,11 @@ function SavaUserTradeInfo(){
 		 cache: false,
 		 data:data,  //重点必须为一个变量如：data
 		 dataType:'json', 
+		 beforeSend: function (){
+             //ajax刷新前加载load动画
+			$("#coverDiv").css("display","block");
+			$("#loadgif").css("display","block");
+         },
 		 success:function(data){  
 			 var returnJson = eval(data);
 			 
@@ -63,7 +68,12 @@ function SavaUserTradeInfo(){
 		 },
 		 error:function(){ 
 			 alert("请求失败");
-		 }
+		 },
+		 complete:function () {			 
+             //完成以后隐藏load动画
+			$("#coverDiv").css("display","none");
+			$("#loadgif").css("display","none");
+         }
 	});//end ajax
 	
 };//end function

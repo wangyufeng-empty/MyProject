@@ -21,7 +21,11 @@ String goods_publisher = (String)OneGoodsInfo.get("goods_publisher");  //发布�
 String goods_category = (String)OneGoodsInfo.get("goods_category");  //发布分类
 int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //库存
 %>
-
+<div class="hidden_div" id="coverDiv">
+</div>
+<div >
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <div>
     <!-- Start Page Title -->
     <div class="page-title">

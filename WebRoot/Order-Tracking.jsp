@@ -8,6 +8,11 @@
 <%@ include file="header.jsp" %>
 <!-- 主体部分 -->
 <%String order_id = (String)session.getAttribute("order_id"); %>
+<div class="hidden_div" id="coverDiv">
+</div>
+<div>
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
     <div class="page-title">
@@ -32,7 +37,7 @@
             <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
                 <div class="w-100 text-center py-1 px-2"><span class='text-medium'>邮寄方式:</span>燕大快递</div>
                 <div class="w-100 text-center py-1 px-2"><span class='text-medium'>状态:</span> 出货检查</div>
-                <div class="w-100 text-center py-1 px-2"><span class='text-medium'>预计到达:</span> 2019年7月16日</div>
+                <div class="w-100 text-center py-1 px-2"><span class='text-medium'>预计到达:</span> 2020年6月7日</div>
             </div>
             <div class="card-body">
                 <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">

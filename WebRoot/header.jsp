@@ -40,7 +40,7 @@
     <script src="js/jquery.min.js"></script>
 	<script src="js/jQuery.upload.min.js"></script>
 	<link rel="stylesheet" href="css/upload.css">
-    
+    <link rel="stylesheet" type="text/css" href="assets/css/loadGif.css"/>
     
 	<script src="layer/layer/layer.js"></script>
 	<link rel="stylesheet" href="layui/css/layui.css">
@@ -210,6 +210,9 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
             
             <li>
                 <a href="account-update.jsp"><span>个人中心</span></a>
+            </li>
+            <li>
+                <a href="usuallyController?url=<%="通知公告"%>"><span>通知公告</span></a>
             </li>
             
         </ul>

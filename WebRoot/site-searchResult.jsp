@@ -12,6 +12,11 @@
 <%
 ArrayList goodsInfo = (ArrayList)session.getAttribute("goodsInfo"); 
 %>
+<div class="hidden_div" id="coverDiv">
+</div>
+<div >
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
  <section class="container padding-top-3x padding-bottom-3x">
         <h3 class="text-center mb-30">搜索结果</h3>
         <div class="owl-carousel"

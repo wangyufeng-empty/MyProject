@@ -8,6 +8,11 @@
 <script src="js/SecondHandPages_JS/myPublishDemoJs.js"></script>
 
 <!-- 主体部分 -->
+<div class="hidden_div" id="coverDiv">
+</div>
+<div>
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <%
 ArrayList myPublish_infos = (ArrayList)session.getAttribute("myPublish_infos");
 %>

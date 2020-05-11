@@ -11,6 +11,11 @@
 <%List IR_Goods_Infos = (List)session.getAttribute("IR_Goods_Infos"); %>
 <script src="js/SecondHandPages_JS/indexJs.js"></script>
 <script src="js/jquery.js" type="text/javascript"></script>
+<div class="hidden_div" id="coverDiv">
+</div>
+<div >
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <div class="offcanvas-wrapper">
     <!-- 开始图片轮播 -->
 <div id="rotationChart"> 
@@ -32,7 +37,7 @@
 		                        </div>
 		                        <a class="btn btn-primary scale-up delay-1" href="usuallyController?url=商品详情&goods_id=${RotationChart.goods_id }">查看详情</a></div>
 		                    <div class='col-md-6 padding-bottom-2x mb-3'>
-		                        <img class='d-block mx-auto' src="${RotationChart.product_image }" alt='Puma Backpack'></div>
+		                        <img class='d-block mx-auto' src="${RotationChart.product_image }" alt='Puma Backpack' style="width: 500px;height: 400px;"></div>
 		                </div>
 		            </div>
 		        </div>

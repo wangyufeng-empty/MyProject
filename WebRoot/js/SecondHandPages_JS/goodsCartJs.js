@@ -1,5 +1,7 @@
 $(document).ready(function(){
+
 	
+	/*清空购物车*/
 	$("#clearGoodsCart").on("click",function(){
 		console.log("clearGoodsCart");
 		layer.confirm("你确定要清空所有已选商品吗",function(){
@@ -11,17 +13,27 @@ $(document).ready(function(){
 				 cache: false,
 				 data:data,  //重点必须为一个变量如：data
 				 dataType:'json', 
+				 beforeSend: function (){
+	                 //ajax刷新前加载load动画
+					$("#coverDiv").css("display","block");
+					$("#loadgif").css("display","block");
+	             },
 				 success:function(data){  
 					 var returnJson = eval(data);
 					 
 					 if(returnJson.hasOwnProperty("status")){  //如果回调为成功的信息
-						 parent.layer.msg(returnJson.returnMessage,{icon:6,time:2500,end:function(){window.location.reload();}});
+						 parent.layer.msg(returnJson.returnMessage,{icon:6,time:1000,end:function(){window.location.reload();}});
 					 }
 					 else parent.layer.msg(returnJson.returnMessage,{icon:5,time:4000}); 
 				 },
 				 error:function(){ 
 					 alert("请求失败");
-				 }
+				 },
+				 complete:function () {			 
+	                 //完成以后隐藏load动画
+					$("#coverDiv").css("display","none");
+					$("#loadgif").css("display","none");
+	             }
 			});//end ajax
 		}); //end confirm
 		
@@ -49,6 +61,11 @@ function submitSelectedQuantity(goods_id,selectedQuantity)
 			 cache: false,
 			 data:data,  //重点必须为一个变量如：data
 			 dataType:'json', 
+			 beforeSend: function (){
+                 //ajax刷新前加载load动画
+				$("#coverDiv").css("display","block");
+				$("#loadgif").css("display","block");
+             },
 			 success:function(data){  
 				 var returnJson = eval(data);
 				 
@@ -59,7 +76,12 @@ function submitSelectedQuantity(goods_id,selectedQuantity)
 			 },
 			 error:function(){ 
 				 alert("请求失败");
-			 }
+			 },
+			 complete:function () {			 
+                 //完成以后隐藏load动画
+				$("#coverDiv").css("display","none");
+				$("#loadgif").css("display","none");
+             }
 		});//end ajax
 	}
 	

@@ -11,6 +11,12 @@
 <%@ include file="header.jsp" %>
 <script src="js/SecondHandPages_JS/indexJs.js"></script>
 <!-- 主体部分 -->
+
+<div class="hidden_div" id="coverDiv">
+</div>
+<div>
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <!-- Start Hero Products -->
     <section class="bg-secondary padding-top-3x padding-bottom-3x">
         <div class="container">

@@ -6,7 +6,11 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
-
+<div class="hidden_div" id="coverDiv">
+</div>
+<div >
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <script src="js/SecondHandPages_JS/indexJs.js"></script>
 <!-- 获取参数开始 -->
 <%

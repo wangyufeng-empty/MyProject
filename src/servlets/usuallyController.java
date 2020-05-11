@@ -1319,12 +1319,22 @@ public class usuallyController extends HttpServlet {
 			} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
-			
+			}			
 		}
 			
-			
+		/***************************  29-请求通知公告 *****************************************/
+		else if("通知公告".equals(url)){
+			AnnouncementInfo announcement = new AnnouncementInfo();
+			 
+			try {
+			List announcementList = announcement.getAllAnnouncementInfo();			
+			session.setAttribute("announcementList", announcementList);
+			response.sendRedirect("Announcement-Info-Demo.jsp"); 		
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	} //doPost end
 }// class end

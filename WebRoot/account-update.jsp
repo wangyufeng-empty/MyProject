@@ -21,10 +21,13 @@ String selfBlessing = (String)userinfo.get("self_blessing");
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
-
-
 <input type="hidden" id="user_grade" value="<%=userGrade %>"/>
 <!-- 主体部分 -->
+<div class="hidden_div" id="coverDiv">
+</div>
+<div>
+	<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
     <div class="page-title">

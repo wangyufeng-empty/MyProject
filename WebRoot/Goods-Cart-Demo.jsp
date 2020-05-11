@@ -20,6 +20,11 @@ if(cartsInfo.size() != 0)
 %>
 
 <!-- 主体部分 -->
+<div class="hidden_div" id="coverDiv">
+</div>
+<div>
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
     <div class="page-title">

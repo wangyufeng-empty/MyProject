@@ -9,6 +9,11 @@
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 <!-- 主体部分 -->
+<div class="hidden_div" id="coverDiv">
+</div>
+<div>
+		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
+</div>
 <%
 double total_price = Double.parseDouble(session.getAttribute("total_price").toString());  //获得总价  
 Map userInfo = (HashMap)session.getAttribute("userInfo");

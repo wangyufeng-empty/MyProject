@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	
+
 	/*为下拉框选择默认值*/
 	var user_grade = $("#user_grade").val();
 	$("#"+user_grade).attr("selected","true");
@@ -47,6 +47,11 @@ function SaveUserInfo(){
 		 cache: false,
 		 data:data,  //重点必须为一个变量如：data
 		 dataType:'json', 
+		 beforeSend: function (){
+             //ajax刷新前加载load动画
+			$("#coverDiv").css("display","block");
+			$("#loadgif").css("display","block");
+         },
 		 success:function(data){  
 			 var returnJson = eval(data);
 			 console.log("请求了ajax");
@@ -59,7 +64,12 @@ function SaveUserInfo(){
 		 },
 		 error:function(){ 
 			 alert("请求失败");
-		 }
+		 },
+		 complete:function () {			 
+             //完成以后隐藏load动画
+			$("#coverDiv").css("display","none");
+			$("#loadgif").css("display","none");
+         }
 	});//end ajax
 	
 };//end function
