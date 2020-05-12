@@ -14,6 +14,7 @@ List<String> goodsPictures_list = (List<String>)session.getAttribute("goodsPictu
 /*接下来分别获取需要的属性*/
 String goods_id = (String)OneGoodsInfo.get("goods_id");//商品id
 String goods_name = (String)OneGoodsInfo.get("goods_name");//商品名字
+String publisher_id = (String)OneGoodsInfo.get("publisher_id");//商品发布者ID
 Double goods_price = Double.parseDouble(OneGoodsInfo.get("goods_price").toString());//价格
 String goods_describe = (String)OneGoodsInfo.get("goods_describe"); //商品描述
 String goods_issuDate = (String)OneGoodsInfo.get("goods_issuDate");  //发布时间
@@ -150,7 +151,7 @@ int goods_stock = Integer.parseInt((String)OneGoodsInfo.get("goods_stock"));  //
                             <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="<%=goods_name %>" data-toast-message="已选中!" id="<%=goods_id%>" onclick="addToCart(this)">
                             		<i class="icon-bag"></i>加入购物车
                             </button>
-                            <button type="button" publisher="<%=goods_publisher %>" class="btn btn-primary contactPublisher" >
+                            <button type="button" publisherId="<%=publisher_id %>" class="btn btn-primary contactPublisher" >
                             <i class="layui-icon">&#xe626;</i> 联系卖家
                         </button>
                     </div>

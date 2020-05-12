@@ -1075,6 +1075,7 @@ public class usuallyController extends HttpServlet {
 			/**********更新货物数据库，新增一条信息********/
 			goods.setGoodsId(goods_id);
 			goods.setGoodsName(goods_name);
+			goods.setPublisher_id(userId);
 			goods.setGoodsPublisher(goods_publisher);
 			goods.setGoodsIssuDate(goods_issuDate);
 			goods.setGoodsCategory(goods_category);
@@ -1280,13 +1281,18 @@ public class usuallyController extends HttpServlet {
 			try {
 				response.setContentType("text/json;charset=utf-8");
 				out = response.getWriter();
-				String username = request.getParameter("username").toString();
+				String publisher_id = request.getParameter("publisher_id").toString();   //直接获得发布者的ID
 				Map<String,Object> dataMap = new HashMap<String,Object>();  //创建数据的json格式
+				String username = "";//用户名
+				
 				user_info userInfo = new user_info();  //创建用户对象，获取用户ID
-				userInfo.setNickname(username);
-				Map userMap = userInfo.getUserinfoByNickname();
+				userInfo.setUsername(publisher_id);  //直接利用user_id查找用户信息
+				Map userMap = userInfo.getUserinfo();
+				username = userMap.get("user_name").toString();  //从找到的这条 用户信息中获取了 user_name
 				dataMap.put("name",username);//昵称
-				dataMap.put("id",userMap == null ? "" : userMap.get("user_id").toString());//ID
+				dataMap.put("id",publisher_id);//ID
+				
+				
 				dataMap.put("type","friend");
 				//头像
 				dataMap.put("avatar","http://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg");

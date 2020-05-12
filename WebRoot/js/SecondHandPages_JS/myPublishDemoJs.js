@@ -8,6 +8,7 @@ function deleteGoods(goods_id){
 	//window.location.href = "usuallyController?url=<%="下架商品" %>&goods_id="+goods_id;
 		var targetUrl = "usuallyController";
 		var data = {"url":"下架商品","goods_id":goods_id};
+		var index = null;
 		$.ajax({ 
 			 type:'post',  
 			 url:targetUrl, 
@@ -16,8 +17,7 @@ function deleteGoods(goods_id){
 			 dataType:'json', 
 			 beforeSend: function (){
                  //ajax刷新前加载load动画
-				$("#coverDiv").css("display","block");
-				$("#loadgif").css("display","block");
+				 index = layer.load(5, {time: 30*1000,shade: [0.1,'#fff']});
              },
 			 success:function(data){  
 				 var returnJson = eval(data);
@@ -34,8 +34,7 @@ function deleteGoods(goods_id){
 			 },
 			 complete:function () {			 
                  //完成以后隐藏load动画
-				$("#coverDiv").css("display","none");
-				$("#loadgif").css("display","none");
+				 layer.close(index);
              }
 		});//end ajax
 })

@@ -65,6 +65,7 @@ $("#register").click(function(){
 	$("#register").attr('disabled',"true");  //防止重复提交
 	var targetUrl = $("#form_register").attr("action");    //获取提交路径
 	var data = $("#form_register").serialize();     //表单数据列表
+	var index = null;
 	$.ajax({ 
 	 type:'post',  
 	 url:targetUrl, 
@@ -73,8 +74,7 @@ $("#register").click(function(){
 	 dataType:'json', 
 	 beforeSend: function (){
          //ajax刷新前加载load动画
-		$("#coverDiv").css("display","block");
-		$("#loadgif").css("display","block");
+		 index = layer.load(1, {time: 30*1000,shade: [0.2,'#000']});
      },
 	 success:function(data){  
 		var returnJson = eval(data);
@@ -90,8 +90,7 @@ $("#register").click(function(){
 	 },
 	 complete:function () {			 
          //完成以后隐藏load动画
-		$("#coverDiv").css("display","none");
-		$("#loadgif").css("display","none");
+		 layer.close(index);
      }
 	});//end ajax
 });   //end click register

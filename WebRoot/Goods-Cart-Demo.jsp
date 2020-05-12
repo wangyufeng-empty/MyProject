@@ -7,9 +7,6 @@
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 <script src="js/SecondHandPages_JS/goodsCartJs.js"></script>
-<script type="text/javascript">
-
-</script>
 
 
 <% 
@@ -47,7 +44,7 @@ if(cartsInfo.size() != 0)
   
         <!-- 开始提示窗口 -->
         <div class="alert alert-info alert-dismissible fade show text-center margin-bottom-1x"><span class="alert-close" data-dismiss="alert"></span>
-            <p><i class="fa fa-bell"></i>欢迎来到你的购物车，在这里，你可以修改选货数量，提交订单等。一件商品一次性不能选购超过五件，注意库存是否充足！ </p>
+            <p><i class="layui-icon layui-icon-cart"></i>&nbsp;&nbsp;欢迎来到你的购物车，在这里，你可以修改选货数量，提交订单等。一件商品一次性不能选购超过五件，注意库存是否充足！ </p>
         </div>        
         <!-- 结束提示 -->                
         <!-- 开始购物车部分 -->
@@ -164,7 +161,7 @@ else
 %>
 		<!-- 开始提示窗口 -->
         <div class="alert alert-info alert-dismissible fade show text-center margin-bottom-1x"><span class="alert-close" data-dismiss="alert"></span>
-            <p><i class="fa fa-bell"></i>欢迎来到你的购物车，你还没有选购哦，快去选购吧！ </p>
+            <p><i class="layui-icon layui-icon-cart"></i>&nbsp;&nbsp;欢迎来到你的购物车，你还没有选购哦，快去选购吧！ </p>
         </div>        
         <!-- 结束提示 -->
          <div class="column">

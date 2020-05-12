@@ -57,31 +57,31 @@ String order_id = (String)session.getAttribute("historyOrder_id");
                 <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
                     <div class="step completed">
                         <div class="step-icon-wrap">
-                            <div class="step-icon"><i class="pe-7s-cart"></i></div>
+                            <div class="step-icon"><i class="layui-icon layui-icon-right"></i></div>
                         </div>
                         <h4 class="step-title">确认订单</h4>
                     </div>
                     <div class="step completed">
                         <div class="step-icon-wrap">
-                            <div class="step-icon"><i class="pe-7s-config"></i></div>
+                            <div class="step-icon"><i class="layui-icon layui-icon-right"></i></div>
                         </div>
                         <h4 class="step-title">提交订单</h4>
                     </div>
                     <div class="step completed">
                         <div class="step-icon-wrap">
-                            <div class="step-icon"><i class="pe-7s-medal"></i></div>
+                            <div class="step-icon"><i class="layui-icon layui-icon-location"></i></div>
                         </div>
                         <h4 class="step-title">出货检查</h4>
                     </div>
                     <div class="step">
                         <div class="step-icon-wrap">
-                            <div class="step-icon"><i class="pe-7s-car"></i></div>
+                            <div class="step-icon"><i class="layui-icon layui-icon-right"></i></div>
                         </div>
                         <h4 class="step-title">发货</h4>
                     </div>
                     <div class="step">
                         <div class="step-icon-wrap">
-                            <div class="step-icon"><i class="pe-7s-home"></i></div>
+                            <div class="step-icon"><i class="layui-icon layui-icon-right"></i></div>
                         </div>
                         <h4 class="step-title">收货</h4>
                     </div>

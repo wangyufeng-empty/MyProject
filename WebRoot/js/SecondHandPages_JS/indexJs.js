@@ -1,6 +1,4 @@
 $(document).ready(function(){
-//	$("#coverDiv").css("display","none");
-//	$("#loadgif").css("display","none");
 }); 
 
 //加入收藏
@@ -11,7 +9,7 @@ function collectGoods(e){
 	var url = "加入收藏";
 	var targetUrl = "usuallyController";
 	var data = {"url":url,"goods_id":goods_id};
-	
+	var index=null;
 	$.ajax({ 
 			 type:'post',  
 			 url:targetUrl, 
@@ -21,8 +19,8 @@ function collectGoods(e){
 			 dataType:'json', 
 			 beforeSend: function (){
                  //ajax刷新前加载load动画
-				$("#coverDiv").css("display","block");
-				$("#loadgif").css("display","block");
+//	
+				index = layer.load(5, {time: 30*1000,shade: [0.1,'#fff']});
              },
 			 success:function(data){  
 				 var returnJson = eval(data);
@@ -39,9 +37,8 @@ function collectGoods(e){
 				 alert("请求失败");
 			 },
 			 complete:function () {			 
-                 //完成以后隐藏load动画
-				$("#coverDiv").css("display","none");
-				$("#loadgif").css("display","none");
+                 //完成以后隐藏load动画		
+				 layer.close(index);
              }
 		});//end ajax
 	
@@ -54,6 +51,7 @@ function addToCart(e){
 	var url = "加入购物车";
 	var targetUrl = "usuallyController";
 	var data = {"url":url,"goods_id":goods_id};
+	var index=null;
 	$.ajax({ 
 			 type:'post',  
 			 url:targetUrl, 
@@ -62,8 +60,8 @@ function addToCart(e){
 			 dataType:'json', 
 			 beforeSend: function (){
                  //ajax刷新前加载load动画
-				$("#coverDiv").css("display","block");
-				$("#loadgif").css("display","block");
+//				
+				 index = layer.load(5, {time: 30*1000,shade: [0.1,'#fff']});
              },
 			 success:function(data){  
 				 var returnJson = eval(data);
@@ -79,8 +77,7 @@ function addToCart(e){
 			 },
 			 complete:function () {			 
                  //完成以后隐藏load动画
-				$("#coverDiv").css("display","none");
-				$("#loadgif").css("display","none");
+				 layer.close(index);
              }
 		});//end ajax
 }

@@ -140,12 +140,12 @@ layui.use('layim', function(){
 
 
 $('.contactPublisher').on('click', function(){
-    var goodsPublisher = $(this).attr("publisher");
+    var publisher_id = $(this).attr("publisherId");
     $.ajax({
         async:false,
         type: "GET",
         url: basePath+'/usuallyController?url=userInfo',
-        data:{"username":goodsPublisher},
+        data:{"publisher_id":publisher_id},
         dataType: "json",
         success: function(rsp){
             var data = rsp.data;

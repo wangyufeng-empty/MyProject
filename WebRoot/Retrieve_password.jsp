@@ -17,45 +17,12 @@
 <script src="js/bootsnav.js" type="text/javascript"></script>
 <script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
 <script src="layer/layer/layer.js"></script>
+<script src="js/SecondHandPages_JS/RetrievePasswordJs.js"></script>
 <!-- <script src="js/jquery.js" type="text/javascript"></script> -->
 <!--[if IE]><script src="js/html5.js"></script><![endif]-->
 <title>重置密码</title>
 </head>
-<%  
-	String message="";
-    message=(String)session.getAttribute("message");
-    
-    if("".equals(message)  || message==null)
-    {}
- 	else
- 	{
-%>
-		<script language="javascript">
-		layer.msg('<%=message%>', {icon: 5});//这句话好坑，坑了我一晚上		    
-		</script>
-<% 
-		session.setAttribute("message", "");  //把message从新设置为空
-	}
-%>
-<script language="javascript">
-function check() 
-{
-	if (form_login.username.value == "") {
-	
-		layer.msg("请输入你的学号");
-		form_login.username.focus();
-		return false;
-		
-	}
-	if (form_login.username.value.length != 12) {
-		
-		layer.msg('学号格式错误');
-		form_login.username.focus();
-		return false;
-		
-	}
-}
-</script>
+
 
 <body class="logobg_style">
 <div class="hidden_div" id="coverDiv">
@@ -71,20 +38,21 @@ function check()
   			<br><br><br>
   				<h2 class="title_name">找回密码</h2>
   				<br><br>
-  				<form action="retrivePasswordController" name="form_login" class="login_padding" method="post" onSubmit="return check();">
+  				<form action="#" name="retrievePswForm" id="retrievePswForm" class="login_padding" method="post">
 				<input type="hidden" name="url" value=<%= "Retrieve_password.jsp"%> />
 				<div class="form-group clearfix">
 					<div class="input-group">
 						<div class="input-group-addon">
 							<i class="icon_user"></i>
 						</div>
-						<input type="text" class="form-control" name="userId" id="username" placeholder="请输入学号" autocomplete="off" oninput="value=value.replace(/[^\d]/g , '')">
-					</div>
+						<input type="text" class="form-control" name="userId" id="user_id" placeholder="请输入学号" autocomplete="off" oninput="value=value.replace(/[^\d]/g , '')">					
+						</div>
+						<span id="userId_tip"></span>
 				</div>
 				
                   <div class="tishi"></div>
 				<div class="form-group">
-				<input type="submit" value="下一步" class="btn btn-danger btn-block btn-login">
+				<input type="button" value="下一步" class="btn btn-danger btn-block btn-login" id="nextStep" onclick="next()"/>
 						
 				</div>
 				<div class=" textright"><a href="login.jsp" class="forget">返回</a></div>

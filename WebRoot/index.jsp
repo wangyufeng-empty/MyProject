@@ -11,11 +11,7 @@
 <%List IR_Goods_Infos = (List)session.getAttribute("IR_Goods_Infos"); %>
 <script src="js/SecondHandPages_JS/indexJs.js"></script>
 <script src="js/jquery.js" type="text/javascript"></script>
-<div class="hidden_div" id="coverDiv">
-</div>
-<div >
-		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
-</div>
+
 <div class="offcanvas-wrapper">
     <!-- 开始图片轮播 -->
 <div id="rotationChart"> 

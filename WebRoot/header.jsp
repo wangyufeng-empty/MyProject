@@ -140,9 +140,10 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
 <!-- Start TopBar -->
 <div class="topbar">
     <div class="topbar-column">
-        <a class="hidden-md-down" href="#"><i class="fa fa-phone"></i>&nbsp;17633360183</a>
-        <a class="hidden-md-down" href="#"><i class="fa fa-envelope-o"></i>&nbsp;905202254@qq.com</a>
-        <a class="hidden-md-down" href="#"><i class="fa fa-map-marker"></i>王宇峰制作</a>
+        <a class="hidden-md-down" href="#"><i class="layui-icon layui-icon-cellphone-fine"></i>&nbsp;&nbsp;17633360183</a>
+        <a class="hidden-md-down" href="#"><i class="layui-icon layui-icon-login-qq"></i>&nbsp;&nbsp;905202254</a>
+        <a class="hidden-md-down" href="#"><i class="layui-icon layui-icon-release"></i>&nbsp;&nbsp;905202254@qq.com</a>
+        <a class="hidden-md-down" href="#"><i class="layui-icon layui-icon-username"></i>&nbsp;&nbsp;王宇峰制作</a>
     </div>
     
 </div>

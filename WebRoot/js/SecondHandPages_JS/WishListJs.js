@@ -9,6 +9,7 @@ $(document).ready(function(){
 			$("#deleteWishList").attr('disabled',"true");  //防止重复提交
 			var targetUrl = "usuallyController";
 			var data = {"url":"清空收藏"};
+			var index = null;
 			$.ajax({ 
 				 type:'post',  
 				 url:targetUrl, 
@@ -17,8 +18,7 @@ $(document).ready(function(){
 				 dataType:'json', 
 				 beforeSend: function (){
 	                 //ajax刷新前加载load动画
-					$("#coverDiv").css("display","block");
-					$("#loadgif").css("display","block");
+					 index = layer.load(5, {time: 30*1000,shade: [0.1,'#fff']});
 	             },
 				 success:function(data){  
 					 var returnJson = eval(data);				 
@@ -35,8 +35,7 @@ $(document).ready(function(){
 				 },
 				 complete:function () {			 
 	                 //完成以后隐藏load动画
-					$("#coverDiv").css("display","none");
-					$("#loadgif").css("display","none");
+					 layer.close(index);
 	             }
 			});//end ajax
 		}); //end confirm
@@ -52,6 +51,7 @@ function removeItemFromWishList(goods_id,goods_name){
 	layer.confirm("确定要移除这件商品吗",function(){
 		var targetUrl = "usuallyController";
 		var data = {"url":"移除一个收藏","goods_id":goods_id,"goods_name":goods_name};
+		var index = null;
 		$.ajax({ 
 			 type:'post',  
 			 url:targetUrl, 
@@ -60,8 +60,7 @@ function removeItemFromWishList(goods_id,goods_name){
 			 dataType:'json', 
 			 beforeSend: function (){
                  //ajax刷新前加载load动画
-				$("#coverDiv").css("display","block");
-				$("#loadgif").css("display","block");
+				 index = layer.load(5, {time: 30*1000,shade: [0.1,'#fff']});
              },
 			 success:function(data){  
 				 var returnJson = eval(data);
@@ -76,8 +75,7 @@ function removeItemFromWishList(goods_id,goods_name){
 			 },
 			 complete:function () {			 
                  //完成以后隐藏load动画
-				$("#coverDiv").css("display","none");
-				$("#loadgif").css("display","none");
+				 layer.close(index);
              }
 		});//end ajax
 	}); //end confirm

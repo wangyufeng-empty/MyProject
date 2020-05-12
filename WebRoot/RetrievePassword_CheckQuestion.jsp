@@ -17,51 +17,15 @@
 <script src="js/bootsnav.js" type="text/javascript"></script>
 <script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
 <script src="layer/layer/layer.js"></script>
+<script src="js/SecondHandPages_JS/RetrievePasswordJs.js"></script>
 <!-- <script src="js/jquery.js" type="text/javascript"></script> -->
 <!--[if IE]><script src="js/html5.js"></script><![endif]-->
 <title>重置密码</title>
 </head>
-<script language="javascript">
-
-
-function check() 
-{
-	if(form_login.userAnswer.value=="")
-	 {
-		layer.msg('请输入你的答案');
-		form_login.userAnswer.focus();
-		return false;	
-	}
-	if(form_login.password.value=="")
-	 {
-		layer.msg('请输入你的密码');
-		form_login.password.focus();
-		return false;	
-	}
-	if(form_login.password.value.length < 6) {
-	
-		layer.msg('密码长度必须大于6位');
-		form_login.password.focus();
-		return false;	
-	}
-	if(form_login.password_confirm.value=="")
-	 {
-		layer.msg('请确认你的密码');
-		form_login.password_confirm.focus();
-		return false;	
-	}
-	if(form_login.password.value != form_login.password_confirm.value)
-	{
-		layer.msg('两次密码不一致');
-		form_login.password_confirm.focus();
-		return false;
-	}
-}
-</script>
 
 <%
-String userId = (String)request.getAttribute("userId");
-String question = (String)request.getAttribute("question");//从servlet接收“问题”参数，代表用户的密保问题
+String userId = (String)request.getParameter("userId");
+String question = (String)request.getParameter("question");//从servlet接收“问题”参数，代表用户的密保问题
 %>
 
 <body class="logobg_style">
@@ -78,7 +42,7 @@ String question = (String)request.getAttribute("question");//从servlet接收“
   				<br><br>
   				<h4 class="title_name"><%= question%></h4>
   				
-  				<form action="retrivePasswordController" name="form_login" class="login_padding" method="post" onSubmit="return check();">
+  				<form action="#" name="retrievePswForm" id="retrievePswForm" class="login_padding" method="post">
 				<input type="hidden" name="url" value=<%="RetrievePassword_CheckQuestion.jsp"%> />
 				<input type="hidden" name="userId" value=<%= userId%> />
 				<input type="hidden" name="question" value=<%= question%> />
@@ -87,7 +51,7 @@ String question = (String)request.getAttribute("question");//从servlet接收“
 						<div class="input-group-addon">
 							<i class="icon_password"></i>
 						</div>
-						<input type="text" class="form-control" name="userAnswer" id="userAnswer" placeholder="输入问题答案" autocomplete="off">
+						<input type="text" class="form-control" name="userAnswer" id="user_answer" placeholder="输入问题答案" autocomplete="off">
 					</div>
 				</div>
 				
@@ -96,8 +60,9 @@ String question = (String)request.getAttribute("question");//从servlet接收“
 						<div class="input-group-addon">
 							<i class="icon_password"></i>
 						</div>
-						<input type="password" class="form-control" name="password" id="password" placeholder="设置新密码" autocomplete="off">
-					</div>
+						<input type="password" class="form-control" name="password" id="user_psw" placeholder="设置新密码" autocomplete="off">
+						</div>
+						<span id="password_tip" style="align:left;"></span>
 				</div>
 				  
 				<div class="form-group clearfix">
@@ -107,11 +72,12 @@ String question = (String)request.getAttribute("question");//从servlet接收“
 						</div>
 						<input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="确认密码" autocomplete="off">
 					</div>
+					<span id="password_confirm_tip" style="align:left;"></span>
 				</div>
 				
                   <div class="tishi"></div>
 				<div class="form-group">
-				<input type="submit" value="完成" class="btn btn-danger btn-block btn-login">
+				<input type="button" value="完成" class="btn btn-danger btn-block btn-login" onclick="retrievePassword();">
 						
 				</div>
 				<div class=" textright"><a href="Retrieve_password.jsp" class="forget">返回</a></div>

@@ -7,6 +7,7 @@ public class Goods {                  //商品类
 		private String goodsId;//
 		private String goodsId_db;  //新ID
 		private String goodsName = null;
+		private String publisher_id = null;  //发布者ID
 		private String goodsPublisher = null;	//商品的发布者
 		private String goodsIssuDate = null;    //商品的发布日期
 		private String goodsCategory = null;    //商品的分类
@@ -36,6 +37,14 @@ public class Goods {                  //商品类
 
 		public void setGoodsName(String goodsName) {
 			this.goodsName = goodsName;
+		}
+
+		public String getPublisher_id() {
+			return publisher_id;
+		}
+
+		public void setPublisher_id(String publisher_id) {
+			this.publisher_id = publisher_id;
 		}
 
 		public String getGoodsPublisher() {
@@ -86,14 +95,7 @@ public class Goods {                  //商品类
 			this.goodsStock = goodsStock;
 		}
 
-		public DBUtil getDb() {
-			return db;
-		}
-
-		public void setDb(DBUtil db) {
-			this.db = db;
-		}
-
+	
 		//通过货物编号返回一条货物信息
 		public Map getGoodsInfo() throws ClassNotFoundException, SQLException{
 			Map goodsinfo = null;
@@ -111,12 +113,8 @@ public class Goods {                  //商品类
 		//通过货物发布者返回N条货物信息,用于用户查看“我的发布”
 		public List getGoodsInfoByGoodsPublisher() throws ClassNotFoundException, SQLException{
 			List goodsInfo = null;
-			String sql = "select * from goods_info where goods_publisher=?";
-			String[] params = {goodsPublisher};
-//			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();   //所有的方法都要先与数据库建立连接
-			
+			String sql = "select * from goods_info where publisher_id=?";
+			String[] params = {publisher_id};
 			goodsInfo = db.getList(sql, params);
 			db.close();
 			return goodsInfo;
@@ -127,10 +125,6 @@ public class Goods {                  //商品类
 			List goodsinfo = null;
 			String sql = "select * from goods_info where goods_category=?";//数据库里面的user_id就是userName
 			String[] params = {goodsCategory};
-			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();   //所有的方法都要先与数据库建立连接
-//			
 			goodsinfo = db.getList(sql, params);
 			db.close();
 			return goodsinfo;
@@ -142,9 +136,6 @@ public class Goods {                  //商品类
 			String sql = "select * from goods_info where concat(goods_name,goods_publisher,goods_category,goods_describe)  like ?";//数据库里面的user_id就是userName
 			String[] params = {"%"+goodsName+"%"};   //在传递参数的时候进行模糊搜索，加%%
 //			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();   //所有的方法都要先与数据库建立连接
-			
 			goodsinfo = db.getList(sql, params);
 			db.close();
 			return goodsinfo;
@@ -156,9 +147,6 @@ public class Goods {                  //商品类
 			List Goods = null;
 			String sql = "select * from goods_info";
 			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();
-//			
 			Goods = db.getList(sql, null);
 			db.close();
 			return Goods;
@@ -197,13 +185,10 @@ public class Goods {                  //商品类
 		public int addOneGoodsInfo() throws ClassNotFoundException, SQLException
 		{
 			int result = 0;
-			String sql = "insert into goods_info values(?,?,?,?,?,?,?,?)";
-			Object[] params = {goodsId,goodsName,goodsPublisher,goodsIssuDate,goodsCategory,goodsDescribe,goodsPrice,goodsStock};
-//			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();
-			
-			result = db.updateComplex(sql, params);//调用数据库操作方法，执行更新   ****************这里采用的是复合型数组，参数回填更加灵活！******************
+			String sql = "insert into goods_info values(?,?,?,?,?,?,?,?,?)";
+			Object[] params = {goodsId,goodsName,publisher_id,goodsPublisher,goodsIssuDate,goodsCategory,goodsDescribe,goodsPrice,goodsStock};
+//			//调用数据库操作方法，执行更新   ***这里采用的是复合型数组，参数回填更加灵活！****
+			result = db.updateComplex(sql, params);
 			db.close();
 			return result;
 		}
@@ -213,12 +198,9 @@ public class Goods {                  //商品类
 		{
 			int result = 0;
 			/***************不能修改货物的ID******************/
-			String sql = "update goods_info set goods_name=?,goods_publisher=?,goods_issuDate=?,goods_category=?,goods_describe=?,goods_price=?,goods_stock=? where goods_id=?"; 
-			Object[] params = {goodsName,goodsPublisher,goodsIssuDate,goodsCategory,goodsDescribe,goodsPrice,goodsStock,goodsId};
+			String sql = "update goods_info set goods_name=?,goods_category=?,goods_describe=?,goods_price=?,goods_stock=? where goods_id=?"; 
+			Object[] params = {goodsName,goodsCategory,goodsDescribe,goodsPrice,goodsStock,goodsId};
 			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();
-				
 			result = db.updateComplex(sql, params);    // ****************这里采用的是复合型数组，参数回填更加灵活！******************/
 			db.close();
 			return result;
@@ -231,9 +213,6 @@ public class Goods {                  //商品类
 			String sql = "update goods_info set goods_stock=? where goods_id=?";
 			Object[] params ={goodsStock,goodsId};
 			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();
-//			
 			result = db.updateComplex(sql, params);
 			db.close();
 			return result;
@@ -246,9 +225,6 @@ public class Goods {                  //商品类
 			String sql = "update goods_info set goods_id=? where goods_id=?";
 			Object[] params ={goodsId_db,goodsId};
 //			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();
-			
 			result = db.updateComplex(sql, params);
 			db.close();
 			return result;
@@ -260,9 +236,6 @@ public class Goods {                  //商品类
 			int result = 0;
 			String sql = "delete from goods_info where goods_id=?";
 			String[] params = {goodsId};
-			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();
 			
 			result = db.update(sql, params);
 			db.close();

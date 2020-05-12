@@ -28,6 +28,7 @@ $("#login").click(function(){
 	$("#login").attr('disabled',"true");  //防止重复提交
 	var targetUrl = $("#form_login").attr("action");    //获取提交路径
 	var data = $("#form_login").serialize();     //表单数据列表
+	var index = null;
 	$.ajax({ 
 		 type:'post',  
 		 url:targetUrl, 
@@ -36,8 +37,8 @@ $("#login").click(function(){
 		 dataType:'json', 
 		 beforeSend: function (){
              //ajax刷新前加载load动画
-			$("#coverDiv").css("display","block");
-			$("#loadgif").css("display","block");
+//		
+			 index = layer.load(1, {time: 30*1000,shade: [0.2,'#000']});
          },
 		 success:function(data){  
 			var returnJson = eval(data);
@@ -57,8 +58,8 @@ $("#login").click(function(){
 		 },
 		 complete:function () {			 
              //完成以后隐藏load动画
-			$("#coverDiv").css("display","none");
-			$("#loadgif").css("display","none");
+//		
+			 layer.close(index);
          }
 	});  //end ajax
 });   //end click login
