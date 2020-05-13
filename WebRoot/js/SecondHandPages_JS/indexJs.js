@@ -1,5 +1,4 @@
-$(document).ready(function(){
-}); 
+
 
 //加入收藏
 //e 代表每个项目对象

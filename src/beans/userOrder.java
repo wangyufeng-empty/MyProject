@@ -13,6 +13,7 @@ public class userOrder {                   /*****************************创建�
 		private double sum_account = 0; //sum_account   订单总价
 		private String order_state = null;   //order_state  订单状态
 		private String include_goodsId = null;  //这笔订单包含的货物有哪些
+		private int is_user_show = 1;
 		public  DBUtil db = DBUtil.getDBUtil();//定义一个数据库对象
 		
 		
@@ -90,22 +91,29 @@ public class userOrder {                   /*****************************创建�
 		}
 
 		
+			public int getIs_user_show() {
+			return is_user_show;
+		}
+
+		public void setIs_user_show(int is_user_show) {
+			this.is_user_show = is_user_show;
+		}
+
 			/************************以后还要对查询更加多样化，比如实现通过时间范围查询相应的订单信息********************/
-			//查询所有订单信息              返回list对象  到时候要用map 一个个循环取出来   p154
+			//查询所有订单信息              在这里只展示is_user_show为1的订单，
+		    //订单信息不能被用户单向删除，管理员还能继续查看)
 			public List getAllOrderInfo() throws ClassNotFoundException, SQLException
 			{
 				List Orders = null;
-				String sql = "select * from order_info where user_id=?";
+				String sql = "select * from order_info where user_id=? and is_user_show=1";
 				String[] params = {user_id};
-				/*DBUtil db = new DBUtil();*/
-				/*db.getConnection();*/
 				
 				Orders = db.getList(sql, params);
 				db.close();
 				return Orders;
 			}
 			
-		//通过账号和订单号返回一条订单信息，用户查询订单
+		//通过账号和订单号返回一条订单信息，用户查询订单(
 		public Map getOneOrderInfo() throws ClassNotFoundException, SQLException{
 			Map orderInfo = null;
 			String sql = "select * from order_info where user_id=? and order_id=?";//数据库里面的user_id就是userName
@@ -123,7 +131,7 @@ public class userOrder {                   /*****************************创建�
 		public int addOrderInfo() throws ClassNotFoundException, SQLException
 		{
 			int result = 0;
-			String sql = "insert into order_info values(?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into order_info values(?,?,?,?,?,?,?,?,?,1)";
 			Object[] params = {user_id,order_id,order_time,consignee,tel_num,address,sum_account,order_state,include_goodsId};
 			
 			/*DBUtil db = new DBUtil();*/
@@ -164,11 +172,11 @@ public class userOrder {                   /*****************************创建�
 			return result;
 		}
 		
-		//删除一条订单信息         返回受影响的数量
+		//删除一条订单信息(只要把is_user_show置为0即可)         返回受影响的数量
 		public int deleteOneOrderInfo() throws ClassNotFoundException, SQLException
 		{
 			int result = 0;
-			String sql = "delete from order_info where user_id=? and order_id=?";
+			String sql = "update order_info set is_user_show=0  where user_id=? and order_id=?";
 			String[] params = {user_id,order_id};
 			
 			/*DBUtil db = new DBUtil();*/

@@ -745,6 +745,7 @@ public class usuallyController extends HttpServlet {
 			/**********开始更新订单数据库    创建类***********/
 			user_info user = new user_info(); //创建一个用户类
 			userOrder order = new userOrder();//创建一个订单类
+			SelledOrderInfo selledOrder = new SelledOrderInfo();  //新建一个“我卖出的订单”类
 			Goods goods = new Goods();  //创建一个货物类，用于更新库存
 			GoodsCart goodsCart = new GoodsCart();   //这里新建了一个购物车的类     
 			historyOrder_info historyOrder = new historyOrder_info();  //创建历史订单类
@@ -764,9 +765,9 @@ public class usuallyController extends HttpServlet {
 			//从用户信息数据库中获取这个用户的信息
 			user.setUsername(userId);
 			Map userInfo = user.getUserinfo(); //获取到这条用户信息
-			String userTel = (String)userInfo.get("user_tel");
-			String userAddress = (String)userInfo.get("user_address");
-			double total_price = Double.parseDouble(session.getAttribute("total_price").toString()); 
+			String userTel = (String)userInfo.get("user_tel"); //购买者电话
+			String userAddress = (String)userInfo.get("user_address");  //购买者地址
+			double total_price = Double.parseDouble(session.getAttribute("total_price").toString()); //订单总价
 			order.setUser_id(userId);
 			order.setOrder_id(order_id);  //学号加时间日期
 			order.setOrder_time(order_time);  
@@ -782,13 +783,16 @@ public class usuallyController extends HttpServlet {
 			/**********更新历史查询订单数据库*******/
 			//首先取出购物车的相关信息
 			goodsCart.setUser_id(userId);//设置用户ID
-			List goodsCartInfo = goodsCart.getAllCartInfo();
+			List goodsCartInfo = goodsCart.getAllCartInfo();  //找出购物车的所有信息
 			String goods_id = "";
 			String goods_name = "";
 			int selectedQuantity = 0;
 			double subtotal = 0.0;
 			String goods_publisher = "";
 			String purchase_record = "",goods_category = "";
+			String publisher_id = "";
+			String buyer_id="";
+			int addSelledOrderResult = 0;
 			for(Object goodsCart_Info:goodsCartInfo)   //一件货物就创建一个记录，记录着订单号的对应关系
 			{
 				Map goodscart = (HashMap)goodsCart_Info;
@@ -808,18 +812,33 @@ public class usuallyController extends HttpServlet {
 				{purchase_record = purchase_record + ";" + goods_name + ";" + goods_publisher + ";" + goods_category;}
 				else
 					return;
-				/***********依次将商品库存-已选数量*****/
-				goods.setGoodsId(goods_id);
-				Map goodsInfo = goods.getGoodsInfo();
+				/*****>>>>>  更新  “卖出的订单”  信息>>>>>>>*****/
+				//首先找出这件商品的发布者id
+				goods.setGoodsId(goods_id);  //设置商品id
+				Map goodsInfo = goods.getGoodsInfo();  //找到这件商品的所有信息
+				publisher_id = goodsInfo.get("publisher_id").toString();
+				//buyer_id
+				buyer_id = userId;
+				//设置类属性
+				selledOrder.setUser_id(publisher_id);//商品发布者的id，他的东西被买走
+				selledOrder.setBuyer_id(buyer_id);
+				selledOrder.setGoods_id(goods_id);
+				selledOrder.setGoods_name(goods_name);
+				selledOrder.setSelectedQuantity(selectedQuantity);
+				selledOrder.setSubtotal(subtotal);
+				selledOrder.setBuyer_tel(userTel);
+				addSelledOrderResult = selledOrder.addOneSelledOrderInfo();
+				/**<<<<<<<<<<<<“卖出的订单”<<<<<<<<<<<<**/
+				
+				/***********依次将商品库存-已选数量>>>>*****/				
 				int goods_stock = Integer.parseInt((String) goodsInfo.get("goods_stock"));
 				int New_stock = goods_stock - selectedQuantity;  //执行相减
 				goods.setGoodsStock(New_stock);
 				goods.updateGoodsStock();  //执行更新库存
-				/***********依次将商品库存-已选数量*****/
-				
+				/***********依次将商品库存-已选数量<<<<<<*****/			
 			}
-			/**********更新历史查询订单数据库*******/
-		
+			/**********更新历史查询订单数据库、卖出的商品数据库《《《《*******/
+			if(addSelledOrderResult==1){System.out.println(userId+":添加“我卖出的”信息");}
 			/**********删除这个用户的购物车的所有信息*******/
 			 int result_delete = goodsCart.deleteAllGoodsCartInfo();  //删除此用户的所有购物车信息
 			/**********删除这个用户的购物车的所有信息*******/
@@ -931,20 +950,12 @@ public class usuallyController extends HttpServlet {
 				order.setOrder_id(order_id);	
 				order.setUser_id(userId);
 				int result_order = order.deleteOneOrderInfo();
-				int result_historyOrder = historyOrder.deleteOneOrderAllInfo();
+				//int result_historyOrder = historyOrder.deleteOneOrderAllInfo();  //同时删除historyorder_info表里的信息
 				List HistoryOrderInfo = order.getAllOrderInfo();
 				session.setAttribute("HistoryOrderInfo", HistoryOrderInfo); //更新会话的订单信息
 				
-				
-				/*******************************************************/
-				System.out.println(result_order);
-				System.out.println(result_historyOrder);  //这里，我在historyorder_info中删除多条记录，但是result_historyOrder返回的却是0  ？？？？
-				/*******************************************************/
-				
-				
 				if(result_order==1 )   
-				{
-					
+				{				
 					String message ="订单删除成功啦！";
 					session.setAttribute("successMessage", message);
 					response.sendRedirect("History-Order-Demo.jsp");
@@ -1123,12 +1134,12 @@ public class usuallyController extends HttpServlet {
 		{
 		try 
 		{
-			String goods_publisher = (String)session.getAttribute("userName");  //获取此用户的姓名作为发布者
+			String publisher_id = (String)session.getAttribute("userId");  //获取此用户的姓名作为发布者
 			/************创建对象************/
 			Goods goods = new Goods();
 			/*******************************/
-			goods.setGoodsPublisher(goods_publisher);
-			List myPublish_infos = goods.getGoodsInfoByGoodsPublisher();			
+			goods.setPublisher_id(publisher_id);
+			List myPublish_infos = goods.getGoodsInfoByPublisherId();			
 			session.setAttribute("myPublish_infos", myPublish_infos);
 			response.sendRedirect("My-Publish_Infos-Demo.jsp");
 		} 
@@ -1154,11 +1165,11 @@ public class usuallyController extends HttpServlet {
 				/*回调json对象*/
 				JSONObject returnJson = new JSONObject();
 				String goods_id = request.getParameter("goods_id");
-				String goods_publisher = (String)session.getAttribute("userName");  //获取此用户的姓名作为发布者
+				String publisher_id = (String)session.getAttribute("userId");  //获取此用户的姓名作为发布者
 				/**********/
 				Goods goods = new Goods();
 				goods.setGoodsId(goods_id);
-				goods.setGoodsPublisher(goods_publisher);
+				goods.setPublisher_id(publisher_id);
 				String goods_name = goods.getGoodsNikename();  //得到此件货物名
 				int result_del = goods.deleteGoodsOne();   //执行数据库删除
 				
@@ -1188,11 +1199,11 @@ public class usuallyController extends HttpServlet {
 						}
 					}
 				}
-				/*********************修改货物ID，在此之后的所有商品ID递减1**************/				
+				/********************************/				
 				
 				if(result_del == 1)
 				{			
-					List myPublish_infos = goods.getGoodsInfoByGoodsPublisher();			
+					List myPublish_infos = goods.getGoodsInfoByPublisherId();			
 					session.setAttribute("myPublish_infos", myPublish_infos);   //更新会话
 					returnMessage =goods_name+"已下架！";
 					returnJson.put("returnMessage", returnMessage);
@@ -1341,6 +1352,36 @@ public class usuallyController extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		
+		/***************************  30-获取“我卖出的”功能的请求申请 ***************************/
+		else if(url.equals("我卖出的"))  
+		{
+			try
+			{
+				/**********创建对象***********/
+				user_info user = new user_info(); //创建一个用户类
+				SelledOrderInfo SelledOrder = new SelledOrderInfo();  //我卖出的类
+				/*************************/
+				
+				String userId = (String)session.getAttribute("userId");
+				SelledOrder.setUser_id(userId);	
+				user.setUsername(userId);
+				Map userInfo = user.getUserinfo();
+				List SelledOrderList = SelledOrder.getSelledOrderInfo_ById();
+				session.setAttribute("SelledOrderList", SelledOrderList);//设置到会话里   全部订单信息
+				session.setAttribute("userInfo", userInfo);//设置到会话里 ，一条用户信息
+				response.sendRedirect("MySelled-Order-Demo.jsp");
+			} 
+			catch (ClassNotFoundException | SQLException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		
+		
 		
 	} //doPost end
 }// class end

@@ -2,8 +2,8 @@
 <% request.setCharacterEncoding("utf-8"); response.setContentType("text/html;charset=utf-8"); response.setCharacterEncoding("utf-8");%>
 <%@ include file="filter.jsp" %> 
 <!-- 此页面完成点击核算后跳转的用户信息确认 -->
-<html lang="zxx" style="height: 100%">
-<body>
+<html lang="zxx" >
+<body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 
@@ -14,7 +14,7 @@
 		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
 </div>
 <%
-ArrayList HistoryOrderInfos = (ArrayList)session.getAttribute("HistoryOrderInfo"); //全部订单信息
+ArrayList SelledOrderList = (ArrayList)session.getAttribute("SelledOrderList"); //全部订单信息
 Map userInfo = (HashMap)session.getAttribute("userInfo"); //一条用户信息
 
 String user_name = (String)userInfo.get("user_name");
@@ -54,39 +54,45 @@ String register_time = (String)userInfo.get("register_time");//注册时间
                 </aside>
                 <nav class="list-group">
                     <a class="list-group-item with-badge" href="account-update.jsp"><i class="icon-head"></i>我的基本信息</a>
-                    <a class="list-group-item active" href="usuallyController?url=<%="我的订单"%>"><i class="icon-bag"></i>我买到的</a>
-                    <a class="list-group-item with-badge" href="usuallyController?url=<%="我卖出的"%>"><i class="icon-heart"></i>我卖出的</a>
+                    <a class="list-group-item with-badge" href="usuallyController?url=<%="我的订单"%>"><i class="icon-bag"></i>我买到的</a>
+                    <a class="list-group-item active" href="usuallyController?url=<%="我卖出的"%>"><i class="icon-heart"></i>我卖出的</a>
                   
                 </nav>
             </div>
+            
             <div class="col-lg-8">
                 <div class="padding-top-2x mt-2 hidden-lg-up"></div>
                 <div class="table-responsive">
                     <table class="table table-hover margin-bottom-none">
                         <thead>
                         <tr>
-                            <th>订单号</th>
-                            <th>下单时间</th>
-                            <th>状态</th>
+                            <th>序号</th>
+                            <th>买家学号</th>
+                            <th>买家联系方式</th>
+                            <th>商品名</th>
+                            <th>数量</th>
                             <th>总计</th>
                         </tr>
                         </thead>
-<%
-				for(Object HistoryOrderInfo : HistoryOrderInfos)
-				{
-					Map historyOrderInfo = (HashMap)HistoryOrderInfo;
-					String order_id = (String)historyOrderInfo.get("order_id");
-					String order_time = (String)historyOrderInfo.get("order_time");
-					String order_state = (String)historyOrderInfo.get("order_state");
-					double sum_account = Double.parseDouble(historyOrderInfo.get("sum_account").toString());
+<%				int i=0;
+				for(Object SelledOrder : SelledOrderList)
+				{	i++;
+					Map SelledOrderMap = (HashMap)SelledOrder;
+					String buyer_id = (String)SelledOrderMap.get("buyer_id");
+					String buyer_tel = (String)SelledOrderMap.get("buyer_tel");
+					String goods_name = (String)SelledOrderMap.get("goods_name");
+					int selectedQuantity = Integer.parseInt(SelledOrderMap.get("selectedQuantity").toString());
+					double subtotal = Double.parseDouble(SelledOrderMap.get("subtotal").toString());
 %>
                         <tbody>
                         <tr>
 							<!--设计点击订单号可以查看具体的订单信息 -->
-                            <td><a class="text-medium navi-link" href="usuallyController?url=<%="订单详情"%>&order_id=<%=order_id%>" ><%=order_id %></a></td>
-                            <td><%=order_time %></td>
-                            <td><span class="text-success"><%=order_state %></span></td>
-                            <td><span class="text-medium"><%=sum_account %>元</span></td>
+                            <td>#<%=i %></td>
+                            <td><%=buyer_id %></td>
+                            <td><span class="text-success"><%=buyer_tel %></span></td>
+                            <td><%=goods_name %></td>
+                            <td><%=selectedQuantity %></td>
+                            <td><%=subtotal %></td>
                         </tr>                     
                         </tbody>
 <%		

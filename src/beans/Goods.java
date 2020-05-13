@@ -110,8 +110,8 @@ public class Goods {                  //商品类
 			return goodsinfo;
 		}
 		
-		//通过货物发布者返回N条货物信息,用于用户查看“我的发布”
-		public List getGoodsInfoByGoodsPublisher() throws ClassNotFoundException, SQLException{
+		//通过货物发布者的ID返回N条货物信息,用于用户查看“我的发布”
+		public List getGoodsInfoByPublisherId() throws ClassNotFoundException, SQLException{
 			List goodsInfo = null;
 			String sql = "select * from goods_info where publisher_id=?";
 			String[] params = {publisher_id};
