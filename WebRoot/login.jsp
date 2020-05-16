@@ -17,10 +17,12 @@
 <script src="js/bootsnav.js" type="text/javascript"></script>
 <script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
 <script src="layer/layer/layer.js"></script>
-<script src="js/SecondHandPages_JS/loginJs.js"></script>
+
 <script src="js/jquery.js" type="text/javascript"></script>
 <!-- <script src="js/jquery.js" type="text/javascript"></script> -->
 <!--[if IE]><script src="js/html5.js"></script><![endif]-->
+
+<script src="js/SecondHandPages_JS/loginJs.js"></script>
 <title>登录校园二手交易网</title>
 </head>
 
@@ -38,7 +40,7 @@
   			<div class="login-content">
   				<h2 class="title_name">欢迎您登录</h2>
   				
-  				<form id="form_login" action="userLoginController" name="form_login" class="login_padding" method="post">
+  				<form id="form_login" action="#" name="form_login" class="login_padding" method="post" onsubmit="return false">
 				
 				<div class="form-group clearfix">
 					<div class="input-group">
@@ -64,7 +66,7 @@
 					<div class=" textright"><a href="Retrieve_password.jsp" class="forget">忘记密码？</a></div>
                   <div class="tishi"></div>
 				<div class="form-group">
-				<input type="submit" id="login" value="登录" class="btn btn-danger btn-block btn-login">
+				<input type="button" id="login" value="登录" class="btn btn-danger btn-block btn-login" onclick="loginIndex();">
 						
 				</div>
 				<div class=" textright"><a href="register.jsp" class="forget">立即注册</a></div>

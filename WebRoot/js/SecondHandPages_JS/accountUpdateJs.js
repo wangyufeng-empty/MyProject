@@ -4,6 +4,7 @@ $(document).ready(function(){
 	var user_grade = $("#user_grade").val();
 	$("#"+user_grade).attr("selected","true");
 	
+	
 });//end ready
 
 function SaveUserInfo(){
@@ -77,5 +78,21 @@ function SaveUserInfo(){
 	
 };//end function
 
+//制造彩蛋
 
+function trick(e){
+    if(typeof window.k=="undefined"){
+        window.k=""
+    }
+    var e=e||event;
+    //alert(e.keyCode);
+    if(e.keyCode==116) window.k=""; //F5 清空重新计数
+    window.k+=e.keyCode+",";
+    console.log(window.k);
+    if(window.k=="38,38,40,40,37,39,37,39,66,65,66,65,") {
+    	window.k=""; //执行play 同时清空
+    	window.open("easter_egg.html", "_blank");     
+    }        
+}
+document.onkeydown=trick; //记录键值执行函数
 
