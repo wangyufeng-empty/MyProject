@@ -5,7 +5,7 @@ $(document).on('blur', '#user_id', function() {
 	var user_id = $("#user_id").val();
 	$.ajax({
 		 type:'post',  
-		 url:"/JsVerify?method=checkUserId", 
+		 url:"JsVerify?method=checkUserId", 
 		 cache: false,
 		 data:{"user_id":user_id},  //重点必须为一个变量如：data
 		 dataType:'json', 

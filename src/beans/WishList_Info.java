@@ -50,7 +50,7 @@ public class WishList_Info {
 		return WishListInfo;
 	}
 	
-	//通过货物编号和用户ID返回一条购物车信息
+	//通过货物编号和用户ID返回一条收藏信息
 	public Map getOnesWishListInfo() throws ClassNotFoundException, SQLException{
 		Map WishListInfo = null;
 		String sql = "select * from user_favorites where user_id=? and goods_id=?";
