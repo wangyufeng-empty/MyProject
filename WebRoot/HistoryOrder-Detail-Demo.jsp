@@ -5,6 +5,7 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <script language="javascript">
 function deleteOrder(order_id){
@@ -23,10 +24,7 @@ function deleteOrder(order_id){
 <div >
 		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
 </div>
-<%
-ArrayList HistoryOrder_infos = (ArrayList)session.getAttribute("HistoryOrder_infos");
-String order_id = (String)session.getAttribute("historyOrder_id");
-%>
+
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
     <div class="page-title">
@@ -47,11 +45,12 @@ String order_id = (String)session.getAttribute("historyOrder_id");
     <!-- Start Order Trucking -->
     <div class="container padding-top-1x padding-bottom-3x">
         <div class="card mb-3">
-            <div class="p-4 text-center text-white text-lg bg-dark rounded-top"><span class="text-uppercase">订单号 - </span><span class="text-medium"><%=order_id %></span></div>
+            <div class="p-4 text-center text-white text-lg bg-dark rounded-top"><span class="text-uppercase">订单号 - </span>
+            <span class="text-medium" id="orderId">${sessionScope.HistoryOrder_infos[0].order_id }</span></div>
             <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
                 <div class="w-100 text-center py-1 px-2"><span class='text-medium'>邮寄方式:</span>燕大快递</div>
                 <div class="w-100 text-center py-1 px-2"><span class='text-medium'>状态:</span> 出货检查</div>
-                <div class="w-100 text-center py-1 px-2"><span class='text-medium'>预计到达:</span> 2020年6月7日</div>
+                <div class="w-100 text-center py-1 px-2"><span class='text-medium'>预计到达:</span> 2020年6月13日</div>
             </div>
             <div class="card-body">
                 <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
@@ -69,22 +68,36 @@ String order_id = (String)session.getAttribute("historyOrder_id");
                     </div>
                     <div class="step completed">
                         <div class="step-icon-wrap">
-                            <div class="step-icon"><i class="layui-icon layui-icon-location"></i></div>
+                            <div class="step-icon"><i class="layui-icon layui-icon-right"></i></div>
                         </div>
                         <h4 class="step-title">出货检查</h4>
                     </div>
-                    <div class="step">
+                    <div class="step completed">
                         <div class="step-icon-wrap">
-                            <div class="step-icon"><i class="layui-icon layui-icon-right"></i></div>
+                            <div class="step-icon"><i class="layui-icon layui-icon-location"></i></div>
                         </div>
                         <h4 class="step-title">发货</h4>
                     </div>
-                    <div class="step">
-                        <div class="step-icon-wrap">
+                    
+                    <c:if test="${sessionScope.thisOrder_state eq '待收货'}">  
+        				<div class="step">
+                        	<div class="step-icon-wrap">
                             <div class="step-icon"><i class="layui-icon layui-icon-right"></i></div>
                         </div>
                         <h4 class="step-title">收货</h4>
-                    </div>
+                    	</div>
+    				</c:if> 
+    				
+    				<c:if test="${sessionScope.thisOrder_state eq '已完成'}">  
+        				<div class="step completed">
+                        	<div class="step-icon-wrap">
+                            <div class="step-icon"><i class="layui-icon layui-icon-location"></i></div>
+                        </div>
+                        <h4 class="step-title">收货</h4>
+                    	</div>
+    				</c:if> 
+                    
+                    
                 </div>
             </div>
           <!-- Start Checkout Review -->
@@ -92,58 +105,54 @@ String order_id = (String)session.getAttribute("historyOrder_id");
                 
                 <h3>此订单包含的商品信息如下：</h3>
                 <hr class="padding-bottom-1x">
+                
                 <div class="table-responsive shopping-cart">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>名称</th>          
+                    <th>商品详情</th>          
                     <th class="text-center">小计</th>
                     <th class="text-center">
-                        <a class="btn btn-sm btn-outline-danger" onclick="deleteOrder('<%=order_id %>')">删除订单</a>
+                       
                     </th>
                 </tr>
                 </thead>
-<% 
-        for(Object HistoryOrder_info:HistoryOrder_infos)
-        {
-        	Map historyOrder_info = (HashMap)HistoryOrder_info;
-        	String goods_name = (String)historyOrder_info.get("goods_name");
-        	int selectedQuantity = Integer.parseInt(historyOrder_info.get("selectedQuantity").toString());
-       		String goods_id = (String)historyOrder_info.get("goods_id");
-       		double subtotal = Double.parseDouble(historyOrder_info.get("subtotal").toString());
-       		Goods goods = new Goods();
-       		goods.setGoodsId(goods_id);
-       		Map goodsInfo = goods.getGoodsInfo();//返回一条货物信息
-       		String goods_publisher = (String)goodsInfo.get("goods_publisher");
-       		String goods_category = (String)goodsInfo.get("goods_category");
-       		String goods_describe = (String)goodsInfo.get("goods_describe");
-%>
-             <tbody>
-                <tr>
-					<!--  第1列 -->
-                    <td>
-                        <div class="product-item">
-                            <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
-                                <img src="assets/images/shop/cart/02.jpg" alt="Product">
-                            </a>
-                            <div class="product-info">
-                                <h4 class="product-title">
-                                     <a href="#"><%=goods_name %><small>x <%=selectedQuantity%></small></a>
-                                </h4>
-                                <span><em>发布者：</em><%=goods_publisher%></span><span><em>分类：</em> <%=goods_category%></span>
-                                <br>
-                                <p><%=goods_describe %></p>
-                            </div>
-                        </div>
-                    </td>
-                    
-                   
-                    <!--  第2列 -->
-                    <td class="text-center text-lg text-medium"><%=subtotal%></td>
-                </tr>
+
+			<c:forEach items="${sessionScope.HistoryOrder_infos}" var="HistoryOrder" varStatus="status">	
+			
+				 <tbody>
+                	<tr>
+						<!--  第1列 -->
+	                    <td>
+	                        <div class="product-item">
+	                            <c:if test="${not empty HistoryOrder.product_image}"> 
+        							<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${HistoryOrder.goods_id}">
+                        				<img src="${HistoryOrder.product_image}" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${HistoryOrder.goods_id}">
+                    				</a>
+    							</c:if>
+    					
+                     			<c:if test="${empty HistoryOrder.product_image}">  
+        							<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${HistoryOrder.goods_id}">
+                        				<img src="assets/images/nopic.jpg" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${HistoryOrder.goods_id}">
+                    				</a>
+    							</c:if> 
+	                            <div class="product-info">
+	                                <h4 class="product-title">
+	                                     <a href="#">${HistoryOrder.goods_name}<small>x ${HistoryOrder.selectedQuantity}</small></a>
+	                                </h4>
+	                                <span><em>发布者：</em>${HistoryOrder.goods_publisher}</span> <span><em>分类：</em> ${HistoryOrder.goods_category}</span>
+	                                <br>
+	                                <p>${HistoryOrder.goods_describe}</p>
+	                            </div>
+	                        </div>
+	                    </td>                    
+	                    <!--  第2列 -->
+	                    <td class="text-center text-lg text-medium">￥${HistoryOrder.subtotal}</td>
+                	</tr>
                 </tbody>
-              
-    <% } %>
+                
+			</c:forEach>
+            
      </table>
      </div>
      
@@ -160,7 +169,13 @@ String order_id = (String)session.getAttribute("historyOrder_id");
                             <li><a href="#">30</a></li>
                         </ul>
                     </div>
-                    <div class="column text-right hidden-xs-down"><a class="btn btn-outline-secondary btn-sm" href="#">下一页&nbsp;<i class="icon-arrow-right"></i></a></div>
+                    
+                    <div class="column text-right hidden-xs-down"><a class="btn btn-danger" style="color: white;" onclick="deleteOrder('${sessionScope.HistoryOrder_infos[0].order_id }')">删除订单</a></div>
+                    <c:if test="${sessionScope.thisOrder_state eq '待收货'}">  
+        				 <div class="column text-right hidden-xs-down"><input type="button" class="btn btn-success" value="确认收货" onclick="ConfirmReceipt('${sessionScope.HistoryOrder_infos[0].order_id }')"/></div>
+    				</c:if> 
+                   
+                   
                 </nav>
                 <!-- 结束分页 -->
             </div>

@@ -87,7 +87,7 @@ public class AnsjSplitAndWordCount {
 	            String natureStr = terms.get(i).getNatureStr(); //拿到词性
 	            
 	            if(expectedNature.contains(natureStr)) {  //如果是规定的词性
-	                System.out.print(word + ":" + natureStr+"  ");
+	                //System.out.print(word + ":" + natureStr+"  ");
 	            	if(!wordFrequence.containsKey(word)){  //如果map中不存在这个词，则加入，词频设为1
 						wordFrequence.put(word, 1);
 					}else{                                 //存在，词频直接+1
@@ -97,9 +97,9 @@ public class AnsjSplitAndWordCount {
 	            }
 	        }
 			System.out.println(" ");
-			System.out.println("排序前wordFrequence : "+wordFrequence);/*----------------------------*/
+			//System.out.println("排序前wordFrequence : "+wordFrequence);/*----------------------------*/
 			Map<String,Integer >wordFrequence_Descend = sortDescend(wordFrequence);//按值(词频)进行排序		
-			System.out.println("排序后wordFrequence : "+wordFrequence_Descend);/*----------------------------*/
+			//System.out.println("排序后wordFrequence : "+wordFrequence_Descend);/*----------------------------*/
 			return wordFrequence_Descend;	
 				
 			}		

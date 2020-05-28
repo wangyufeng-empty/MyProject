@@ -97,12 +97,27 @@ public class GoodsCart {
 			List GoodsCart = null;
 			String sql = "select * from goodsCart_info where user_id=?";
 			String[] params = {user_id};
-			/*DBUtil db = new DBUtil();*/
-			/*db.getConnection();*/
-			
 			GoodsCart = db.getList(sql, params);
+			
+			/*>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+			//循环取出每一件
+			List goodsinfoList = new ArrayList<>();
+			GoodsPicture GoodsPicture = new GoodsPicture();
+			String product_image = null;
+			String goods_id = null;
+			for(Object goods_info : GoodsCart){
+				Map goodsInfo = (HashMap)goods_info;
+				goods_id = goodsInfo.get("goods_id").toString();		
+				//取出商品图片
+				product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+				goodsInfo.put("product_image", product_image);
+				goodsinfoList.add(goodsInfo);
+			}
+			/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+			
+			
 			db.close();
-			return GoodsCart;
+			return goodsinfoList;
 		}
 
 		//通过货物编号和用户ID返回一条购物车信息

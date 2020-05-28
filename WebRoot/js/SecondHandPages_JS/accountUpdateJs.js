@@ -1,11 +1,4 @@
-$(document).ready(function(){
 
-	/*为下拉框选择默认值*/
-	var user_grade = $("#user_grade").val();
-	$("#"+user_grade).attr("selected","true");
-	
-	
-});//end ready
 
 function SaveUserInfo(){
 	/*表单验证*/
@@ -66,7 +59,7 @@ function SaveUserInfo(){
 			
 		 },
 		 error:function(){ 
-			 alert("请求失败");
+			 layer.alert("请求失败，请重新登录！");
 		 },
 		 complete:function () {			 
              //完成以后隐藏load动画
@@ -88,7 +81,7 @@ function trick(e){
     //alert(e.keyCode);
     if(e.keyCode==116) window.k=""; //F5 清空重新计数
     window.k+=e.keyCode+",";
-    console.log(window.k);
+    //console.log(window.k);
     if(window.k=="38,38,40,40,37,39,37,39,66,65,66,65,") {
     	window.k=""; //执行play 同时清空
     	window.open("easter_egg.html", "_blank");     

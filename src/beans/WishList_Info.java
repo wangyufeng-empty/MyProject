@@ -1,5 +1,6 @@
 package beans;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +43,26 @@ public class WishList_Info {
 		List WishListInfo = null;
 		String sql = "select * from user_favorites where user_id=?";
 		String[] params = {user_id};
-		/*DBUtil db = new DBUtil();*/
-		/*db.getConnection();*/
-		
 		WishListInfo = db.getList(sql, params);
+		
+		/*>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+		//循环取出每一件
+		List goodsinfoList = new ArrayList<>();
+		GoodsPicture GoodsPicture = new GoodsPicture();
+		String product_image = null;
+		String goods_id = null;
+		for(Object goods_info : WishListInfo){
+			Map goodsInfo = (HashMap)goods_info;
+			goods_id = goodsInfo.get("goods_id").toString();		
+			//取出商品图片
+			product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+			goodsInfo.put("product_image", product_image);
+			goodsinfoList.add(goodsInfo);
+		}
+		/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+		
 		db.close();
-		return WishListInfo;
+		return goodsinfoList;
 	}
 	
 	//通过货物编号和用户ID返回一条收藏信息

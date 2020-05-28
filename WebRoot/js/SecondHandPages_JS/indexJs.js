@@ -33,7 +33,7 @@ function collectGoods(e){
 				 
 			 },
 			 error:function(){ 
-				 alert("请求失败");
+				 layer.alert("请求失败，请重新登录！");
 			 },
 			 complete:function () {			 
                  //完成以后隐藏load动画		
@@ -72,7 +72,7 @@ function addToCart(e){
 				 //sleep(4000);
 			 },
 			 error:function(){ 
-				 alert("请求失败");
+				 layer.alert("请求失败，请重新登录！");
 			 },
 			 complete:function () {			 
                  //完成以后隐藏load动画

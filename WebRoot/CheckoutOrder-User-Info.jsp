@@ -62,6 +62,11 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
                 
            
                 <!--开始填写表单，修改/完善个人基本信息，收货信息           ，待执行servlet验证       -->
+                 <!-- 开始提示窗口 -->
+        		<div class="alert alert-danger alert-dismissible fade show text-center margin-bottom-1x"><span class="alert-close" data-dismiss="alert"></span>
+           		 	<p><i class="layui-icon layui-icon-cart"></i>&nbsp;&nbsp;请确定你的收货信息是否正确，填写完毕请先保存！ </p>
+        		</div>        
+        <!-- 结束提示 -->     
                 <div align="center">
                 <form class="col" name="updateProfile"  id="updateProfile" action="#" method="post" onsubmit="return false">
                 	<input type="hidden" name="url" value="updateOrderInfo">
@@ -90,7 +95,7 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-phone">收货地址</label>
-                            <input class="form-control" type="text" name="userAddress" value="<%=userAddress %>" required>
+                            <input class="form-control" type="text" name="userAddress" id="userAddress" value="<%=userAddress %>" required>
                         </div>
                     </div>
                  
@@ -99,7 +104,7 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
                         <div class="d-flex flex-wrap justify-content-between align-items-center">
                         
 <!--                             /*注意一个大坑，ID名不要和函数名重合、相同了*/ -->
-                           <input type="button" class="btn btn-primary margin-right-none" value="保存信息" id="savaUserTradeInfo" />
+                           <input type="button" class="btn btn-primary margin-right-none" value="保存信息" id="savaUserTradeInfo" onclick="SavaUserTradeInfo()" />
                         </div>
                     </div>
                 </form>
@@ -117,7 +122,7 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
          
                 <div class="checkout-footer">
                     <div class="column"><a class="btn btn-outline-secondary" href="Goods-Cart-Demo.jsp"><i class="icon-arrow-left"></i><span class="hidden-xs-down">&nbsp;返回购物车</span></a></div>
-                    <div class="column"><a class="btn btn-primary" href="usuallyController?url=<%="订单下一步" %>"><span class="hidden-xs-down">下一步&nbsp;</span><i class="icon-arrow-right"></i></a></div>
+                    <div class="column"><a class="btn btn-primary" onclick="OrderNext();"><span class="hidden-xs-down">下一步&nbsp;</span><i class="icon-arrow-right"></i></a></div>
                 </div>
             </div>
             <!-- End Checkout Address -->

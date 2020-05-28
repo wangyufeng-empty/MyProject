@@ -58,9 +58,17 @@
 	                    <div class="rating-stars">
 	                        <i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i><i class="icon-star filled"></i>
 	                    </div>
-	                    <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
-	                        <img src="assets/images/shop/products/05.jpg" alt="Product">
-	                    </a>
+	                   <c:if test="${not empty IR_Goods_Info.product_image}"> 
+        					<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                        		<img src="${IR_Goods_Info.product_image}" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                    		</a>
+    					</c:if>
+    					
+                     	<c:if test="${empty IR_Goods_Info.product_image}">  
+        					<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                        		<img src="assets/images/nopic.jpg" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                    		</a>
+    					</c:if> 
 	                    <h3 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">${IR_Goods_Info.goods_name}</a></h3>
 	                    <h4 class="product-price">${IR_Goods_Info.goods_price} 元</h4>
 	                    <div class="product-buttons">

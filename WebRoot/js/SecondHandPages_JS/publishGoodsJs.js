@@ -1,6 +1,3 @@
-$(document).ready(function(){
-
-});//end ready
 
 function check() {
 	if($("#goods_name").val() == ""){
@@ -26,8 +23,8 @@ function check() {
         return false;
     }
     
-    if($("#goods_stock").val() > 20||$("#goods_stock").val() <0) {
-        layer.msg("发布数量请少于20件！");
+    if($("#goods_stock").val() > 20||$("#goods_stock").val() <=0) {
+        layer.msg("数量请小于20或者输入合法数量");
         $("#goods_stock").focus();
         return false;
     }

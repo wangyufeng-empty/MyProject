@@ -1,14 +1,7 @@
-$(document).ready(function(){
-
-	/*注意一个大坑，ID名不要和函数名重合/相同了*/
-	$("#savaUserTradeInfo").attr("onclick","SavaUserTradeInfo()");
-	
-	
-});//end ready
 
 
-function SavaUserTradeInfo(){
-	/*表单验证*/
+//表单验证
+function checkOrderUserInfo(){
 	
 	if($("#consignee").val()==""||$("#consignee").val()=="null"||$("#consignee").val()=="NULL"){
 		layer.msg('请输入收货人');
@@ -39,10 +32,16 @@ function SavaUserTradeInfo(){
 		$("#userAddress").focus();
 		return false;
 	}
+}
+
+function SavaUserTradeInfo(){
+	/*表单验证*/
+	if(checkOrderUserInfo()==false){
+		return false;
+	}
 	
 	
 	/*如果验证通过*/	
-	
 	var targetUrl = "usuallyController";    //获取提交路径
 	var data = $("#updateProfile").serialize();     //表单数据列表
 	var index = null;
@@ -53,9 +52,7 @@ function SavaUserTradeInfo(){
 		 data:data,  //重点必须为一个变量如：data
 		 dataType:'json', 
 		 beforeSend: function (){
-             //ajax刷新前加载load动画
-//			$("#coverDiv").css("display","block");
-//			$("#loadgif").css("display","block");
+             //ajax刷新前加载load动画		
 			 index = layer.load(5, {time: 30*1000,shade: [0.1,'#fff']});
          },
 		 success:function(data){  
@@ -69,14 +66,55 @@ function SavaUserTradeInfo(){
 			
 		 },
 		 error:function(){ 
-			 alert("请求失败");
+			 layer.alert("请求失败，请重新登录！");
 		 },
 		 complete:function () {			 
-             //完成以后隐藏load动画
-//			$("#coverDiv").css("display","none");
-//			$("#loadgif").css("display","none");
+            
 			 layer.close(index);
          }
 	});//end ajax
 	
 };//end function
+
+//订单下一步
+function OrderNext(){
+	/*表单验证*/
+	if(checkOrderUserInfo()==false){
+		return false;
+	}
+	
+	/*如果验证通过*/	
+	var targetUrl = "usuallyController";    //获取提交路径
+	var data = {"url":"订单下一步"};     //表单数据列表
+	var index = null;
+	$.ajax({ 
+		 type:'post',  
+		 url:targetUrl, 
+		 cache: false,
+		 data:data,  //重点必须为一个变量如：data
+		 dataType:'json', 
+		 beforeSend: function (){
+             //ajax刷新前加载load动画		
+			 index = layer.load(5, {time: 30*1000,shade: [0.1,'#fff']});
+         },
+		 success:function(data){  
+			 var returnJson = eval(data);
+			 
+			 if(returnJson.hasOwnProperty("goUrl")){  //如果回调为成功的信息
+				 console.log("goUrl："+returnJson.goUrl);
+				 window.location.href = returnJson.goUrl;
+				 
+			 }
+			 else {parent.layer.msg("跳转失败，请联系管理员！",{icon:5,time:4000}); }
+			
+		 },
+		 error:function(){ 
+			 layer.alert("请求失败，请重新登录！");
+		 },
+		 complete:function () {			           
+			 layer.close(index);
+         }
+	});//end ajax
+}
+
+

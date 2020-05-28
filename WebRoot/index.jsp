@@ -8,7 +8,7 @@
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%List IR_Goods_Infos = (List)session.getAttribute("IR_Goods_Infos"); %>
+
 <script src="js/SecondHandPages_JS/indexJs.js"></script>
 <script src="js/jquery.js" type="text/javascript"></script>
 
@@ -53,71 +53,40 @@
         <h3 class="text-center mb-30">最新发布</h3>
         <div class="row">
         
-        
-            <div class="col-md-4 col-sm-6 home-cat">
+         <c:forEach items="${sessionScope.LastestGoodsList}" var="LastestGoods" varStatus="status">	
+         
+         	<div class="col-md-4 col-sm-6 home-cat">
                 <div class="card">
                     <a class="card-img-tiles" href="#">
                         <div class="inner">
-                            <div class="main-img">
-                                <img src="assets/images/shop/categories/01.jpg" alt="Category">
-                            </div>
+                        	<c:if test="${not empty LastestGoods.product_image}"> 
+	        					<div class="main-img">
+                                	<img src="${LastestGoods.product_image}" alt="Category">
+                            	</div>
+    						</c:if>
+    					
+                     		<c:if test="${empty LastestGoods.product_image}">  
+	        					<div class="main-img">
+                                	<img src="assets/images/nopic.jpg" alt="Category">
+                            	</div>
+    						</c:if> 
+                            
+                            
                             <div class="thumblist">
-                                <img src="assets/images/shop/categories/02.jpg" alt="Category">
-                                <img src="assets/images/shop/categories/03.jpg" alt="Category">
+                             	<img src="assets/images/cat.jfif" alt="Category">
+<!--                                 <img src="assets/images/shop/categories/03.jpg" alt="Category"> -->
                             </div>
                         </div>
                     </a>
                     <div class="card-body text-center">
-                        <h4 class="card-title">智能手机</h4>
-                        <p class="text-muted">最低2299元</p>
-                        <a class="btn btn-outline-primary btn-sm" href="#">查看详情</a>
+                        <h4 class="card-title">${LastestGoods.goods_name}</h4>
+                        <p class="text-muted">最低${LastestGoods.goods_price}元</p>
+                        <a class="btn btn-outline-primary btn-sm" href="usuallyController?url=<%="商品详情"%>&goods_id=${LastestGoods.goods_id}">查看详情</a>
                     </div>
                 </div>
             </div>
-            
-            
-            <div class="col-md-4 col-sm-6 home-cat">
-                <div class="card">
-                    <a class="card-img-tiles" href="#">
-                        <div class="inner">
-                            <div class="main-img">
-                                <img src="assets/images/shop/categories/04.jpg" alt="Category">
-                            </div>
-                            <div class="thumblist">
-                                <img src="assets/images/shop/categories/05.jpg" alt="Category">
-                                <img src="assets/images/shop/categories/06.jpg" alt="Category">
-                            </div>
-                        </div>
-                    </a>
-                    <div class="card-body text-center">
-                        <h4 class="card-title">笔记本电脑</h4>
-                        <p class="text-muted">最低4599元</p>
-                        <a class="btn btn-outline-primary btn-sm" href="#">查看详情</a>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <div class="col-md-4 col-sm-6 horizontal-center home-cat">
-                <div class="card">
-                    <a class="card-img-tiles" href="#">
-                        <div class="inner">
-                            <div class="main-img">
-                                <img src="assets/images/shop/categories/07.jpg" alt="Category">
-                            </div>
-                            <div class="thumblist">
-                                <img src="assets/images/shop/categories/08.jpg" alt="Category">
-                                <img src="assets/images/shop/categories/09.jpg" alt="Category">
-                            </div>
-                        </div>
-                    </a>
-                    <div class="card-body text-center">
-                        <h4 class="card-title">扩展显示屏</h4>
-                        <p class="text-muted">最低3000元</p>
-                        <a class="btn btn-outline-primary btn-sm" href="#">查看详情</a>
-                    </div>
-                </div>
-            </div>
+         
+         </c:forEach>
             
             
         </div>
@@ -132,14 +101,24 @@
              data-owl-carousel='{"nav": false, "dots": false, "margin": 30, "responsive": {"0":{"items":1},"576":{"items":2},"768":{"items":3},"991":{"items":4},"1200":{"items":4}} }'>
              
              
-            <c:forEach items="${IR_Goods_Infos}" var="IR_Goods_Info">	
+            <c:forEach items="${sessionScope.IR_Goods_Infos}" var="IR_Goods_Info">	
                 	
 				 <!-- Start Product  -->
             	<div class="grid-item">
                 	<div class="product-card">
-                    	<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
-                        	<img src="assets/images/shop/categories/04.jpg" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
-                    	</a>
+                	
+                		<c:if test="${not empty IR_Goods_Info.product_image}"> 
+        					<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                        		<img src="${IR_Goods_Info.product_image}" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                    		</a>
+    					</c:if>
+    					
+                     	<c:if test="${empty IR_Goods_Info.product_image}">  
+        					<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                        		<img src="assets/images/nopic.jpg" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">
+                    		</a>
+    					</c:if> 
+                    	
                    		<h3 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=${IR_Goods_Info.goods_id}">${IR_Goods_Info.goods_name}</a></h3>
                     	<h4 class="product-price">${IR_Goods_Info.goods_price} 元</h4>
                     	<div class="product-buttons">

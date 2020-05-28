@@ -20,6 +20,7 @@ import beans.Administrators;
 import beans.AnsjSplitAndWordCount;
 import beans.IntelligentRecommendation;
 import beans.CollectInfoFor_IR;
+import beans.Goods;
 import beans.GoodsPicture;
 
 //@WebServlet("/userLoginController")
@@ -106,7 +107,11 @@ public class userLoginController extends HttpServlet {
 						        GoodsPicture goods_picture = new GoodsPicture();
 						        List RotationChartList = goods_picture.getAllRotationChart();
 								session.setAttribute("RotationChartList", RotationChartList);
-						       
+						        /*更新最新发布的商品*/
+								Goods Goods = new Goods();
+								List LastestGoodsList = Goods.getLastestGoods();
+								session.setAttribute("LastestGoodsList", LastestGoodsList);
+								
 						        String goUrl = "index.jsp";
 								returnJson.put("goUrl", goUrl);
 								out.print(returnJson.toString());

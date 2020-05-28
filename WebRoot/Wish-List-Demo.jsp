@@ -7,18 +7,13 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="js/SecondHandPages_JS/WishListJs.js"></script>
 <%
-ArrayList WiListInfos = (ArrayList)session.getAttribute("WiListInfos");
-user_info user = new user_info();
 String userName = (String)session.getAttribute("userName");
 %>
 <!-- 主体部分 -->
-<div class="hidden_div" id="coverDiv">
-</div>
-<div >
-		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
-</div>
+
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
     <div class="page-title">
@@ -69,36 +64,39 @@ String userName = (String)session.getAttribute("userName");
                             <th>名称</th>
                             <th class="text-center"><a class="btn btn-sm btn-outline-danger" id="deleteWishList">清空收藏</a></th>
                         </tr>
-                        </thead>    
-<%	
-				for(Object WiListInfo : WiListInfos)
-				{
-					Map wiListInfo = (HashMap)WiListInfo;
-					String goods_name = (String)wiListInfo.get("goods_name");
-					String goods_id = (String)wiListInfo.get("goods_id");
-					String goods_category = (String)wiListInfo.get("goods_category");
-					int  goods_stock = Integer.parseInt((String)wiListInfo.get("goods_stock"));
-					double goods_price = Double.parseDouble((String)wiListInfo.get("goods_price"));
-%>                    
-                        <tbody>                      
-                        <tr>
-                            <td>
-                                <div class="product-item"><a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>"><img src="assets/images/shop/cart/03.jpg" alt="Product"></a>
-                                    <div class="product-info">
-                                        <h4 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>"><%=goods_name%></a></h4>
-                                        <span><em>分类：</em> <%=goods_category%></span>
-                                        <div class="text-lg text-medium text-muted"><%=goods_price%>元</div>
-                                        <div>库存:
-                                            <div class="d-inline text-success"><%=goods_stock%>件</div>
-                                        </div>
+                        </thead>                
+					<c:forEach items="${sessionScope.WiListInfos}" var="WiListInfo" varStatus="status">
+					   <tbody>                      
+                      	<tr>
+                      		<td>
+                            <div class="product-item">
+                             	<c:if test="${not empty WiListInfo.product_image}"> 
+	     							<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${WiListInfo.goods_id}">
+	                     				<img src="${WiListInfo.product_image}" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${WiListInfo.goods_id}">
+	                 				</a>
+								</c:if>
+					
+                 				<c:if test="${empty WiListInfo.product_image}">  
+	     							<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${WiListInfo.goods_id}">
+	                     				<img src="assets/images/nopic.jpg" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${WiListInfo.goods_id}">
+	                 				</a>
+								</c:if> 
+                                <div class="product-info">
+                                    <h4 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=${WiListInfo.goods_id}">${WiListInfo.goods_name}</a></h4>
+                                    <span><em>分类：</em> ${WiListInfo.goods_category}</span>
+                                    <div class="text-lg text-medium text-muted">${WiListInfo.goods_price}元</div>
+                                    <div>库存:
+                                        <div class="d-inline text-success">${WiListInfo.goods_stock}件</div>
                                     </div>
                                 </div>
-                            </td>
-                            <td class="text-center"><a class="remove-from-cart" onclick="removeItemFromWishList('<%=goods_id %>','<%=goods_name %>')" data-toggle="tooltip" title="移除"><i class="icon-cross"></i></a></td>
-                        </tr>
-              <%} %>   
-                        
-                        </tbody>
+                            </div>
+                      		</td>
+                      		<td class="text-center"><a class="remove-from-cart" onclick="removeItemFromWishList('${WiListInfo.goods_id}','${WiListInfo.goods_name}')" data-toggle="tooltip" title="移除"><i class="icon-cross"></i></a></td>
+                      	</tr>
+
+                    </tbody>
+				  </c:forEach>
+                       
                     </table>
                 </div>
                 <hr class="mb-4">

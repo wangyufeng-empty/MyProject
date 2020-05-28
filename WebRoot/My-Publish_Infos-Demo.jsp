@@ -5,17 +5,10 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="js/SecondHandPages_JS/myPublishDemoJs.js"></script>
 
 <!-- 主体部分 -->
-<div class="hidden_div" id="coverDiv">
-</div>
-<div>
-		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
-</div>
-<%
-ArrayList myPublish_infos = (ArrayList)session.getAttribute("myPublish_infos");
-%>
 
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
@@ -46,34 +39,34 @@ ArrayList myPublish_infos = (ArrayList)session.getAttribute("myPublish_infos");
                 <thead>
                 <tr>
                     <th>名称</th>          
-                    <th class="text-center">数量</th>
-                    
+                    <th class="text-center">库存</th>
+                    <th class="text-center">修改</th>
+                    <th class="text-center">删除</th>
                 </tr>
                 </thead>
-<%
-			for(Object myPublish_info : myPublish_infos) 
-			{
-				Map myPublish = (HashMap)myPublish_info;
-				String goods_id = (String)myPublish.get("goods_id");  //货物ID
-				String goods_name = (String)myPublish.get("goods_name"); //货物名
-				String goods_category = (String)myPublish.get("goods_category"); //
-				int goods_stock = Integer.parseInt((String)myPublish.get("goods_stock"));  //发布的剩余数量
-				double goods_price = Double.parseDouble((String)myPublish.get("goods_price"));  //价格
-			
-%>
- 			<tbody>
+                
+		<c:forEach items="${sessionScope.myPublish_infos}" var="myPublish" varStatus="status">
+			<tbody>
                 <tr>
 					<!--  第1列 -->
                     <td>
                         <div class="product-item">
-                            <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
-                                <img src="assets/images/shop/cart/01.jpg" alt="Product">
-                            </a>
+                            	<c:if test="${not empty myPublish.product_image}"> 
+        							<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${myPublish.goods_id}">
+                        				<img src="${myPublish.product_image}" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${myPublish.goods_id}">
+                    				</a>
+    							</c:if>
+    					
+                     			<c:if test="${empty myPublish.product_image}">  
+        							<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=${myPublish.goods_id}">
+                        				<img src="assets/images/nopic.jpg" alt="Product" href="usuallyController?url=<%="商品详情"%>&goods_id=${myPublish.goods_id}">
+                    				</a>
+    							</c:if> 
                             <div class="product-info">
                                 <h4 class="product-title">
-                                     <a href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>"><%=goods_name %></a>
+                                     <a href="usuallyController?url=<%="商品详情"%>&goods_id=${myPublish.goods_id}">${myPublish.goods_name}</a>
                                 </h4>
-                                <span><em>价格：</em><%=goods_price%></span><span><em>分类：</em> <%=goods_category%></span>
+                                <span><em>价格：</em>${myPublish.goods_price}</span><span><em>分类：</em>${myPublish.goods_category}</span>
                                
                             </div>
                         </div>
@@ -81,15 +74,19 @@ ArrayList myPublish_infos = (ArrayList)session.getAttribute("myPublish_infos");
                     
                    
                     <!--  第2列 -->
-                    <td class="text-center text-lg text-medium"><%=goods_stock%></td>
+                    <td class="text-center text-lg text-medium">${myPublish.goods_stock}</td>
                     <!--  第3列 -->
                     <td class="text-center">
-                        <a class="btn btn-sm btn-outline-danger" id="<%=goods_id %>" onClick="deleteGoods(<%=goods_id %>)">下架商品</a>
+                        <a class="btn btn-sm btn-outline-danger" id="${myPublish.goods_id}" onClick="updateStock('${myPublish.goods_id}')">修改库存</a>
+                    </td>
+                     <!--  第4列 -->
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-outline-danger" id="${myPublish.goods_id}" onClick="deleteGoods('${myPublish.goods_id}')">下架商品</a>
                     </td>
                 </tr>
-                </tbody>
-              
-    		<% } %>
+            </tbody>
+		</c:forEach>
+ 		    
      </table>
      </div>
      </div>

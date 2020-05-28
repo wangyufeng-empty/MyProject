@@ -7,7 +7,7 @@
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
 <script src="js/SecondHandPages_JS/goodsCartJs.js"></script>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <% 
 String user_id = (String)session.getAttribute("userId"); //直接获得ID
@@ -17,11 +17,7 @@ if(cartsInfo.size() != 0)
 %>
 
 <!-- 主体部分 -->
-<div class="hidden_div" id="coverDiv">
-</div>
-<div>
-		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
-</div>
+
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
     <div class="page-title">
@@ -74,16 +70,24 @@ if(cartsInfo.size() != 0)
 				double subtotal = Double.parseDouble(cart_Info.get("subtotal").toString());//从MAP中，获取货物的小计		
 				String goods_publisher = (String)cart_Info.get("goods_publisher");//从MAP中，获取货物的发布者
 				String goods_category = (String)cart_Info.get("goods_category");//从MAP中，获取货物的分类	
+				String product_image = (String)cart_Info.get("product_image"); //图片
 				total_price+=subtotal;  //累加这个总价	
 %>          
+
                 <tbody>
                 <tr>
 					<!--  第1列 -->
                     <td>
                         <div class="product-item">
+<%                        if(product_image!=null){                                                                                                                 %> 
                             <a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
-                                <img src="assets/images/shop/cart/01.jpg" alt="Product">
+                                <img src="<%=product_image %>" alt="Product">
                             </a>
+<%                         }else{                                                                                                                      %>
+							<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
+                                <img src="assets/images/nopic.jpg" alt="Product">
+                            </a>
+<%                         }                                                                                                                      %>
                             <div class="product-info">
                                 <h4 class="product-title"><a href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>"><%=goods_name %></a></h4>
                                 <span><em>发布者：</em><%=goods_publisher%></span><span><em>分类：</em> <%=goods_category%></span>

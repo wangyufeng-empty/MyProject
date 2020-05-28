@@ -23,7 +23,7 @@ public class LLWS {
 	@OnOpen
 	public void onOpen(Session session,@PathParam("userId") String userId) {
 		String jsonString="{'content':'online','id':"+userId+",'type':'onlineStatus'}";
-		System.out.println("onOpen jsonString:"+jsonString.toString());//////
+		//System.out.println("onOpen jsonString:"+jsonString.toString());//////
 		session.setMaxIdleTimeout(1800000);
 		/*for (String value : mapSU.values()) {
 			try {
@@ -45,7 +45,7 @@ public class LLWS {
     	if(userId!=null&&userId!=""){
         	mapUS.remove(userId);
         	mapSU.remove(session);
-			System.out.println("用户"+userId+"退出llws,当前在线人数为" + mapUS.size());
+			//System.out.println("用户"+userId+"退出llws,当前在线人数为" + mapUS.size());
     	}
     }  
   

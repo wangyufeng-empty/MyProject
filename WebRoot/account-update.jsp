@@ -23,11 +23,7 @@ String selfBlessing = (String)userinfo.get("self_blessing");
 <%@ include file="header.jsp" %>
 <input type="hidden" id="user_grade" value="<%=userGrade %>"/>
 <!-- 主体部分 -->
-<div class="hidden_div" id="coverDiv">
-</div>
-<div>
-	<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
-</div>
+
 <div class="offcanvas-wrapper">
     <!-- Start Page Title -->
     <div class="page-title">
@@ -63,8 +59,8 @@ String selfBlessing = (String)userinfo.get("self_blessing");
                 </aside>
                 <nav class="list-group">
                     <a class="list-group-item active" href="account-update.jsp"><i class="icon-head"></i>我的基本信息</a>
-                    <a class="list-group-item with-badge" href="usuallyController?url=<%="我的订单"%>"><i class="icon-bag"></i>我的订单</a>
-                    <a class="list-group-item with-badge" href="usuallyController?url=<%="我的收藏"%>"><i class="icon-heart"></i>我的收藏</a>
+                    <a class="list-group-item with-badge" href="#" onclick="NavigationJump('我的订单')"><i class="icon-bag"></i>我的订单</a>
+                    <a class="list-group-item with-badge" href="#" onclick="NavigationJump('我的收藏')"><i class="icon-heart"></i>我的收藏</a>
                 </nav>
             </div>
             <div class="col-lg-8">

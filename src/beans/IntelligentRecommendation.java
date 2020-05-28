@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
+import beans.GoodsPicture;
 /**
  * @author 王宇峰
  *
@@ -194,8 +194,23 @@ public class IntelligentRecommendation {
 			}
 		}//end else
 		
+		/*把商品图片属性也加入到IR_GoodsIds_List里面*/
+		List IR_GoodsIdSList = new ArrayList<>();
+		for(int i=0;i<IR_GoodsIdS.size();i++){			
+			Map IR_GoodsId = (Map) IR_GoodsIdS.get(i);
+			 //先从Map里面得到goods_id
+			String goods_id = (String)IR_GoodsId.get("goods_id");
+			GoodsPicture GoodsPicture = new GoodsPicture();
+			//得到此件商品的第一张图片
+			String product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+			System.out.println(goods_id+" image: "+product_image);////////
+			IR_GoodsId.put("product_image", product_image);
+			IR_GoodsIdSList.add(IR_GoodsId);
+			
+		}
+		//System.out.println("IR_GoodsIdSList: "+IR_GoodsIdSList);
 		db.close();
-		return IR_GoodsIdS;
+		return IR_GoodsIdSList;
 	}
 	
 		

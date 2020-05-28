@@ -28,7 +28,7 @@ $(document).on('blur', '#user_id', function() {
 		   	
 		 },
 		 error:function(){ 
-		  alert("请求失败");
+			 layer.alert("请求失败！");
 		 }
 	});//end ajax
 }); //end listen user_id
@@ -89,7 +89,7 @@ function loginIndex(){
 			}
 		 },
 		 error:function(){ 
-		  alert("请求失败");
+			 layer.alert("请求失败！");
 		  $("#login").removeAttr("disabled");
 		 },
 		 complete:function () {			 

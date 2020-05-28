@@ -43,7 +43,7 @@ public class GoodsPicture {
 
 	//通过商品id返回1~n 条图片信息（返回一个商品的n张图片）
 	public List<String> getMultipleGoodsPictures() throws ClassNotFoundException, SQLException{
-		List<String> goods_pictures = null;
+		List<String> goods_pictures = new ArrayList<>();
 		String sql = "select * from goods_picture where goods_id=?";
 		String[] params = {goods_id};
 		
@@ -53,6 +53,28 @@ public class GoodsPicture {
 		goods_pictures = db.getList(sql, params);
 		db.close();
 		return goods_pictures;
+	}
+	
+	/*通过ID返回第一张图片，用于商品显示*/
+	public String getFirstGoodsPictures_ById(String goods_id) 
+			throws ClassNotFoundException, SQLException{
+		GoodsPicture GoodsPicture = new GoodsPicture();
+		GoodsPicture.setGoods_id(goods_id);
+		//得到一件商品的所有图片
+		List goods_pictures = GoodsPicture.getMultipleGoodsPictures();
+		Map goods_picture = new HashMap<>();
+		String goods_image = null;
+		//取这件商品的第一张图片,注意这里有肯能为空
+		
+		if(goods_pictures.size()>0){
+			goods_picture = (Map) goods_pictures.get(0);
+			goods_image = goods_picture.get("product_image").toString();
+			System.out.println(goods_id+": "+goods_image);
+		}
+		else{
+			System.out.println(goods_id+": 没有图片，应用默认图片");
+		}
+		return goods_image;
 	}
 	
 	//添加一条图片信息，存储一张图片,返回0或者1（配合循环上传多张图片）
@@ -116,7 +138,7 @@ public class GoodsPicture {
 			/*将map数据加入到LIST中*/
 			returnList.add(oneMap);
 		}// end for
-		System.out.println("轮播图returnList:"+returnList.toString());  ////////
+		
 		/*返回LIST*/
 		return returnList;
 	}

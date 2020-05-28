@@ -25,13 +25,9 @@
 <title>注册校园二手交易网账号</title>
 </head>
 <body class="logobg_style" >
-<div class="hidden_div" id="coverDiv">
-</div>
-<div >
-		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
-</div>
-  	<div id="large-header" class="large-header login-page">
-  		<canvas id="demo-canvas" width="1920" height="1080"></canvas>  
+
+  	<div id="large-header" class="large-header">
+  		<canvas id="demo-canvas" width="100%" height="100%"></canvas>  
   		<div class="login-form"> 
   		
 <!--   			<div class="login-content">  -->
@@ -121,7 +117,7 @@
 				  <div class="layui-form-item">
 				    <div class="layui-input-block">
 				      <input type="submit" class="layui-btn" value="立即注册" id="register"/>
-				      <input type="reset" class="layui-btn layui-btn-primary" value="重置"/>
+				      <input type="reset" class="layui-btn layui-btn-primary" id="resetReg" value="重置"/>
 				      <input type="button" onclick="location.href='login.jsp'" class="layui-btn layui-btn-primary" value="返回"/>
 				    </div>
 				  </div>  

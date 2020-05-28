@@ -54,7 +54,7 @@ String register_time = (String)userInfo.get("register_time");//注册时间
                 </aside>
                 <nav class="list-group">
                     <a class="list-group-item with-badge" href="account-update.jsp"><i class="icon-head"></i>我的基本信息</a>
-                    <a class="list-group-item with-badge" href="usuallyController?url=<%="我的订单"%>"><i class="icon-bag"></i>我买到的</a>
+                    <a class="list-group-item with-badge" href="#" onclick="NavigationJump('我的订单')"><i class="icon-bag"></i>我买到的</a>
                     <a class="list-group-item active" href="usuallyController?url=<%="我卖出的"%>"><i class="icon-heart"></i>我卖出的</a>
                   
                 </nav>

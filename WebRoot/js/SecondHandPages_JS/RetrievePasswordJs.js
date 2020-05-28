@@ -5,7 +5,7 @@ $(document).ready(function(){
 		var user_id = $("#user_id").val();
 		$.ajax({
 			 type:'post',  
-			 url:"/JsVerify?method=checkUserId", 
+			 url:"JsVerify?method=checkUserId", 
 			 cache: false,
 			 data:{"user_id":user_id},  //重点必须为一个变量如：data
 			 dataType:'json', 
@@ -28,7 +28,7 @@ $(document).ready(function(){
 			   	
 			 },
 			 error:function(){ 
-			  alert("请求失败");
+				 layer.alert("请求失败！");
 			 }
 		});//end ajax
 	}); //end listen user_id
@@ -103,7 +103,7 @@ function next()
 			}
 		 },
 		 error:function(){ 
-		  alert("请求失败");
+			 layer.alert("请求失败！");
 		 },
 		 complete:function () {			 
              //完成以后隐藏load动画
@@ -174,7 +174,7 @@ function retrievePassword(){
 			}
 		 },
 		 error:function(){ 
-		  alert("请求失败");
+			 layer.alert("请求失败！");
 		 },
 		 complete:function () {			 
              //完成以后隐藏load动画

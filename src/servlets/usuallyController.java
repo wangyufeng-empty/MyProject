@@ -16,6 +16,9 @@ import beans.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.util.Random;
+import java.util.Scanner;
+
 public class usuallyController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
   
@@ -51,19 +54,28 @@ public class usuallyController extends HttpServlet {
 	 	} 
 		 
 		String url = request.getParameter("url");  //获取请求的路径，配合hidden或者链接 ?name=value 使用
+		
+		
 		/**********************************1-请求为侧拉菜单“分类浏览”的计算机书籍类*************************/
 		
-		if(url.equals("计算机书籍")||url.equals("耳机")||url.equals("电脑")||url.equals("相机")||url.equals("单片机")||url.equals("开发软件/工具"))   //1-请求为侧拉菜单“分类浏览”
+		if(url.equals("CategorySearch"))   //1-请求为侧拉菜单“分类浏览”
 		{
+			
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			String category = request.getParameter("category");
+			
 			Goods goods = new Goods();
-			goods.setGoodsCategory(url);//url获得的直接就是货物种类，传递给goods类的类别属性
-			ArrayList goodsInfo = null;
+			goods.setGoodsCategory(category);
+			ArrayList searchCategoryResult = null;
 			try 
 			{			
-				goodsInfo = (ArrayList) goods.getGoodsInfoByCategory();  //查询结果list
-				session.setAttribute("sort", url);//发送给jsp的url以显示不同的内容，这里按照类别发送
-				session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
-				request.getRequestDispatcher("searchCategory.jsp").forward(request, response);//请求转发
+				searchCategoryResult = (ArrayList) goods.getGoodsInfoByCategory();  //查询结果list
+				session.setAttribute("sort", category);//发送给jsp的url以显示不同的内容，这里按照类别发送
+				session.setAttribute("searchCategoryResult", searchCategoryResult);//把结果集发送给显示货物的界面
+				returnJson.put("goUrl", "searchCategory.jsp");
+				out.print(returnJson.toString());
+				//response.sendRedirect("searchCategory.jsp");
 			} 
 			catch (ClassNotFoundException | SQLException e) 
 			{
@@ -83,17 +95,19 @@ public class usuallyController extends HttpServlet {
 		/*********************3-请求的地方是“关键字搜索”功能**********************************/
 		else if(url.equals("site-search"))   //3-请求的地方是“关键字搜索”功能
 		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			Goods goods = new Goods();
 			String search_key = request.getParameter("search_key");
+			System.out.println("search_key:"+search_key);//////////////
 			goods.setGoodsName(search_key); //把搜索关键字放入类的goodsname属性中，参见getGoodsInfoByKey()方法内容
 			try
 			{
-				ArrayList goodsInfo = (ArrayList) goods.getGoodsInfoByKey();    //根据关键字搜索返回的结果
-				if(goodsInfo.size()==0)  //本次关键字搜索结果为空
+				ArrayList SearchResultGoodsInfo = (ArrayList) goods.getGoodsInfoByKey();    //根据关键字搜索返回的结果
+				if(SearchResultGoodsInfo.size()==0)  //本次关键字搜索结果为空
 				{
-					String message = "本次搜索结果为空哦！";
-					session.setAttribute("message", message);
-					response.sendRedirect("index.jsp"); 
+					returnJson.put("returnMessage","本次搜索结果为空哦！");
+					out.print(returnJson.toString());
 				}
 				else  //关键字搜索成功
 					{
@@ -124,9 +138,11 @@ public class usuallyController extends HttpServlet {
 							}						
 							/*-----------------------------------------------------*/
 						
-					request.setAttribute("url", "searchResultSuccess");//发送给jsp的url以显示不同的内容
-					session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
-					request.getRequestDispatcher("site-searchResult.jsp").forward(request, response);//请求转发
+					//request.setAttribute("url", "searchResultSuccess");//发送给jsp的url以显示不同的内容
+					session.setAttribute("SearchResultGoodsInfo", SearchResultGoodsInfo);//把结果集发送给显示货物的界面
+					returnJson.put("goUrl", "site-searchResult.jsp");
+					out.print(returnJson.toString());
+					
 				}
 			}
 			catch (ClassNotFoundException | SQLException e)
@@ -205,13 +221,18 @@ public class usuallyController extends HttpServlet {
 		/**********************6-获取来自“头部-查看所有商品信息”功能的请求申请***********************/
 		else if(url.equals("全部商品"))  //6-获取来自“头部-查看所有商品信息”功能的请求申请
 		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			Goods goods = new Goods();  //新建一个货物对象
 			ArrayList goodsInfo = null;
 			try 
 			{
 				goodsInfo = (ArrayList) goods.getAllGoodsInfo(); //查询结果list
 				session.setAttribute("goodsInfo", goodsInfo);//把结果集发送给显示货物的界面
-				request.getRequestDispatcher("All-Goods-Demo.jsp").forward(request, response);//请求转发
+				returnJson.put("goUrl", "All-Goods-Demo.jsp");
+				out.print(returnJson.toString());
+				
+				
 			} 
 			catch (ClassNotFoundException | SQLException e) 
 			{
@@ -342,8 +363,9 @@ public class usuallyController extends HttpServlet {
 		}
 		
 		
-		/**********  8-获取来自“加入收藏”功能的请求申请 （和加入购物车类似，就是界面不同）*********************/     //2019-7-10   已经写好类和界面，直接加入就行
-		else if(url.equals("加入收藏"))  // 8-获取来自“加入收藏”功能的请求申请 （和加入购物车类似，就是界面不同）
+		/**********  8-获取来自“加入收藏”功能的请求申请 *************/    
+		//2019-7-10   已经写好类和界面，直接加入就行
+		else if(url.equals("加入收藏"))  
 		{
 			/*回调信息*/
 			String returnMessage = "";
@@ -449,6 +471,8 @@ public class usuallyController extends HttpServlet {
 		/**********  9-获取来自“我的收藏”功能的请求申请 （和加入购物车类似，就是界面不同）*********************/     //2019-7-10   已经写好类和界面，直接加入就行
 		else if(url.equals("我的收藏"))  // 9-获取来自“我的收藏”功能的请求申请 （和加入购物车类似，就是界面不同）
 		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			try 
 			{
 				/**************创建对象*******************/		
@@ -461,7 +485,9 @@ public class usuallyController extends HttpServlet {
 				wishList.setUser_id(userId);
 				List WiListInfos = wishList.getAllWishListInfo();	
 				session.setAttribute("WiListInfos", WiListInfos);//加入全局会话
-				response.sendRedirect("Wish-List-Demo.jsp"); 	
+				returnJson.put("goUrl", "Wish-List-Demo.jsp");
+				out.print(returnJson.toString());
+				
 			}
 			catch (ClassNotFoundException | SQLException e)
 			{
@@ -475,6 +501,8 @@ public class usuallyController extends HttpServlet {
 		/***************************  10-获取来自“查看购物车”功能的请求申请 **********************************/
 		else if(url.equals("查看购物车"))  // 10-获取来自“查看购物车”功能的请求申请 
 		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			GoodsCart cart = new GoodsCart();  //新建一个货物对象
 			String user_id = (String)session.getAttribute("userId");
 			cart.setUser_id(user_id);
@@ -483,7 +511,9 @@ public class usuallyController extends HttpServlet {
 			{
 				cartsInfo = (ArrayList) cart.getAllCartInfo(); //查询结果list
 				session.setAttribute("cartsInfo", cartsInfo);//把结果集发送给显示货物的界面
-				request.getRequestDispatcher("Goods-Cart-Demo.jsp").forward(request, response);//请求转发
+				returnJson.put("goUrl", "Goods-Cart-Demo.jsp");
+				out.print(returnJson.toString());
+				
 			} 
 			catch (ClassNotFoundException | SQLException e) 
 			{
@@ -709,6 +739,8 @@ public class usuallyController extends HttpServlet {
 		/***************************  16-获取确认订单信息中的“下一步”功能的请求申请 **********************************/
 		else if(url.equals("订单下一步"))  //16-获取确认订单信息中的“下一步”功能的请求申请 
 		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			try 
 			{
 				GoodsCart cart = new GoodsCart();  //新建一个货物对象
@@ -727,7 +759,9 @@ public class usuallyController extends HttpServlet {
 				ArrayList cartsInfo = (ArrayList) cart.getAllCartInfo(); //查询结果list
 				session.setAttribute("cartsInfo", cartsInfo);//把结果集发送给显示货物的界面
 				session.setAttribute("userInfo", userInfo);//把结果集发送给显示货物的界面
-				response.sendRedirect("CheckoutOrder-Goods-Info.jsp");
+				returnJson.put("goUrl", "CheckoutOrder-Goods-Info.jsp");
+				out.print(returnJson.toString());
+				//response.sendRedirect("CheckoutOrder-Goods-Info.jsp");
 				} 
 				catch (ClassNotFoundException | SQLException e) 
 				{
@@ -889,6 +923,8 @@ public class usuallyController extends HttpServlet {
 		/***************************  18-获取主页面中的“我的订单”功能的请求申请 *****************************************/
 		else if(url.equals("我的订单"))  //18-获取主页面中的“我的订单”功能的请求申请 
 		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			try
 			{
 				/**********创建对象***********/
@@ -904,7 +940,9 @@ public class usuallyController extends HttpServlet {
 				List HistoryOrderInfo = order.getAllOrderInfo();
 				session.setAttribute("HistoryOrderInfo", HistoryOrderInfo);//设置到会话里   全部订单信息
 				session.setAttribute("userInfo", userInfo);//设置到会话里 ，一条用户信息
-				response.sendRedirect("History-Order-Demo.jsp");
+				returnJson.put("goUrl", "History-Order-Demo.jsp");				
+				out.print(returnJson.toString());	
+				
 			} 
 			catch (ClassNotFoundException | SQLException e) 
 			{
@@ -920,9 +958,15 @@ public class usuallyController extends HttpServlet {
 			{
 				historyOrder_info historyOrder = new historyOrder_info();  //创建历史订单类
 				String order_id = request.getParameter("order_id");
-				session.setAttribute("historyOrder_id", order_id);
+//				session.setAttribute("historyOrder_id", order_id);
 				historyOrder.setOrder_id(order_id);				
 				List HistoryOrder_infos = historyOrder.getOneOrderId_Info();
+				userOrder userOrder = new userOrder();
+				userOrder.setOrder_id(order_id);
+				userOrder.setUser_id(session.getAttribute("userId").toString());
+				String order_state = userOrder.getOneOrderInfo().get("order_state").toString();
+				session.setAttribute("thisOrder_state", order_state);
+				System.out.println("thisOrder_state:"+session.getAttribute("thisOrder_state"));////
 				session.setAttribute("HistoryOrder_infos", HistoryOrder_infos);
 				response.sendRedirect("HistoryOrder-Detail-Demo.jsp");
 			} 
@@ -1074,14 +1118,12 @@ public class usuallyController extends HttpServlet {
 			String goods_describe = request.getParameter("goods_describe");
 			String goods_issuDate = time.creatNowTimeFormart();  //获取发布时间
 			/*******************************/	
-			/***********计算goods_id*************/
-			List AllGoodsInfo = goods.getAllGoodsInfo();
-			int Goods_id = 1001;
-			for(Object GoodsInfo : AllGoodsInfo)
-			{
-				Goods_id++;
-			}
-			String goods_id = ""+Goods_id;//转化类型
+			/***********计算goods_id，使用时间戳吧************/
+			Random random = new Random();
+			int ends = random.nextInt(999);//生成三位数随机数小标
+			
+			Date date = new Date();
+			String goods_id = ""+date.getTime()+"_"+String.format("%03d",ends);			
 			/***********************************/
 			/**********更新货物数据库，新增一条信息********/
 			goods.setGoodsId(goods_id);
@@ -1132,6 +1174,8 @@ public class usuallyController extends HttpServlet {
 		/***************************  24-获取页面中的“我的发布”功能的请求申请 *****************************************/
 		else if(url.equals("我的发布"))  //24-获取页面中的“我的发布”功能的请求申请
 		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 		try 
 		{
 			String publisher_id = (String)session.getAttribute("userId");  //获取此用户的姓名作为发布者
@@ -1141,7 +1185,9 @@ public class usuallyController extends HttpServlet {
 			goods.setPublisher_id(publisher_id);
 			List myPublish_infos = goods.getGoodsInfoByPublisherId();			
 			session.setAttribute("myPublish_infos", myPublish_infos);
-			response.sendRedirect("My-Publish_Infos-Demo.jsp");
+			returnJson.put("goUrl", "My-Publish_Infos-Demo.jsp");
+			out.print(returnJson.toString());
+		
 		} 
 		catch (ClassNotFoundException | SQLException e) 
 		{
@@ -1172,34 +1218,6 @@ public class usuallyController extends HttpServlet {
 				goods.setPublisher_id(publisher_id);
 				String goods_name = goods.getGoodsNikename();  //得到此件货物名
 				int result_del = goods.deleteGoodsOne();   //执行数据库删除
-				
-				/*********************修改货物ID，在此之后的所有商品ID递减1**************/				
-				int goods_id_del = Integer.parseInt(goods_id);   //已经被删除的货物ID
-				List AllGoods = goods.getAllGoodsInfo();
-				for(Object OneGoods:AllGoods)
-				{
-					HashMap Onegoods = (HashMap)OneGoods;
-					String goods_id_DEL = (String)Onegoods.get("goods_id");//String 类型的原ID
-					goods.setGoodsId(goods_id_DEL);//设置原ID
-					int goods_id_db = Integer.parseInt((String)Onegoods.get("goods_id"));   //原ID	转INT			
-					if(goods_id_db > goods_id_del)   //在被删除的货物之后的所有货物 ID都要减一
-					{			
-						
-						goods_id_db--;
-						String goods_id_DB = ""+goods_id_db;  //新ID 转STRING
-						goods.setGoodsId_db(goods_id_DB);  //设置新ID
-						int result_changeId = goods.updateGoodsID();
-						if(result_changeId == 1)
-							continue;
-						else
-						{
-							returnMessage =goods_name+"ID冲突，未知错误！";
-							returnJson.put("returnMessage", returnMessage);
-							out.print(returnJson.toString());
-						}
-					}
-				}
-				/********************************/				
 				
 				if(result_del == 1)
 				{			
@@ -1323,16 +1341,24 @@ public class usuallyController extends HttpServlet {
 			}
 		}
 		
-		/***************************  28-获得轮播图 *****************************************/
+		/***************************  28-获得轮播图和最新发布的3个商品 *****************************************/
 		else if("getAllRotationChart".equals(url)){
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			System.out.println("获取轮播图");
 			GoodsPicture goods_picture = new GoodsPicture();
+			Goods Goods = new Goods();
 			/*获取轮播图*/
 			try {
 			/*封装了获取轮播图的方法getAllRotationChart*/
 			List RotationChartList = goods_picture.getAllRotationChart();
+			/*获取最新发布的三件商品*/
+			List LastestGoodsList = Goods.getLastestGoods();
 			session.setAttribute("RotationChartList", RotationChartList);
-			response.sendRedirect("index.jsp"); 		
+			session.setAttribute("LastestGoodsList", LastestGoodsList);
+			returnJson.put("goUrl", "index.jsp");
+			out.print(returnJson.toString());
+			
 			} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1341,12 +1367,16 @@ public class usuallyController extends HttpServlet {
 			
 		/***************************  29-请求通知公告 *****************************************/
 		else if("通知公告".equals(url)){
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			AnnouncementInfo announcement = new AnnouncementInfo();
 			 
 			try {
 			List announcementList = announcement.getAllAnnouncementInfo();			
 			session.setAttribute("announcementList", announcementList);
-			response.sendRedirect("Announcement-Info-Demo.jsp"); 		
+			returnJson.put("goUrl", "Announcement-Info-Demo.jsp");
+			out.print(returnJson.toString());
+			
 			} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1378,6 +1408,76 @@ public class usuallyController extends HttpServlet {
 			}
 		}
 		
+		/***************************  31-在发布界面修改库存 ***************************/
+		else if("updateStock".equals(url)){
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			
+			String goods_id = request.getParameter("goods_id").toString(); //获取商品ID
+			int goods_stock =Integer.parseInt(request.getParameter("goods_stock").toString());
+			Goods Goods = new Goods();
+			Goods.setGoodsId(goods_id);
+			Goods.setGoodsStock(goods_stock);			
+			try {
+				if(Goods.updateGoodsStock()==1){   //成功修改一条库存，需要更新会话信息，否则库存显示不会改变
+					String publisher_id = (String)session.getAttribute("userId");
+					Goods.setPublisher_id(publisher_id);
+					List myPublish_infos = Goods.getGoodsInfoByPublisherId();			
+					session.setAttribute("myPublish_infos", myPublish_infos);
+					
+					returnMessage ="库存修改成功！";
+					returnJson.put("returnMessage", returnMessage);
+					returnJson.put("status", "success");
+					out.print(returnJson.toString());			
+				}
+				else{
+					returnMessage ="库存修改失败，未知错误！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());
+				}
+				
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		/***************************  32-订单确认收货 ***************************/
+		else if("确认收货".equals(url)){
+			/*回调信息*/
+			String returnMessage = "";
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			String user_id = (String)session.getAttribute("userId");
+			String order_id = request.getParameter("order_id").toString();
+			userOrder userOrder = new userOrder();
+			userOrder.setUser_id(user_id);
+			userOrder.setOrder_id(order_id);
+			userOrder.setOrder_state("已完成");
+			
+			try {
+				if(userOrder.updateOrderState()==1){
+					//更新会话的订单状态信息
+					String order_state = userOrder.getOneOrderInfo().get("order_state").toString();
+					session.setAttribute("thisOrder_state", order_state);
+					
+					returnMessage = "订单收货成功，此订单已完成！";
+					returnJson.put("returnMessage", returnMessage);
+					returnJson.put("status", "success");
+					out.print(returnJson.toString());
+				}
+				else{
+					returnMessage ="确认收货失败，未知错误！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());
+				}
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		
 		

@@ -48,6 +48,7 @@ public class MessageController extends HttpServlet {
                     //DBUtil db = new DBUtil();
                     DBUtil db = DBUtil.getDBUtil();
                     conn = db.getConnection();
+                    //左连接操作，friend_message as fm  ； user_info as ui 简写
                     String sql = "select fm.*,ui.user_name from friend_message fm LEFT JOIN user_info ui ON fm.from_user_id = ui.user_id WHERE to_user_id = ? and is_read = ?";
                     pstmt = conn.prepareStatement(sql);
                     pstmt.setString(1, userId);
@@ -119,6 +120,7 @@ public class MessageController extends HttpServlet {
                         //DBUtil db = new DBUtil();
                         DBUtil db = DBUtil.getDBUtil();
                         conn = db.getConnection();
+                        //count（id）as total 别名
                         String sql = "select count(id) total from friend_message where (from_user_id = ? and to_user_id = ?) or (from_user_id = ? and to_user_id = ?)";
                         pstmt = conn.prepareStatement(sql);
                         pstmt.setString(1, friendId);
@@ -165,10 +167,13 @@ public class MessageController extends HttpServlet {
                 String mineId = request.getParameter("mineId") == null ? "" : request.getParameter("mineId").toString();
                 String friendId = request.getParameter("friendId") == null ? "" : request.getParameter("friendId").toString();
                 String type = request.getParameter("type") == null ? "" : request.getParameter("type").toString();
-
+                //cur: 第几页
+                //pageSize: 一页显示多少条记录
+                //stratRow : 查找的开始的第一条的下标
                 int cur = request.getParameter("cur") == null ? 1 : Integer.parseInt(request.getParameter("cur").toString());
                 int pageSize = request.getParameter("pageSize") == null ? 1 : Integer.parseInt(request.getParameter("pageSize").toString());
                 int stratRow = (cur -1)*pageSize;
+                /*如果封装类型是好友类型，单聊*/
                 if(type.trim().equals("friend")){
                     Connection conn = null;
                     PreparedStatement pstmt = null;

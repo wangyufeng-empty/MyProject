@@ -168,49 +168,7 @@
 
 </body>
 <script>
-    $(function () {
-        var allImgs = $("#allImgs");
-        layui.use(['upload', 'layer'], function () {
-            var upload = layui.upload,
-                layer = layui.layer;
-            //多文件上传
-            var multipleUploadInst = upload.render({
-                elem: '#uploadImages'
-                , url: basePath + '/uploadFile?url=multipleUpload'
-                , multiple: true
-                , acceptMime: 'image/*'
-                , field: 'files'
-                , choose: function (obj) {
-                    layer.load(); //上传loading
-                }
-                , done: function (res) {
-                    if (res.code == '0') {//成功
-                        $.each(res.data, function (k, o) {
-                            var imgHtml = '<li><a href="#' + o.identifier + '" class="img-wrap"><span onclick="closeImg(this);" class="close">&times;</span><img onclick="imgClick(this);" src="' + o.src + '" alt="Product"></a></li>';
-                            allImgs.append(imgHtml);
-                        });
-                    } else {
-                        layer.msg(res.msg, {
-                            icon: 2
-                        });
-                    }
-                }
-                , allDone: function (obj) { //当文件全部被提交后，才触发
-                    $("#allImgs li:last-child").find("img").click();
-                    layer.closeAll('loading');
-                    layer.msg("文件上传完成！", {
-                        icon: 1
-                    });
-                }
-                , error: function () {
-                    layer.closeAll('loading');
-                    layer.msg("请求异常", {
-                        icon: 2
-                    });
-                }
-            });
-        });
-    })
+   
     function imgClick(obj){
         $("#bigImg").html('<img src="'+$(obj).attr("src")+'" alt="Product">');
         $(obj).parent().parent().siblings().removeClass('active');

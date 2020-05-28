@@ -48,18 +48,44 @@ public class historyOrder_info {
 		this.db = db;
 	}
 	
-	//通过订单ID返回n条货物的具体信息
+	//通过订单ID返回n条货物的具体信息，返回订单ID、商品名、数量、商品ID、小计、发布者、分类、描述
 	public List getOneOrderId_Info() throws ClassNotFoundException, SQLException{
 		List orderInfo = null;
 		String sql = "select * from historyOrder_info where order_id=?";
 		String[] params = {order_id};
-		
-		/*DBUtil db = new DBUtil();*/
-		/*db.getConnection();*/   //所有的方法都要先与数据库建立连接
-		
 		orderInfo = db.getList(sql, params);
+		
+		/*>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+		//循环取出每一件
+		List goodsinfoList = new ArrayList<>();
+		GoodsPicture GoodsPicture = new GoodsPicture();
+		Goods Goods = new Goods();  //取商品的一些信息
+		
+		String product_image = null;
+		String goods_id = null;
+		for(Object goods_info : orderInfo){
+			Map<String, String> goodsInfo = (HashMap)goods_info;
+			goods_id = goodsInfo.get("goods_id").toString();		
+			//取出商品图片
+			product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+			goodsInfo.put("product_image", product_image);
+			/*获取发布者、分类、描述*/
+			Goods.setGoodsId(goods_id);
+			goodsInfo.put("goods_publisher", Goods.getGoodsInfo().get("goods_publisher").toString());
+			goodsInfo.put("goods_category", Goods.getGoodsInfo().get("goods_category").toString());
+			String goods_describe = Goods.getGoodsInfo().get("goods_describe").toString();
+			if(goods_describe.length()>40){//字符串过长，用省略号替换
+				goods_describe = goods_describe.substring(0, 45)+"......";
+			}
+			goodsInfo.put("goods_describe", goods_describe);
+			
+			goodsinfoList.add(goodsInfo);
+		}
+		/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+		
+		
 		db.close();
-		return orderInfo;
+		return goodsinfoList;
 	}
 	
 	

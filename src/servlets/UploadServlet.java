@@ -69,8 +69,9 @@ public class UploadServlet extends HttpServlet {
             String url = request.getParameter("url") == null ? "" : request.getParameter("url").toString().trim();
             writer = response.getWriter();
             // 这个方法可能会抛出异常！它会检查单个文件的大小，如果超出了1m，那么这个方法抛出异常。
-            List<FileItem> fileItemList = sfu.parseRequest(request);  //创建list对象
+            List<FileItem> fileItemList = sfu.parseRequest(request);  //创建list对象，接收文件
             if(fileItemList != null && fileItemList.size() > 0){
+            	
                 if(url.equals("layim")){
                     Calendar cal = Calendar.getInstance();
                     /*
@@ -118,11 +119,12 @@ public class UploadServlet extends HttpServlet {
                     writer.write(JSONObject.fromObject(uploadFile).toString());
                 }
                 
-                else if(url.equals("multipleUpload")){//多文件上传
+              //多文件上传
+                else if(url.equals("multipleUpload")){
                     List<Map<String,String>> fileLinkList = new ArrayList<Map<String,String>>();
                     System.out.println("总文件数"+fileItemList.size());
                     for (FileItem item : fileItemList) {
-                        Calendar cal = Calendar.getInstance();
+                        Calendar cal = Calendar.getInstance();//获得定时器
                         // 得到保存文件的根目录，获取的是真实路径！
                         String realpath = this.getServletContext().getRealPath("/uploadFile");
                         // 目录打散
@@ -144,7 +146,7 @@ public class UploadServlet extends HttpServlet {
                         // 创建目录链
                         savedir.mkdirs();
 
-                        long timeInMill = cal.getTimeInMillis();
+                        long timeInMill = cal.getTimeInMillis();//时间戳
                         // 处理文件同名问题
                         filename = filename.substring(0,filename.lastIndexOf("."))+"_"+timeInMill+filename.substring(filename.lastIndexOf("."));
                         //使用路径和文件名创建目录文件

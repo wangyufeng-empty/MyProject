@@ -1,5 +1,5 @@
 $(document).ready(function(){
-
+	document.getElementById("resetReg").click();
 //注册操作
 
 $("#register").click(function(){
@@ -85,7 +85,7 @@ $("#register").click(function(){
 	   $("#register").removeAttr("disabled");
 	 },
 	 error:function(){ 
-	  alert("请求失败");
+		 layer.alert("请求失败！");
 	  $("#register").removeAttr("disabled");
 	 },
 	 complete:function () {			 
@@ -101,7 +101,7 @@ $(document).on('blur', '#user_id', function() {
 	var user_id = $("#user_id").val();
 	$.ajax({
 		 type:'post',  
-		 url:"/JsVerify?method=checkUserId", 
+		 url:"JsVerify?method=checkUserId", 
 		 cache: false,
 		 data:{"user_id":user_id},  //重点必须为一个变量如：data
 		 dataType:'json', 
@@ -120,7 +120,7 @@ $(document).on('blur', '#user_id', function() {
 		   	}
 		 },
 		 error:function(){ 
-		  alert("请求失败");
+			 layer.alert("请求失败！");
 		 }
 	});//end ajax
 }); //end listen user_id
@@ -157,6 +157,13 @@ $("#password_confirm").on("blur",function(){
 	}
 	
 })
+
+//监听重置按钮
+$(document).on('click', '#resetReg', function() {  
+	$("#userId_tip").text("");	
+	$("#password_tip").text("");	
+	$("#password_confirm_tip").text("");
+});
 
 
 });//end ready

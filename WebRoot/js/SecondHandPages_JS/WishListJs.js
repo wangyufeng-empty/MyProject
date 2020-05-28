@@ -31,7 +31,7 @@ $(document).ready(function(){
 					 
 				 },
 				 error:function(){ 
-					 alert("请求失败");
+					 layer.alert("请求失败，请重新登录！");
 				 },
 				 complete:function () {			 
 	                 //完成以后隐藏load动画
@@ -66,12 +66,12 @@ function removeItemFromWishList(goods_id,goods_name){
 				 var returnJson = eval(data);
 				 
 				 if(returnJson.hasOwnProperty("status")){  //如果回调为成功的信息
-					 parent.layer.msg(returnJson.returnMessage,{icon:6,time:500,end:function(){window.location.reload();}});
+					 parent.layer.msg(returnJson.returnMessage,{icon:6,time:1500,end:function(){window.location.reload();}});
 				 }
 				 else parent.layer.msg(returnJson.returnMessage,{icon:5,time:4000}); 
 			 },
 			 error:function(){ 
-				 alert("请求失败");
+				 layer.alert("请求失败，请重新登录！");
 			 },
 			 complete:function () {			 
                  //完成以后隐藏load动画

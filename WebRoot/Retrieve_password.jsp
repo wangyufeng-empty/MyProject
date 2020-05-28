@@ -52,7 +52,7 @@
 				
                   <div class="tishi"></div>
 				<div class="form-group">
-				<input type="button" value="下一步" class="btn btn-danger btn-block btn-login" id="nextStep" onclick="next()"/>
+				<input type="submit" value="下一步" class="btn btn-danger btn-block btn-login" id="nextStep" onclick="next()"/>
 						
 				</div>
 				<div class=" textright"><a href="login.jsp" class="forget">返回</a></div>

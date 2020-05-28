@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-3 col-sm-6 text-center home-cat">
                 <img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="assets/images/services/01.png" alt="Shipping">
-                <h6>校内交易</h6>
+                <h6>燕大校内交易</h6>
                 <p class="text-muted margin-bottom-none">给你最快捷的体验</p>
             </div>
             <div class="col-md-3 col-sm-6 text-center home-cat">
@@ -17,8 +17,8 @@
             </div>
             <div class="col-md-3 col-sm-6 text-center home-cat">
                 <img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="assets/images/services/03.png" alt="Support">
-                <h6>学生专享优惠</h6>
-                <p class="text-muted margin-bottom-none">燕大专属网站，只为校园便利</p>
+                <h6>网页即时通讯</h6>
+                <p class="text-muted margin-bottom-none">不需要QQ微信，就地高效联系</p>
             </div>
             <div class="col-md-3 col-sm-6 text-center home-cat">
                 <img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="assets/images/services/04.png" alt="Payment">

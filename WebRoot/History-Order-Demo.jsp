@@ -29,7 +29,7 @@ String register_time = (String)userInfo.get("register_time");//注册时间
             </div>
             <div class="column">
                 <ul class="breadcrumbs">
-                    <li><a href="index-1.html">主页</a></li>
+                    <li><a href="index.jsp">主页</a></li>
                     <li class="separator">&nbsp;</li>
                     <li>我的订单</li>
                 </ul>
@@ -54,7 +54,7 @@ String register_time = (String)userInfo.get("register_time");//注册时间
                 </aside>
                 <nav class="list-group">
                     <a class="list-group-item with-badge" href="account-update.jsp"><i class="icon-head"></i>我的基本信息</a>
-                    <a class="list-group-item active" href="usuallyController?url=<%="我的订单"%>"><i class="icon-bag"></i>我买到的</a>
+                    <a class="list-group-item active" href="#" onclick="NavigationJump('我的订单')"><i class="icon-bag"></i>我买到的</a>
                     <a class="list-group-item with-badge" href="usuallyController?url=<%="我卖出的"%>"><i class="icon-heart"></i>我卖出的</a>
                   
                 </nav>
@@ -64,11 +64,12 @@ String register_time = (String)userInfo.get("register_time");//注册时间
                 <div class="table-responsive">
                     <table class="table table-hover margin-bottom-none">
                         <thead>
-                        <tr>
+                        <tr align="center">
                             <th>订单号</th>
                             <th>下单时间</th>
                             <th>状态</th>
                             <th>总计</th>
+                           
                         </tr>
                         </thead>
 <%
@@ -85,8 +86,13 @@ String register_time = (String)userInfo.get("register_time");//注册时间
 							<!--设计点击订单号可以查看具体的订单信息 -->
                             <td><a class="text-medium navi-link" href="usuallyController?url=<%="订单详情"%>&order_id=<%=order_id%>" ><%=order_id %></a></td>
                             <td><%=order_time %></td>
+                            <%if(order_state.equals("待收货")){ %>
+                            <td><span class="text-danger"><%=order_state %></span></td>
+                            <%}else{ %>
                             <td><span class="text-success"><%=order_state %></span></td>
+                            <%} %>
                             <td><span class="text-medium"><%=sum_account %>元</span></td>
+                            
                         </tr>                     
                         </tbody>
 <%		

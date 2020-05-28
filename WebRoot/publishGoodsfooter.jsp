@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-3 col-sm-6 text-center home-cat">
                 <img class="d-block w-90 img-thumbnail rounded-circle mx-auto mb-3" src="assets/images/services/01.png" alt="Shipping">
-                <h6>免费运费</h6>
+                <h6>燕大校内交易</h6>
                 <p class="text-muted margin-bottom-none">给你最快捷的体验</p>
             </div>
             <div class="col-md-3 col-sm-6 text-center home-cat">
@@ -33,7 +33,7 @@
     <footer class="site-footer">
        
             <!-- Start Copyright -->
-            <p class="footer-copyright text-center">copyright 2020 王宇峰 | 保留所有权利 </p>
+            <p class="footer-copyright text-center">Copyright 2020 by 王宇峰 | 保留所有权利 </p>
             <p class="footer-copyright text-center">用途：毕业设计；作者：王宇峰；学校：燕山大学</p>
             <!-- End Copyright -->
         

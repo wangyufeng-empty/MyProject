@@ -102,9 +102,6 @@ public class Goods {                  //商品类
 			String sql = "select * from goods_info where goods_id=?";//数据库里面的user_id就是userName
 			String[] params = {goodsId};
 			
-//			DBUtil db = new DBUtil();
-//			db.getConnection();   //所有的方法都要先与数据库建立连接
-			
 			goodsinfo = db.getMap(sql, params);
 			db.close();
 			return goodsinfo;
@@ -116,8 +113,25 @@ public class Goods {                  //商品类
 			String sql = "select * from goods_info where publisher_id=?";
 			String[] params = {publisher_id};
 			goodsInfo = db.getList(sql, params);
+			
+			/*>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+			//循环取出每一件
+			List goodsinfoList = new ArrayList<>();
+			GoodsPicture GoodsPicture = new GoodsPicture();
+			String product_image = null;
+			String goods_id = null;
+			for(Object goods_info : goodsInfo){
+				Map goods_Info = (HashMap)goods_info;
+				goods_id = goods_Info.get("goods_id").toString();		
+				//取出商品图片
+				product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+				goods_Info.put("product_image", product_image);
+				goodsinfoList.add(goods_Info);
+			}
+			/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+			
 			db.close();
-			return goodsInfo;
+			return goodsinfoList;
 		}
 		
 		//通过货物类别返回N条货物信息
@@ -126,30 +140,107 @@ public class Goods {                  //商品类
 			String sql = "select * from goods_info where goods_category=?";//数据库里面的user_id就是userName
 			String[] params = {goodsCategory};
 			goodsinfo = db.getList(sql, params);
+			
+			/*>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+			//循环取出每一件
+			List goodsinfoList = new ArrayList<>();
+			GoodsPicture GoodsPicture = new GoodsPicture();
+			String product_image = null;
+			String goods_id = null;
+			for(Object goods_info : goodsinfo){
+				Map goodsInfo = (HashMap)goods_info;
+				goods_id = goodsInfo.get("goods_id").toString();		
+				//取出商品图片
+				product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+				goodsInfo.put("product_image", product_image);
+				goodsinfoList.add(goodsInfo);
+			}
+			/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+			
+			
 			db.close();
-			return goodsinfo;
+			return goodsinfoList;
+		}
+		
+		/*获得最新发布的三件商品*/
+		public List getLastestGoods() throws ClassNotFoundException, SQLException{
+			List goodsinfo = new ArrayList<>();
+			String sql = "SELECT * FROM goods_info AS gi ORDER BY gi.goods_issuDate DESC LIMIT 6;";
+			//获取前6的商品
+			goodsinfo = db.getList(sql, null);
+			
+			/*>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+			//循环取出每一件
+			List goodsinfoList = new ArrayList<>();
+			GoodsPicture GoodsPicture = new GoodsPicture();
+			String product_image = null;
+			String goods_id = null;
+			for(Object goods_info : goodsinfo){
+				Map goodsInfo = (HashMap)goods_info;
+				goods_id = goodsInfo.get("goods_id").toString();		
+				//取出商品图片
+				product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+				goodsInfo.put("product_image", product_image);
+				goodsinfoList.add(goodsInfo);
+			}
+			/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+			
+			db.close();
+			return goodsinfoList;
 		}
 		
 		/****************************通过关键字搜索返回n条货物信息   !!!!!!!!!!!!!!!!!!!!!!!!!!!!亮点***************/
 		public List getGoodsInfoByKey() throws ClassNotFoundException, SQLException{
 			List goodsinfo = null;
 			String sql = "select * from goods_info where concat(goods_name,goods_publisher,goods_category,goods_describe)  like ?";//数据库里面的user_id就是userName
-			String[] params = {"%"+goodsName+"%"};   //在传递参数的时候进行模糊搜索，加%%
-//			
+			String[] params = {"%"+goodsName+"%"};   //在传递参数的时候进行模糊搜索，加%%		
 			goodsinfo = db.getList(sql, params);
+			
+			/*>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+			//循环取出每一件
+			List goodsinfoList = new ArrayList<>();
+			GoodsPicture GoodsPicture = new GoodsPicture();
+			String product_image = null;
+			String goods_id = null;
+			for(Object goods_info : goodsinfo){
+				Map goodsInfo = (HashMap)goods_info;
+				goods_id = goodsInfo.get("goods_id").toString();		
+				//取出商品图片
+				product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+				goodsInfo.put("product_image", product_image);
+				goodsinfoList.add(goodsInfo);
+			}
+			/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+			
 			db.close();
-			return goodsinfo;
+			return goodsinfoList;
 		}
 		
 		//查询所有货物信息              返回list对象  到时候要用map 一个个循环取出来   p154
 		public List getAllGoodsInfo() throws ClassNotFoundException, SQLException
 		{
-			List Goods = null;
+			List goodsinfo = null;
 			String sql = "select * from goods_info";
+			goodsinfo = db.getList(sql, null);
 			
-			Goods = db.getList(sql, null);
+			/*>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+			//循环取出每一件
+			List goodsinfoList = new ArrayList<>();
+			GoodsPicture GoodsPicture = new GoodsPicture();
+			String product_image = null;
+			String goods_id = null;
+			for(Object goods_info : goodsinfo){
+				Map goodsInfo = (HashMap)goods_info;
+				goods_id = goodsInfo.get("goods_id").toString();		
+				//取出商品图片
+				product_image = GoodsPicture.getFirstGoodsPictures_ById(goods_id);
+				goodsInfo.put("product_image", product_image);
+				goodsinfoList.add(goodsInfo);
+			}
+			/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+			
 			db.close();
-			return Goods;
+			return goodsinfoList;
 		}
 				
 	

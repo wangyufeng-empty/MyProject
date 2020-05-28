@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" import="java.util.*" pageEncoding="utf-8" %>
 <% request.setCharacterEncoding("utf-8"); response.setContentType("text/html;charset=utf-8"); response.setCharacterEncoding("utf-8");%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- 此页面是所有网页的头部信息 -->
 <%
     String path = request.getContextPath();
@@ -39,6 +39,8 @@
     
     <script src="js/jquery.min.js"></script>
 	<script src="js/jQuery.upload.min.js"></script>
+	<script src="js/SecondHandPages_JS/headerJs.js"></script>
+	
 	<link rel="stylesheet" href="css/upload.css">
     <link rel="stylesheet" type="text/css" href="assets/css/loadGif.css"/>
     
@@ -105,7 +107,7 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
 <!-- 开始顶部侧拉菜单 -->
 <div class="offcanvas-container" id="shop-categories">
     <div class="offcanvas-header">
-        <h3 class="offcanvas-title">分类浏览</h3>
+        <h3 class="offcanvas-title" style="color: white;">分类浏览</h3>
     </div>
     
     <nav class="offcanvas-menu">
@@ -113,22 +115,22 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
         
             <li class="has-children">
                 <span>
-                    <a href="usuallyController?url=<%="计算机书籍"%>">计算机书籍</a>                
+                    <a category="计算机书籍" class="CategorySearch" href="#">计算机书籍</a>                
                 </span>
                 <span>
-                   <a href="usuallyController?url=<%="耳机"%>">耳机</a>                 
+                   <a category="耳机" class="CategorySearch" href="#">耳机</a>                 
                 </span>
                 <span>
-                    <a href="usuallyController?url=<%="电脑"%>">电脑</a>                 
+                    <a category="电脑" class="CategorySearch" href="#">电脑</a>                 
                 </span>
                 <span>
-                    <a href="usuallyController?url=<%="相机"%>">相机</a>                 
+                    <a category="相机" class="CategorySearch" href="#">相机</a>                 
                 </span>
                 <span>
-                    <a href="usuallyController?url=<%="单片机"%>">单片机</a>                
+                    <a category="单片机" class="CategorySearch" href="#">单片机</a>                
                 </span>
                 <span>
-                    <a href="usuallyController?url=<%="开发软件/工具"%>">开发软件/工具</a>
+                    <a category="开发软件/工具" class="CategorySearch" href="#">开发软件/工具</a>
                 </span>
             </li>
             
@@ -153,7 +155,7 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
 <header class="navbar navbar-sticky">
 
     <!-- 开始搜索部分 -->
-    <form class="site-search" method="post" action="usuallyController">
+    <form class="site-search" id="site-search" method="post" onsubmit="return false">
         <input type="text" name="search_key" placeholder="输入关键字搜索商品...">
         <!-- 用于区分是哪个表单 -->
         <input type="hidden" name="url" value="site-search" />
@@ -162,6 +164,7 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
             <span class="clear-search">清除</span>
             <span class="close-search"><i class="icon-cross"></i></span>
         </div>
+      
     </form>
     <!-- 结束搜索部分 -->
     
@@ -182,19 +185,19 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
         <ul>
 <!--    class="active"  用来加亮标签 -->
             <li >
-                <a href="usuallyController?url=<%="getAllRotationChart"%>"><span>主页</span></a>
+                <a href="#" onclick="NavigationJump('getAllRotationChart')"><span>主页</span></a>
             </li>
             
             <li>            
-                <a href="usuallyController?url=<%="全部商品"%>"><span>全部商品</span></a>
+                <a href="#" onclick="NavigationJump('全部商品')"><span>全部商品</span></a>
             </li>
             
             <li>
-                <a href="usuallyController?url=<%="查看购物车"%>"><span>购物车</span></a>
+                <a href="#" onclick="NavigationJump('查看购物车')"><span>购物车</span></a>
             </li>
             
             <li>
-                <a href="usuallyController?url=<%="我的订单"%>"><span>我的订单</span></a>
+                <a href="#" onclick="NavigationJump('我的订单')"><span>我的订单</span></a>
             </li>
             
             <li>
@@ -202,18 +205,18 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
             </li>
             
              <li>
-                <a href="usuallyController?url=<%="我的发布"%>"><span>我的发布</span></a>
+                <a href="#" onclick="NavigationJump('我的发布')"><span>我的发布</span></a>
             </li>
             
             <li>
-                <a href="usuallyController?url=<%="我的收藏"%>"><span>我的收藏</span></a>
+                <a href="#" onclick="NavigationJump('我的收藏')"><span>我的收藏</span></a>
             </li>
             
             <li>
                 <a href="account-update.jsp"><span>个人中心</span></a>
             </li>
             <li>
-                <a href="usuallyController?url=<%="通知公告"%>"><span>通知公告</span></a>
+                <a href="#" onclick="NavigationJump('通知公告')"><span>通知公告</span></a>
             </li>
             
         </ul>
@@ -244,7 +247,7 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
                         <li><a href="usuallyController?url=<%="userInfoDemo"%>&userId=<%=userId%>">基本信息</a></li>
                         <li class="sub-menu-separator"></li>
                         <li>
-                        <a href="usuallyController?url=<%="loginout"%>" ><i class="fa fa-lock"></i>退出登录</a>                      
+                        <a href="usuallyController?url=<%="loginout"%>" ><i class="layui-icon">&#xe60c;</i> 退出登录</a>                      
                         </li>
                     </ul>
                 </div>
