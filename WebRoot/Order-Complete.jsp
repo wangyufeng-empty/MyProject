@@ -34,7 +34,7 @@
             <div class="card-body padding-top-2x">
                 <h3 class="card-title">感谢您这次的购物!</h3>
                  <p class="card-text">您本次购物的订单号为： <span class="text-medium"><%=order_id %></span></p><br>
-                <p class="card-text">燕山大学二手商品交易网系统由王宇峰全程独立设计，测试。历时将近180天全程打造，目前已经是第6个版本。</p><br>
+                <p class="card-text">燕山大学二手商品交易网系统由王宇峰全程独立设计，测试。历时将近336天全程打造，目前已经是第9个版本。</p><br>
                 <p class="card-text">本系统功能完善，系统稳定，可以实现市面上交易网的大部分核心功能，欢迎使用和体验。</p><br>
                 <p class="card-text">Write/Design by: 王宇峰</p>
                 <div class="padding-top-1x padding-bottom-1x">

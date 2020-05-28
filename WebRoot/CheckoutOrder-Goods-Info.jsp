@@ -8,12 +8,9 @@
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
+<script src="js/SecondHandPages_JS/checkOutOrderGoodsJs.js"></script>
 <!-- 主体部分 -->
-<div class="hidden_div" id="coverDiv">
-</div>
-<div>
-		<img id="loadgif" style="position:fixed; overflow: auto; z-index:9999;left:43%;top:45%;width: 200px;height: 200px;display: none" alt="加载中..." src="../assets/images/timg_loading.gif">
-</div>
+
 <%
 double total_price = Double.parseDouble(session.getAttribute("total_price").toString());  //获得总价  
 Map userInfo = (HashMap)session.getAttribute("userInfo");
@@ -111,7 +108,7 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
                 </div>
                 <div class="checkout-footer margin-top-1x">
                     <div class="column hidden-xs-down"><a class="btn btn-outline-secondary" href="CheckoutOrder-User-Info.jsp"><i class="icon-arrow-left"></i>&nbsp;返回</a></div>
-                    <div class="column"><a class="btn btn-primary" href="usuallyController?url=<%="提交订单" %>">提交订单</a></div>
+                    <div class="column"><a class="btn btn-primary" href="#" onclick="submitOrder();">提交订单</a></div>
                 </div>
             </div>
             <!-- End Checkout Review -->

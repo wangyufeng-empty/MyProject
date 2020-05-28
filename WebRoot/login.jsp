@@ -28,11 +28,7 @@
 
 
 <body class="logobg_style">
-<div class="hidden_div" id="coverDiv">
-</div>
-<div>
-		<img  id="loadgif" style="position:fixed; overflow: auto; z-index:99999;left:49%;top:32%;width: 50px;height: 50px;display: none" alt="加载中..." src="../assets/images/loading.gif">
-</div>
+
   	<div id="large-header" class="large-header login-page">
   		<canvas id="demo-canvas" width="1590" height="711"></canvas>
   		<div class="login-form" style="top: 45%;left: 50%;">

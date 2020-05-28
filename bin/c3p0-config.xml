@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c3p0-config>
+	<!-- 默认配置，如果没有指定则使用这个配置 -->
+	<default-config>
+		<!-- 基本配置 -->
+		<property name="driverClass">com.mysql.jdbc.Driver</property>
+		<property name="jdbcUrl">jdbc:mysql://localhost:3306/SecondHandShopping_web?characterEncoding=utf-8
+		</property>
+		<property name="user">root</property>
+		<property name="password">123456</property>
+
+		<!--扩展配置 -->
+		<property name="checkoutTimeout">30000</property>
+		<property name="idleConnectionTestPeriod">30</property>
+		<property name="initialPoolSize">5</property>
+		<property name="maxIdleTime">30</property>
+		<property name="maxPoolSize">50</property>
+		<property name="minPoolSize">5</property>
+		<property name="maxStatements">100</property>
+	</default-config>
+
+</c3p0-config>

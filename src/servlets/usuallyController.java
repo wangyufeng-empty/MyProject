@@ -773,6 +773,8 @@ public class usuallyController extends HttpServlet {
 		/*******************************需要额外把库存减去已选数量，更新回数据库*******************************/
 		else if(url.equals("提交订单"))  //17-获取确认订单信息中的“提交订单”功能的请求申请
 		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
 			//这个功能目前需要修改一下订单状态，把信息加入历史订单数据库，然后清除购物车
 			try {
 			String userId = (String)session.getAttribute("userId");
@@ -799,6 +801,7 @@ public class usuallyController extends HttpServlet {
 			//从用户信息数据库中获取这个用户的信息
 			user.setUsername(userId);
 			Map userInfo = user.getUserinfo(); //获取到这条用户信息
+			String user_name = (String)userInfo.get("user_name");
 			String userTel = (String)userInfo.get("user_tel"); //购买者电话
 			String userAddress = (String)userInfo.get("user_address");  //购买者地址
 			double total_price = Double.parseDouble(session.getAttribute("total_price").toString()); //订单总价
@@ -907,7 +910,12 @@ public class usuallyController extends HttpServlet {
 				
 				String message ="订单提交成功啦！";
 				session.setAttribute("successMessage", message);
-				response.sendRedirect("Order-Complete.jsp");
+				
+				String urlString = "http://localhost:8080/Alipay_Test/alipay.trade.page.pay.jsp?WIDout_trade_no="+
+						order_id+"&WIDtotal_amount="+total_price+"&WIDsubject="+user_name;
+				returnJson.put("goUrl", urlString);
+				out.print(returnJson.toString());
+				//response.sendRedirect(urlString);
 			}
 			else
 			{
