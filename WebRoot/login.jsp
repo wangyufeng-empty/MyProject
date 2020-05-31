@@ -56,14 +56,15 @@
 						</div>
 						<input type="password" class="form-control" name="password" id="user_psw" placeholder="请输入密码" autocomplete="off">
 					</div>
+					<span id="userPWD_tip"></span>
 				</div>
 				
 				
 					<div class=" textright"><a href="Retrieve_password.jsp" class="forget">忘记密码？</a></div>
                   <div class="tishi"></div>
 				<div class="form-group">
-				<input type="submit" id="login" value="登录" class="btn btn-danger btn-block btn-login" onclick="loginIndex();">
-						
+					<input type="submit" id="login" value="登录" class="btn btn-danger btn-block btn-login" onclick="loginIndex();">
+					<input type="button" value="面部识别登录" class="btn btn-danger btn-block btn-login" onclick="faceLogin();">
 				</div>
 				<div class=" textright"><a href="register.jsp" class="forget">立即注册</a></div>
 				<!-- Implemented in v1.1.4 -->				

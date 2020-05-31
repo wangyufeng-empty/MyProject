@@ -101,6 +101,7 @@ public class userRegisterController extends HttpServlet {
 						if(result == 1) //用户注册成功，把用户爱好更新到智能推荐表的user_hobby中
 						{
 							System.out.println(userId+"实名认证成功，用户已创建");
+							session.setAttribute("reqUser_Id", userId);  //待请求服务的user_id
 							
 							/*初始化CollectInfo_forIR表格，为用户开辟一个信息收集表*/
 							CollectInfoFor_IR collectInfo_table = new CollectInfoFor_IR();

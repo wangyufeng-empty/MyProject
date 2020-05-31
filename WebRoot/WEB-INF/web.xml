@@ -39,6 +39,16 @@
     <servlet-name>JsVerify</servlet-name>
     <servlet-class>servlets.JsVerify</servlet-class>
   </servlet>
+  
+  <servlet>
+    <servlet-name>faceLoginController</servlet-name>
+    <servlet-class>servlets.faceLoginController</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>faceLoginController</servlet-name>
+    <url-pattern>/faceLoginController</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>userLoginController</servlet-name>

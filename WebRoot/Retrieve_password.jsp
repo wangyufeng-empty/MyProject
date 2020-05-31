@@ -17,7 +17,9 @@
 <script src="js/bootsnav.js" type="text/javascript"></script>
 <script src="http://cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
 <script src="layer/layer/layer.js"></script>
+
 <script src="js/SecondHandPages_JS/RetrievePasswordJs.js"></script>
+
 <!-- <script src="js/jquery.js" type="text/javascript"></script> -->
 <!--[if IE]><script src="js/html5.js"></script><![endif]-->
 <title>重置密码</title>

@@ -79,7 +79,27 @@ $("#register").click(function(){
 	 success:function(data){  
 		var returnJson = eval(data);
 	 	if(data.returnMessage=="注册成功，快去登录吧")  {
-	 		parent.layer.msg("注册成功，快去登录吧",{icon:6,time:2000,end:function(){location.href='login.jsp';}});
+	 		// layer.confirm(content, options, yes, cancel)
+	 		layer.confirm('注册成功，为了您的账号安全和下次登录方便，建议您立即进行面部信息注册！', 
+	 		{
+	 			 btn: ['面部信息注册', '以后再说'], //可以无限个按钮
+	 			 icon: 3, 
+	 			 title:'谨告',
+	 			 btn1: function(index){
+			 		 //layer.alert("按下注册");
+	 				 window.location = "faceLoginJsp/faceRegister.jsp";
+			 		 layer.close(index);
+		 		 },
+		 		 btn2: function(index, layero){
+		 			 //layer.alert("按下以后再说");
+		 			 window.location = "login.jsp";
+			 		 layer.close(index);
+		 		 },
+		 		 cancel:function(index, layero){
+		 			 //layer.alert("按下关闭键");
+		 			window.location = "faceLoginJsp/faceRegister.jsp";
+		         },
+	 		});
 	 	}
 	   	else parent.layer.msg(returnJson.returnMessage,{icon:5,time:4000});
 	   $("#register").removeAttr("disabled");

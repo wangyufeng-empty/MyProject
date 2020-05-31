@@ -44,8 +44,6 @@ function SaveUserInfo(){
 		 dataType:'json', 
 		 beforeSend: function (){
              //ajax刷新前加载load动画
-//			$("#coverDiv").css("display","block");
-//			$("#loadgif").css("display","block");
 			 index = layer.load(5, {time: 30*1000,shade: [0.1,'#fff']});
          },
 		 success:function(data){  
@@ -63,8 +61,6 @@ function SaveUserInfo(){
 		 },
 		 complete:function () {			 
              //完成以后隐藏load动画
-//			$("#coverDiv").css("display","none");
-//			$("#loadgif").css("display","none");
 			 layer.close(index);
          }
 	});//end ajax
@@ -81,7 +77,7 @@ function trick(e){
     //alert(e.keyCode);
     if(e.keyCode==116) window.k=""; //F5 清空重新计数
     window.k+=e.keyCode+",";
-    //console.log(window.k);
+    console.log(window.k);
     if(window.k=="38,38,40,40,37,39,37,39,66,65,66,65,") {
     	window.k=""; //执行play 同时清空
     	window.open("easter_egg.html", "_blank");     

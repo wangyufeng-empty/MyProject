@@ -84,8 +84,18 @@ function loginIndex(){
 				window.location.href = returnJson.goUrl;
 			}
 			else{
-		 		parent.layer.msg(returnJson.returnMessage,{icon:5,time:3000});
-		 		$("#login").removeAttr("disabled")
+				if(returnJson.ERRORPWDCOUNT>=3){
+					$("#userPWD_tip").css("color","yellow");
+					$("#userPWD_tip").text("密码错误三次或以上，建议您使用面部识别登录！");
+					layer.confirm("密码错误三次或以上，建议您使用面部识别登录！", function() {
+               		 	window.location="faceLoginJsp/GetUserId.jsp"                  	
+					});
+				}
+				else{
+					parent.layer.msg(returnJson.returnMessage,{icon:5,time:3000});
+			 		$("#login").removeAttr("disabled");
+				}
+		 		
 			}
 		 },
 		 error:function(){ 
@@ -98,4 +108,13 @@ function loginIndex(){
 			 layer.close(index);
        }
 	});  //end ajax
-};   //end click login
+}   //end click login
+
+
+//在非form里面ID 和函数名是可以重名的，在form标签里不行，不然会发生函数找不到的错误
+function faceLogin(){
+	window.location.href = "faceLoginJsp/GetUserId.jsp";
+}
+
+
+

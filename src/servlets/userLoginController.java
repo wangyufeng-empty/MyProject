@@ -26,7 +26,7 @@ import beans.GoodsPicture;
 //@WebServlet("/userLoginController")
 public class userLoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
- 
+	
     public userLoginController() {
         super();
        
@@ -49,7 +49,7 @@ public class userLoginController extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
-		
+				
 		user_info user = new user_info();//新建一个用户对象
 		Administrators admin = new Administrators();//新建一个管理员对象，用于判断登录的用户类型
 		String returnMessage = "";  //待返回的ajax信息
@@ -71,11 +71,13 @@ public class userLoginController extends HttpServlet {
 				if(user.checkName())  //判断用户名是否存在的方法,如果用户存在
 				{
 					String user_password = user.getUserPassword();//从数据库获取标准密码
-					
+					session.setAttribute("autoFullId", username);  //脸部识别时，自动填充的ID
 					if(user_password.equals(password))  //用户密码正确
 					{
 						if(user.accountState()==1){  //并且账号状态为1，正常
-							
+							/*移除登录错误次数*/
+							session.removeAttribute("ERRORPWDCOUNT");
+							session.removeAttribute("autoFullId");
 							try {
 								CollectInfoFor_IR CollectInfo = new CollectInfoFor_IR();  //实例化对象
 								CollectInfo.setUser_id(username); //初始化ID
@@ -128,6 +130,19 @@ public class userLoginController extends HttpServlet {
 					else  //否则，密码错误
 					{
 						returnMessage = "密码错误！";
+						/*统计密码输错次数*/
+						Object ERRORPWDCOUNT = session.getAttribute("ERRORPWDCOUNT");
+						int errorpwdcount = 0;
+						if(ERRORPWDCOUNT==null) {//第一次请求
+							session.setAttribute("ERRORPWDCOUNT", "1");//初始化session
+						}
+						else {
+							errorpwdcount = Integer.parseInt(session.getAttribute("ERRORPWDCOUNT").toString());
+							errorpwdcount++;
+							session.setAttribute("ERRORPWDCOUNT", errorpwdcount+"");//存储字符串对象
+						}
+						returnJson.put("ERRORPWDCOUNT", errorpwdcount+"");
+						
 						returnJson.put("returnMessage", returnMessage);
 						out.print(returnJson.toString());
 						

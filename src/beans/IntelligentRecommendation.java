@@ -107,13 +107,14 @@ public class IntelligentRecommendation {
 		
 		System.out.println("REGEXP_string  :"+ REGEXP_string);
 		this.setGenerate_keywords(Arrays.toString(keyArrays));  //首先设置属性，生成的关键字 2
+		/*按照关键词排名，赋予每种关键词查询结果不同的权重*/
 		String sql = "select *, "+
 				"("+
-						"(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,1,0)) " +
-						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,1,0)) "+
-						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,1,0)) "+
-						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,1,0)) "+
-						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,1,0)) "+
+						"(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,6,0)) " +
+						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,5,0)) "+
+						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,4,0)) "+
+						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,3,0)) "+
+						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,2,0)) "+
 						"+(IF (CONCAT_WS(\" \",goods_name,goods_publisher,goods_category,goods_describe) LIKE ?,1,0)) "+
 				") AS keyweight "+
 				"from goods_info where "+
