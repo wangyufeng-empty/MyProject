@@ -138,7 +138,10 @@ h1 {
 				<input type="button" onclick="javascript:window.location='login.jsp'" value="返回"
 				class="submit_btn" />
 			</dd>
-
+			<dd>
+			<input type="button" onclick="javascript:window.location='login.jsp'" value="返回"
+				class="submit_btn" />
+			</dd>
 		</dl>
 		</form>
 		
@@ -228,13 +231,37 @@ h1 {
 	                console.log("resultState :"+resultState);
 	                console.log("resultMessage :"+resultMessage);
                     if(resultState=="1"){
-                    	layer.confirm(resultMessage+"是否进行面部识别登录？", function() {
-                    		 window.location="faceLoginJsp/faceLogin.jsp";                  	
-                    	});
+                    	
+                    	layer.confirm(resultMessage+"是否进行面部识别登录？", 
+				 		{
+				 			 btn: ['确认','取消'], //可以无限个按钮
+				 			 icon: 1, 
+				 			 title:'面部信息注册成功',
+				 			 btn1: function(index){
+				 				 window.location="faceLoginJsp/faceLogin.jsp";  
+						 		 layer.close(index);
+					 		 },		
+					 		 btn2:function(index){
+					 		 	window.location="login.jsp";  
+						 		layer.close(index);
+					 		 },
+					 		 cancel:function(index, layero){
+					 			 //layer.alert("按下关闭键");
+					 			 window.location = "<%=basePath%>/login.jsp";
+					         },
+				 		});
                     	
                     }
                    else{                    
-                      layer.alert(resultMessage);
+                      layer.confirm(resultMessage, 
+				 		{
+				 			 btn: ['确认'], //可以无限个按钮
+				 			 icon: 2, 
+				 			 title:'错误提示',
+				 			 btn1: function(index){
+						 		 layer.close(index);
+					 		 },		
+				 		});
                     }
 	            },
 	             error:function(){ 

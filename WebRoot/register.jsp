@@ -31,28 +31,28 @@
   		<div class="login-form"> 
   		
 <!--   			<div class="login-content">  -->
-   				<center><h2 class="title_name">账户注册</h2></center><br> 
+   				
   				
 				  <form class="layui-form" name="form_register" id="form_register" action="userRegisterController" method="post">
-				  
+				  	<center><h2 class="title_name">账户注册</h2></center><br> 
 				  <div class="layui-form-item">
-				    <label class="layui-form-label">姓名</label>
-				    <div class="layui-input-block">
+				    <label class="layui-form-label" style="color: white;">姓名</label>
+				    <div class="layui-input-block" style="width: 400px;">
 				      <input type="text" name="userName" id="user_name" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
 				    </div>
 				  </div>
 				  
 				  <div class="layui-form-item">
-				    <label class="layui-form-label">学号</label>
-				    <div class="layui-input-block">
+				    <label class="layui-form-label" style="color: white;">学号</label>
+				    <div class="layui-input-block" style="width: 400px;">
 				      <input type="text" name="userId" id="user_id" required  lay-verify="required" placeholder="请输入学号" autocomplete="off" class="layui-input" oninput="value=value.replace(/[^\d]/g , '')">
 				      <span id="userId_tip"></span>
 				    </div>
 				  </div>
 				  
 				  <div class="layui-form-item">
-				    <label class="layui-form-label" >密码</label>
-				    <div class="layui-input-block">
+				    <label class="layui-form-label" style="color: white;">密码</label>
+				    <div class="layui-input-block" style="width: 400px;">
 				      <input type="password" name="password" id="user_psw" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
 				    	<span id="password_tip"></span>
 				    </div>
@@ -60,8 +60,8 @@
 				  </div>
 				  
 				   <div class="layui-form-item">
-				    <label class="layui-form-label">确认密码</label>
-				    <div class="layui-input-block">
+				    <label class="layui-form-label" style="color: white;">确认</label>
+				    <div class="layui-input-block" style="width: 400px;">
 				      <input type="password" name="password_confirm" id="password_confirm" required lay-verify="required" placeholder="请确认密码" autocomplete="off" class="layui-input">
 				    <span id="password_confirm_tip"></span>
 				    </div>
@@ -69,27 +69,28 @@
 				  
 				  
 				  <div class="layui-form-item">
-				    <label class="layui-form-label">性别</label>
-				    <div class="layui-input-block">
+				    <label class="layui-form-label" style="color: white;">性别</label>
+				    <div class="layui-input-block" style="width: 400px;">
 				      <input type="radio" name="userSex" id="user_sex" value="男" title="男">
 				      <input type="radio" name="userSex" id="user_sex" value="女" title="女" checked>
 				    </div>
 				  </div>
 				  
 				   <div class="layui-form-item">
-				    <label class="layui-form-label">爱好</label>
-				    <div class="layui-input-block">
+				    <label class="layui-form-label" style="color: white;">爱好</label>
+				    <div class="layui-input-block" style="width: 400px;">
 				      <input type="checkbox" name="hobby" id="user_hobby" value="人工智能" title="人工智能">
 				      <input type="checkbox" name="hobby" id="user_hobby" value="大数据" title="大数据">
 				      <input type="checkbox" name="hobby" id="user_hobby" value="数据库" title="数据库">
 				      <input type="checkbox" name="hobby" id="user_hobby" value="边缘计算" title="边缘计算">
-				      <input type="checkbox" name="hobby" id="user_hobby" value="硬件" title="硬件">
+				      <input type="checkbox" name="hobby" id="user_hobby" value="硬件" title="硬件开发">
+				      <input type="checkbox" name="hobby" id="user_hobby" value="文学" title="文学">
 				    </div>
 				  </div>
 				  
 				  <div class="layui-form-item">
-				    <label class="layui-form-label">年级</label>
-				    <div class="layui-input-block">
+				    <label class="layui-form-label" style="color: white;">年级</label>
+				    <div class="layui-input-block" style="width: 400px;">
 				      <select name="userGrade" lay-verify="required" id="user_grade">
 				        <option value=""></option>
 				        <option value="大一">大一</option>
@@ -101,15 +102,15 @@
 				  </div>
 				  
 				  <div class="layui-form-item">
-				    <label class="layui-form-label">密保问题</label>
-				    <div class="layui-input-block">
+				    <label class="layui-form-label" style="color: white;">密保</label>
+				    <div class="layui-input-block" style="width: 400px;">
 				      <select name="userQuestion" lay-verify="required">
 				       
 				        <option value="userQuestion_motherName">你母亲的姓名是什么？</option>
 				        <option value="userQuestion_firstLove">你的初恋是谁？</option>
 				      </select>
 				      
-				      <input type="text" name="userAnswer" required lay-verify="required" placeholder="请输入答案" autocomplete="off" class="layui-input">
+				      <input type="text" name="userAnswer" required lay-verify="required" placeholder="请输入答案" autocomplete="off" class="layui-input" style="width: 400px;">
 				   
 				    </div>
 				  </div>

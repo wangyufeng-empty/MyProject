@@ -15,6 +15,7 @@
 double total_price = Double.parseDouble(session.getAttribute("total_price").toString());  //获得总价  
 Map userInfo = (HashMap)session.getAttribute("userInfo");
 ArrayList cartsInfo = (ArrayList)session.getAttribute("cartsInfo"); //获取到购物车的信息
+
 String consignee = (String)session.getAttribute("consignee");//取出收货人
 String userTel = (String)userInfo.get("user_tel");//取出电话号码
 String userAddress = (String)userInfo.get("user_address");//取出地址
@@ -65,17 +66,29 @@ String userAddress = (String)userInfo.get("user_address");//取出地址
             for(Object cartInfo : cartsInfo)   /////////////2019-7-10
 			{   				
 				Map cart_Info = (HashMap)cartInfo;
+				String goods_id = (String)cart_Info.get("goods_id");//从MAP中，获取货物的ID
 				String goods_name = (String)cart_Info.get("goods_name");//从MAP中，获取货物的名字
 				int selectedQuantity = Integer.parseInt(cart_Info.get("selectedQuantity").toString());//从MAP中，获取货物的已选数量
 				double subtotal = Double.parseDouble(cart_Info.get("subtotal").toString());//从MAP中，获取货物的小计		
 				String goods_publisher = (String)cart_Info.get("goods_publisher");//从MAP中，获取货物的发布者
-				String goods_category = (String)cart_Info.get("goods_category");//从MAP中，获取货物的分类	     
+				String goods_category = (String)cart_Info.get("goods_category");//从MAP中，获取货物的分类	    
+				String product_image = (String)cart_Info.get("product_image"); //图片 
 %>         
+				
                         <tbody>
                         <tr>
                             <td>
                                 <div class="product-item">
-                                    <a class="product-thumb" href="#"><img src="assets/images/shop/cart/01.jpg" alt="Product"></a>
+<%                        		if(product_image!=null){                                                                                                                 %> 
+                            		<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
+                                		<img src="<%=product_image %>" alt="Product">
+                            		</a>
+<%                         		}else{                                                                                                                %>
+									<a class="product-thumb" href="usuallyController?url=<%="商品详情"%>&goods_id=<%=goods_id%>">
+                                		<img src="assets/images/nopic.jpg" alt="Product">
+                            		</a>
+<%                         		}                                                                                                                      %>
+                                    
                                     <div class="product-info">
                                         <h4 class="product-title">
                                             <a href="#"><%=goods_name %><small>x <%=selectedQuantity%></small></a>

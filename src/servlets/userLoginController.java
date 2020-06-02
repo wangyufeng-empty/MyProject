@@ -48,6 +48,7 @@ public class userLoginController extends HttpServlet {
 		
 		
 		HttpSession session = request.getSession();
+		session.setMaxInactiveInterval(7200);//会话过期时间，单位为秒
 		PrintWriter out = response.getWriter();
 				
 		user_info user = new user_info();//新建一个用户对象

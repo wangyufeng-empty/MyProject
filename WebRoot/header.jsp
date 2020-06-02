@@ -213,7 +213,7 @@ String userId = (String)session.getAttribute("userId");  //从登录servlet获�
             </li>
             
             <li>
-                <a href="account-update.jsp"><span>个人中心</span></a>
+                <a href="#" onclick="NavigationJump('个人中心')"><span>个人中心</span></a>
             </li>
             <li>
                 <a href="#" onclick="NavigationJump('通知公告')"><span>通知公告</span></a>

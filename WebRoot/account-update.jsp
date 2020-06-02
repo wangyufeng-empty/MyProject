@@ -2,26 +2,12 @@
 <% request.setCharacterEncoding("utf-8"); response.setContentType("text/html;charset=utf-8"); response.setCharacterEncoding("utf-8");%>
 <%@ include file="filter.jsp" %>
 
-<%
-String user_name = (String)session.getAttribute("userName"); 
-String user_id = (String)session.getAttribute("userId");
-user_info user = new user_info();
-user.setUsername(user_id);
-Map userinfo = user.getUserinfo();
-String register_time = (String)userinfo.get("register_time");//注册时间
-String userGrade = (String)userinfo.get("user_grade");
-String userTel = (String)userinfo.get("user_tel");
-String userEmail = (String)userinfo.get("user_email");
-String userAddress = (String)userinfo.get("user_address");
-String selfIntroduce = (String)userinfo.get("self_introduce");
-String selfBlessing = (String)userinfo.get("self_blessing");
-%>
 
 <html lang="zxx">
 <body style="height: 100%">
 <!--固定页头部分 -->
 <%@ include file="header.jsp" %>
-<input type="hidden" id="user_grade" value="<%=userGrade %>"/>
+<input type="hidden" id="user_grade" value="${userMap['user_grade'] }"/>
 <!-- 主体部分 -->
 
 <div class="offcanvas-wrapper">
@@ -53,7 +39,7 @@ String selfBlessing = (String)userinfo.get("self_blessing");
                     <div class="user-info">
                         <div class="user-avatar"><a class="edit-avatar" href="#"></a><img src="assets/images/account/user-ava.jpg" alt="User"></div>
                         <div class="user-data">
-                            <h4><%=user_name %></h4><span>注册时间： <%=register_time %></span>
+                            <h4>${userMap['user_name'] }</h4><span>注册时间：${userMap.register_time }</span>
                         </div>
                     </div>
                 </aside>
@@ -71,17 +57,17 @@ String selfBlessing = (String)userinfo.get("self_blessing");
 			<!--开始填写表单，修改/完善个人基本信息           ，待执行servlet验证       -->
                 <form class="row" name="updateProfile" id="updateProfile" action="##" method="post" onsubmit="return false">
                 	<input type="hidden" name="url" value="updateProfile">
-                	<input type="hidden" name="userId" value="<%=user_id %>">
+                	<input type="hidden" name="userId" value="${userMap['user_id'] }">
                 	<div class="col-md-6">
                         <div class="form-group">
                             <label for="account-email">学号</label>
-                            <input class="form-control" type="text" name="userId" value="<%=user_id %>" disabled>
+                            <input class="form-control" type="text" name="userId" value="${userMap['user_id'] }" disabled>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-fn">姓名</label>
-                            <input class="form-control" type="text" name="userName" value="<%=user_name %>" disabled>
+                            <input class="form-control" type="text" name="userName" value="${userMap['user_name'] }" disabled>
                         </div>
                     </div>
                     
@@ -89,27 +75,27 @@ String selfBlessing = (String)userinfo.get("self_blessing");
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-fn">电话号码</label>
-                            <input class="form-control" type="text" name="userTel" id="userTel" value="<%=userTel %>" required oninput="value=value.replace(/[^\d]/g , '')">
+                            <input class="form-control" type="text" name="userTel" id="userTel" value="${userMap['user_tel'] }" required oninput="value=value.replace(/[^\d]/g , '')">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-ln">邮箱</label>
-                            <input class="form-control" type="email" name="userEmail" id="userEmail" value="<%=userEmail %>" required>
+                            <input class="form-control" type="email" name="userEmail" id="userEmail" value="${userMap['user_email'] }" required>
                         </div>
                     </div>
                     
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-phone">收货地址</label>
-                            <input class="form-control" type="text" name="userAddress" id="userAddress" value="<%=userAddress %>" required>
+                            <input class="form-control" type="text" name="userAddress" id="userAddress" value="${userMap['user_address'] }" required>
                         </div>
                     </div>
                     
                      <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-phone">年级</label>                 	   
-							<select id="userGrade" name="userGrade" class="form-control">
+							<select class="form-control" id="userGrade" name="userGrade">
                             	<option value="">请选择</option>
                                 <option value="大一" id="大一">大一</option>
                                 <option value="大二" id="大二">大二</option>
@@ -122,13 +108,13 @@ String selfBlessing = (String)userinfo.get("self_blessing");
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-phone">个人简介</label>
-                            <textarea class="form-control" name="selfIntroduce" placeholder="<%=selfIntroduce %>" required><%=selfIntroduce %></textarea> 
+                            <textarea class="form-control" name="selfIntroduce" required>${userMap['self_introduce'] }</textarea> 
                         </div>
                     </div>
                      <div class="col-md-6">
                         <div class="form-group">
                             <label for="account-phone">对自己的寄语</label>
-                            <textarea class="form-control" name="selfBlessing" placeholder="<%=selfBlessing %>" required><%=selfBlessing %></textarea> 
+                            <textarea class="form-control" name="selfBlessing" required>${userMap['self_blessing'] }</textarea> 
                         </div>
                     </div>
                     

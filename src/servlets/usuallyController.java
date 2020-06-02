@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.collections.map.HashedMap;
+
 import beans.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -42,15 +45,18 @@ public class usuallyController extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");	
 		
 		HttpSession session = request.getSession();
+		session.setMaxInactiveInterval(7200);//会话过期时间，单位为秒
 		PrintWriter out = response.getWriter();
 		
 		
 		//过滤
 		String login_state = (String)session.getAttribute("login_state");
 		String userName_check = (String)session.getAttribute("userName");
-		 if(login_state == null || !login_state.equals("true") || userName_check == null)
+		String userId_check = (String)session.getAttribute("userId");
+		 if(login_state == null || !login_state.equals("true") || userName_check == null||userId_check==null)
 	 	{
 	 		response.sendRedirect("login.jsp");
+	 		return;
 	 	} 
 		 
 		String url = request.getParameter("url");  //获取请求的路径，配合hidden或者链接 ?name=value 使用
@@ -88,8 +94,9 @@ public class usuallyController extends HttpServlet {
 		{
 			session.setAttribute("login_state", "false");
 			session.removeAttribute("userName"); 
-			
+			session.removeAttribute("userId"); 
 			response.sendRedirect("login.jsp"); 
+			return;
 		}
 		
 		/*********************3-请求的地方是“关键字搜索”功能**********************************/
@@ -272,13 +279,21 @@ public class usuallyController extends HttpServlet {
 				goods.setGoodsId(goods_id);
 				Map goodsInfo = goods.getGoodsInfo();//获取到一条货物信息
 				String goods_name = (String) goodsInfo.get("goods_name");  //获取货物名字
+				String publisher_id = (String) goodsInfo.get("publisher_id");  //发布者ID
 				String goods_publisher = (String) goodsInfo.get("goods_publisher");  //获取货物名字
 				String goods_category = (String) goodsInfo.get("goods_category");  //获取货物名字
 				Double goods_price = Double.parseDouble(goodsInfo.get("goods_price").toString()); //单价
 				
 				int goods_stock =  Integer.parseInt(goodsInfo.get("goods_stock").toString());   //取出库存，
 				/********先从货物信息中取出相应的信息，然后到购物车 end********/
-				if(goods_stock > 0 && selectQuantity < goods_stock)  //库存大于0,并且已选数量小于（不能等于，否则在下面加一以后超过库存）库存才能加入购物车
+				
+				/*无法加入自己发布的商品*/
+				if(user_id.equals(publisher_id)) {
+					returnMessage = "无法购买自己发布的商品哦！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());	
+				}
+				else if(goods_stock > 0 && selectQuantity < goods_stock)  //库存大于0,并且已选数量小于（不能等于，否则在下面加一以后超过库存）库存才能加入购物车
 				{
 					
 					cart.setGoods_id(goods_id);
@@ -388,6 +403,7 @@ public class usuallyController extends HttpServlet {
 				/*************取商品属性****************/
 				goods.setGoodsId(goods_id);
 				Map goodsInfo = (HashMap)goods.getGoodsInfo();
+				String publisher_idString = (String)goodsInfo.get("publisher_id");//发布者ID
 				String goods_name = (String)goodsInfo.get("goods_name"); //3
 				String goods_category = (String)goodsInfo.get("goods_category");  //4
 				int goods_stock = Integer.parseInt((String)goodsInfo.get("goods_stock")); // 5
@@ -403,8 +419,13 @@ public class usuallyController extends HttpServlet {
 				wishList.setGoods_stock(goods_stock);
 				wishList.setGoods_price(goods_price);
 				/*************************************/
-				
-				if(wishList.isGoodsWished()==false)   //如果没有收藏
+				/*拒绝收藏自己发布的商品*/
+				if(publisher_idString.equals(userId)) {
+					returnMessage = "无法收藏自己发布的商品哦！";
+					returnJson.put("returnMessage", returnMessage);
+					out.print(returnJson.toString());	
+				}
+				else if(wishList.isGoodsWished()==false)   //如果没有收藏
 				{
 					/*************执行更新**************/
 					int result = wishList.addWishListInfo();
@@ -1487,6 +1508,30 @@ public class usuallyController extends HttpServlet {
 			}
 		}
 		
+		
+		/*******33-获取来自“头部-个人中心”功能的请求申请***********/
+		else if(url.equals("个人中心"))  
+		{
+			/*回调json对象*/
+			JSONObject returnJson = new JSONObject();
+			
+			String user_id = (String)session.getAttribute("userId");
+			user_info user = new user_info();
+			user.setUsername(user_id);
+			Map userMap = new HashedMap();
+			try 
+			{
+				userMap = user.getUserinfo();
+				session.setAttribute("userMap", userMap);//把结果集发送给显示货物的界面
+				returnJson.put("goUrl", "account-update.jsp");
+				out.print(returnJson.toString());
+				
+			} 
+			catch (ClassNotFoundException | SQLException e) 
+			{
+				e.printStackTrace();
+			}  
+		}
 		
 		
 		

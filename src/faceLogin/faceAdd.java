@@ -45,7 +45,7 @@ public class faceAdd {
             map.put("user_info", user_name);
             map.put("liveness_control", "HIGH");          
             map.put("quality_control", "NORMAL");
-            map.put("action_type", "REPLACE");  //用户重复注册时，图片将替换
+            map.put("action_type", "APPEND");  //用户重复注册时，图片将追加
 
             String param = GsonUtils.toJson(map);
 

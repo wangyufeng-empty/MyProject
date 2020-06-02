@@ -250,12 +250,37 @@ h1 {
                     	
                     }
                     else if(error_code=="222207"){  //未注册人脸信息
-                    	layer.confirm(resultMessage+"是否进行面部信息注册？",function(){
-                    		window.location="faceLoginJsp/faceRegister.jsp";
-                    	})
+                    	
+                    	layer.confirm(resultMessage+"是否进行面部信息注册？", 
+				 		{
+				 			 btn: ['确认','取消'], //可以无限个按钮
+				 			 icon: 2, 
+				 			 title:'错误提示',
+				 			 btn1: function(index){
+				 				 window.location="faceLoginJsp/faceRegister.jsp";
+						 		 layer.close(index);
+					 		 },		
+					 		 btn2:function(index){
+					 		 	window.location="login.jsp";  
+						 		layer.close(index);
+					 		 },
+					 		 cancel:function(index, layero){
+					 			 //layer.alert("按下关闭键");
+					 			 window.location = "<%=basePath%>/login.jsp";
+					         },
+				 		});
                     }
-                   	else{                    
-                      layer.alert(resultMessage);
+                   	else
+                   	{                    
+                      	layer.confirm(resultMessage, 
+				 		{
+				 			 btn: ['确认'], //可以无限个按钮
+				 			 icon: 2, 
+				 			 title:'错误提示',
+				 			 btn1: function(index){
+						 		 layer.close(index);
+					 		 },		
+				 		});
                     }
 	            },
 	             error:function(){ 

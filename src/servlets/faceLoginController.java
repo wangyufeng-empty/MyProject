@@ -80,6 +80,7 @@ public class faceLoginController extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");	
 		
 		HttpSession session = request.getSession();
+		session.setMaxInactiveInterval(7200);//会话过期时间，单位为秒
 		PrintWriter out = response.getWriter();
 		
 		String method = request.getParameter("method");
@@ -167,17 +168,14 @@ public class faceLoginController extends HttpServlet {
 						{
 							resultMessage = "您的账户已被封禁，请联系管理员！";
 							resultState = 0;
-							returnJsonObject.put("resultMessage", resultMessage);
-							
+							returnJsonObject.put("resultMessage", resultMessage);							
 						}
-		            	
 		            	
 		            }
 		            else if(Double.parseDouble(score)<80){
 		            	resultMessage = "错误：不是本人登录！";
 		            	resultState = 0;
-					}
-		           
+					}	           
 				}
 				
 				/*检测失败*/
@@ -213,49 +211,77 @@ public class faceLoginController extends HttpServlet {
 		}
 		
 		if("faceAdd".equals(method)) {  
+			String error_code="";
 			
 			/*获取必要参数*/
 			String imageBASE64 = request.getParameter("imageBASE64");
 			String user_id = request.getParameter("user_id");
 			String user_name = request.getParameter("user_name");
 			
+			/*首先进行人脸搜索，如果曾经注册过，则拒绝再次注册*/
 			/*调用API，返回json字符串*/
-			String result = faceAdd.add(imageBASE64, user_id, user_name);
+			String SearchResult;
+			try {
+			SearchResult = faceSearch.search(imageBASE64, user_id);
 			
-			//把百度返回的result字符串转化为json对象
-			JSONObject resultJson=JSONObject.fromObject(result);
+			JSONObject SearchResultJson=JSONObject.fromObject(SearchResult);
+			String SearchError_code = SearchResultJson.getString("error_code");
+			String SearchError_msg = SearchResultJson.getString("error_msg");
 			
-			/*获取返回代码*/
-			String error_code = resultJson.getString("error_code");
-			
-			/*获取返回错误信息*/
-			String error_msg = resultJson.getString("error_msg");
-			
-			System.out.println(result);
-	        JSONObject resultJsonObject=JSONObject.fromObject(result);
-	        
-	        
-	        
-	        if(error_code.equals("0")) {
-	        	/*获取面部信息唯一标识码*/
-	        	String face_token = JSONObject.fromObject(resultJsonObject.getString("result")).getString("face_token");
-	        	resultMessage = "面部信息注册成功！";
-	        	resultState = 1;
-	        }
-	        else if(error_code.equals("223120")){
-	        	resultMessage = "活体检测失败，请真人验证或保证拍摄质量！";
-	        	resultState = 0;
+			/*如果没有注册过人脸*/
+			if(SearchError_code.equals("222207")) {
+				/*调用API，返回json字符串*/
+				String result = faceAdd.add(imageBASE64, user_id, user_name);
+				
+				//把百度返回的result字符串转化为json对象
+				JSONObject resultJson=JSONObject.fromObject(result);
+				
+				/*获取返回代码*/
+				error_code = resultJson.getString("error_code");
+				
+				/*获取返回错误信息*/
+				String error_msg = resultJson.getString("error_msg");
+				
+				System.out.println(result);
+		        JSONObject resultJsonObject=JSONObject.fromObject(result);
+		        
+		        if(error_code.equals("0")) {
+		        	/*获取面部信息唯一标识码*/
+		        	String face_token = JSONObject.fromObject(resultJsonObject.getString("result")).getString("face_token");
+		        	resultMessage = "面部信息注册成功！";
+		        	resultState = 1;
+		        }
+		        else if(error_code.equals("223120")){
+		        	resultMessage = "活体检测失败，请真人验证或保证拍摄质量！";
+		        	resultState = 0;
+				}
+		        else {
+		        	resultMessage = "error: "+error_msg;
+		        	resultState = 0;
+				}
 			}
-	        else {
-	        	resultMessage = "error: "+error_msg;
-	        	resultState = 0;
+			/*注册过人脸或者别的错误信息*/
+			else 
+			{
+				if(SearchError_code.equals("0")) {
+					resultMessage = "错误：你已注册过面部信息";
+					resultState = 0;
+				}
+				else {
+					resultMessage = "error: "+SearchError_msg;
+		        	resultState = 0;
+				}
+				
 			}
-	        
-	        /*返回信息*/
+			/*返回信息*/
 	        returnJsonObject.put("resultMessage", resultMessage);
 			returnJsonObject.put("resultState", resultState);
 			returnJsonObject.put("error_code", error_code);
 			out.print(returnJsonObject.toString());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		/*获得请求服务的学号*/
