@@ -133,7 +133,7 @@ h1 {
 			</div>
 			
 			<dd>
-				<input type="button" onclick="faceLogin()" value="立即登录"
+				<input type="submit" onclick="faceLogin()" value="立即登录"
 					class="submit_btn" />
 				
 			</dd>

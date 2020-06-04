@@ -18,7 +18,7 @@ import org.apache.commons.collections.map.HashedMap;
 import beans.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
+import textCensor.*;  //文本内容审核
 import java.util.Random;
 import java.util.Scanner;
 
@@ -182,8 +182,10 @@ public class usuallyController extends HttpServlet {
 		{
 			/*回调信息*/
 			String returnMessage = "";
+			String resultState = "";
 			/*回调json对象*/
-			JSONObject returnJson = new JSONObject();
+			JSONObject resultObject = new JSONObject();
+			
 			String userId = (String)session.getAttribute("userId");  //得到用户ID
 			String userTel = request.getParameter("userTel");
 			String userEmail = request.getParameter("userEmail");
@@ -191,37 +193,55 @@ public class usuallyController extends HttpServlet {
 			String userGrade = request.getParameter("userGrade");
 			String selfIntroduce = request.getParameter("selfIntroduce");
 			String selfBlessing = request.getParameter("selfBlessing");
-			user_info user = new user_info();
-			user.setUsername(userId);
-			user.setUser_tel(userTel);
-			user.setUser_email(userEmail);
-			user.setUser_address(userAddress);
-			user.setUserGrade(userGrade);
-			user.setSelf_introduce(selfIntroduce);
-			user.setSelf_blessing(selfBlessing);
-			try 
-			{
-				int result = user.updateUser();
-				if(result == 1)  //更新、完善个人信息成功
-				{
-					returnMessage = "修改成功了哦！";
-					System.out.println(userId+": 修改个人信息成功");
-					returnJson.put("returnMessage", returnMessage);
-					returnJson.put("status", "success");
-					out.print(returnJson.toString());
-				}
-				else
-				{
-					returnMessage ="修改失败，发生未知错误！";
-					returnJson.put("returnMessage", returnMessage);
-					out.print(returnJson.toString());
-				}
-					
-			} 
-			catch (ClassNotFoundException | SQLException e) 
-			{
-				e.printStackTrace();
+			
+			/*审核文本内容是否合规
+			 * @param goods_name :检查商品名
+			 * @param goods_describe ：检查商品描述
+			 * */
+			String text =  selfIntroduce+"。"+selfBlessing;
+			JSONObject censorObject = TextCensor.censor(text);  //调用方法，进行文本检测
+			resultState = censorObject.getString("resultState");
+			returnMessage = censorObject.getString("resultMessage");
+			/*文本检测不合格*/
+			if (resultState.equals("0")) { 
+				returnMessage = "您修改的个人信息已被拦截！<br>"+returnMessage;	
 			}
+			/*文本检测合规*/
+			else
+			{
+				try 
+				{
+					user_info user = new user_info();
+					user.setUsername(userId);
+					user.setUser_tel(userTel);
+					user.setUser_email(userEmail);
+					user.setUser_address(userAddress);
+					user.setUserGrade(userGrade);
+					user.setSelf_introduce(selfIntroduce);
+					user.setSelf_blessing(selfBlessing);
+				
+					int result = user.updateUser();
+					if(result == 1)  //更新、完善个人信息成功
+					{
+						returnMessage = "个人信息修改成功！";
+						System.out.println(userId+": 修改个人信息成功");
+						resultState = "1";
+					}
+					else
+					{
+						returnMessage ="修改失败，发生未知错误！";
+					}
+				
+				} 
+				catch (ClassNotFoundException | SQLException e) 
+				{
+					e.printStackTrace();
+				}
+			}  //end 合规
+			
+			resultObject.put("returnMessage", returnMessage);
+			resultObject.put("resultState", resultState);
+			out.print(resultObject.toString());
 		}
 		
 		
@@ -1128,15 +1148,17 @@ public class usuallyController extends HttpServlet {
 		}
 		
 		
-		/***************************  23-获取页面中的“发布商品”功能的请求申请 *****************************************/
-		else if(url.equals("发布商品"))  //23-获取页面中的“发布商品”功能的请求申请
+		/*************  23“发布商品”功能的请求申请 **********/
+		else if(url.equals("发布商品")) 
 		{
+			JSONObject resultObject = new JSONObject();
+			String resultMessage = "";
 		try 
 		{
 			/************创建对象************/
 			Goods goods = new Goods();
 			userOrder time = new userOrder();  //纯粹用于计算时间
-			/*******************************/
+		
 			/************获取参数************/
 			String userId = (String)session.getAttribute("userId");
 			String goods_publisher = (String)session.getAttribute("userName");
@@ -1146,48 +1168,72 @@ public class usuallyController extends HttpServlet {
 			String goods_category = request.getParameter("goods_category");
 			String goods_describe = request.getParameter("goods_describe");
 			String goods_issuDate = time.creatNowTimeFormart();  //获取发布时间
-			/*******************************/	
-			/***********计算goods_id，使用时间戳吧************/
-			Random random = new Random();
-			int ends = random.nextInt(999);//生成三位数随机数小标
 			
-			Date date = new Date();
-			String goods_id = ""+date.getTime()+"_"+String.format("%03d",ends);			
-			/***********************************/
-			/**********更新货物数据库，新增一条信息********/
-			goods.setGoodsId(goods_id);
-			goods.setGoodsName(goods_name);
-			goods.setPublisher_id(userId);
-			goods.setGoodsPublisher(goods_publisher);
-			goods.setGoodsIssuDate(goods_issuDate);
-			goods.setGoodsCategory(goods_category);
-			goods.setGoodsDescribe(goods_describe);
-			goods.setGoodsPrice(goods_price);
-			goods.setGoodsStock(goods_stock);
-			int result = goods.addOneGoodsInfo();
-			if(result == 1)
-			{
-				/*处理上传图片的功能*/
-				String goodsPics = request.getParameter("goodsPictures") == null ? "" : request.getParameter("goodsPictures").toString().trim();
-				if(!goodsPics.equals("")){
-					String [] goodPicArr =  goodsPics.split(",");
-					for (String pic : goodPicArr) {
-						GoodsPicture goodsPicture = new GoodsPicture();
-						goodsPicture.setGoods_id(goods.getGoodsId());
-						goodsPicture.setProduct_image(pic);
-						goodsPicture.addOneGoodsPicture();
-					}
-				}
-				String message ="您的二手商品信息发布成功，请留意商城！";
-				session.setAttribute("successMessage", message);
-				response.sendRedirect("Publish-Goods.jsp");
+			
+			/*审核文本内容是否合规
+			 * @param goods_name :检查商品名
+			 * @param goods_describe ：检查商品描述
+			 * */
+			String text = goods_name +"。"+ goods_describe;
+			JSONObject censorObject = TextCensor.censor(text);  //调用方法，进行文本检测
+			String resultState = censorObject.getString("resultState");
+			resultMessage = censorObject.getString("resultMessage");
+			/*文本检测不合格*/
+			if (resultState.equals("0")) { 
+				resultMessage = "您发布的商品信息已被拦截！<br>"+resultMessage;
+				
 			}
+			/*文本检测合规*/
 			else
 			{
-				String message ="二手信息发布失败，未知错误！";
-				session.setAttribute("message", message);
-				response.sendRedirect("Publish-Goods.jsp");
-			}
+				/***********计算goods_id，使用时间戳************/
+				Random random = new Random();
+				int ends = random.nextInt(999);//生成三位数随机数小标
+				
+				Date date = new Date();
+				String goods_id = ""+date.getTime()+"_"+String.format("%03d",ends);			
+				
+				/**********更新货物数据库，新增一条信息********/
+				goods.setGoodsId(goods_id);
+				goods.setGoodsName(goods_name);
+				goods.setPublisher_id(userId);
+				goods.setGoodsPublisher(goods_publisher);
+				goods.setGoodsIssuDate(goods_issuDate);
+				goods.setGoodsCategory(goods_category);
+				goods.setGoodsDescribe(goods_describe);
+				goods.setGoodsPrice(goods_price);
+				goods.setGoodsStock(goods_stock);
+				int result = goods.addOneGoodsInfo();
+				if(result == 1)
+				{
+					/*处理上传图片的功能*/
+					String goodsPics = request.getParameter("goodsPictures") == null ? "" : request.getParameter("goodsPictures").toString().trim();
+					if(!goodsPics.equals("")){
+						String [] goodPicArr =  goodsPics.split(",");
+						for (String pic : goodPicArr) {
+							GoodsPicture goodsPicture = new GoodsPicture();
+							goodsPicture.setGoods_id(goods.getGoodsId());
+							goodsPicture.setProduct_image(pic);
+							goodsPicture.addOneGoodsPicture();
+						}
+					}
+					resultMessage ="您的二手商品信息发布成功，请留意商城！";
+//					session.setAttribute("successMessage", message);
+//					response.sendRedirect("Publish-Goods.jsp");
+				}
+				else
+				{
+					resultMessage ="二手信息发布失败，未知错误！";
+					resultState = "0";
+//					session.setAttribute("message", message);
+//					response.sendRedirect("Publish-Goods.jsp");
+				}
+			} //end 合格
+			
+			resultObject.put("resultMessage", resultMessage);
+			resultObject.put("resultState", resultState);
+			out.print(resultObject.toString());
+			
 			
 		}
 		catch (ClassNotFoundException | SQLException e) 

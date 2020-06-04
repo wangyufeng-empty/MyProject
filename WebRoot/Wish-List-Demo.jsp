@@ -48,9 +48,9 @@ String userName = (String)session.getAttribute("userName");
                     </div>
                 </aside>
                 <nav class="list-group">
-                     <a class="list-group-item with-badge" href="account-update.jsp"><i class="icon-head"></i>我的基本信息</a>
-                    <a class="list-group-item with-badge" href="usuallyController?url=<%="我的订单"%>"><i class="icon-bag"></i>我的订单</a>
-                    <a class="list-group-item active" href="usuallyController?url=<%="我的收藏"%>"><i class="icon-heart"></i>我的收藏</a>
+                     <a class="list-group-item " href="account-update.jsp"><i class="icon-head"></i>我的基本信息</a>
+                    <a class="list-group-item with-badge" href="#" onclick="NavigationJump('我的订单')"><i class="icon-bag"></i>我的订单</a>
+                    <a class="list-group-item with-badge active" href="#" onclick="NavigationJump('我的收藏')"><i class="icon-heart"></i>我的收藏</a>
                 </nav>
             </div>
             <div class="col-lg-8">

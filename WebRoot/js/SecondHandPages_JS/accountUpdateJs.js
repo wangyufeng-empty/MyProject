@@ -48,18 +48,39 @@ function SaveUserInfo(){
          },
 		 success:function(data){  
 			 var returnJson = eval(data);
-			 console.log("请求了ajax");
-			 if(returnJson.hasOwnProperty("status")){  //如果回调为成功的信息
-				layer.msg(returnJson.returnMessage,{icon:6,time:2500,end:function(){}});
-				$("#saveUserInfo").removeAttr("disabled");
+			 var resultState = returnJson.resultState;
+			 var resultMessage = returnJson.returnMessage;
+			 
+			 if(resultState=="1"){  //如果回调为成功的信息
+				 layer.confirm(resultMessage, 
+		 		 {
+		 			 btn: ['确认'], //可以无限个按钮
+		 			 icon: 1, 
+		 			 title:'修改成功',
+		 			 btn1: function(index){
+				 		 layer.close(index);
+			 		 },		
+		 		 });
+				
 			 }
-			 else {layer.msg(returnJson.returnMessage,{icon:5,time:4000});}
+			 else {
+				 layer.confirm(resultMessage, 
+		 		 {
+		 			 btn: ['确认'], //可以无限个按钮
+		 			 icon: 2, 
+		 			 title:'警告！修改的信息已被拦截',
+		 			 btn1: function(index){
+				 		 layer.close(index);
+			 		 },		
+		 		 });
+			 }
 			
 		 },
 		 error:function(){ 
 			 layer.alert("请求失败，请重新登录！");
 		 },
-		 complete:function () {			 
+		 complete:function () {		
+			 $("#saveUserInfo").removeAttr('disabled');  //移除按钮禁止
              //完成以后隐藏load动画
 			 layer.close(index);
          }
@@ -75,7 +96,7 @@ function trick(e){
     }
     var e=e||event;
     //alert(e.keyCode);
-    if(e.keyCode==116) window.k=""; //F5 清空重新计数
+    if(e.keyCode==116) window.k=""; 
     window.k+=e.keyCode+",";
     console.log(window.k);
     if(window.k=="38,38,40,40,37,39,37,39,66,65,66,65,") {
@@ -83,5 +104,5 @@ function trick(e){
     	window.open("easter_egg.html", "_blank");     
     }        
 }
-document.onkeydown=trick; //记录键值执行函数
+document.onkeydown=trick; 
 

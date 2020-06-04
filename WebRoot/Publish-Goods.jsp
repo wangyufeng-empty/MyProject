@@ -99,8 +99,8 @@
 
 
                 <!--开始填写表单，待执行servlet验证       -->
-                <form class="row" name="publishGoods" id="publishGoodsForm" action="usuallyController" method="post"
-                      onsubmit="return check()">
+                <form class="row" name="publishGoods" id="publishGoodsForm" action="#" method="post"
+                      onsubmit="return false">
                     <input type="hidden" name="url" value="发布商品">
 
                     <div class="col-md-6">
@@ -167,30 +167,8 @@
 <%@ include file="publishGoodsfooter.jsp" %>
 
 </body>
-<script>
+<script type="text/javascript">
    
-    function imgClick(obj){
-        $("#bigImg").html('<img src="'+$(obj).attr("src")+'" alt="Product">');
-        $(obj).parent().parent().siblings().removeClass('active');
-        $(obj).parent().parent().addClass("active")
-    }
-    function closeImg(obj){
-        $(obj).parent().parent().remove();
-        if($("#allImgs li:last-child").length > 0){
-            $("#allImgs li:last-child").find("img").click();
-        }else{
-            $("#bigImg").html('');
-        }
-
-    }
-    function submitGoods(){
-        var goodsPictures = new Array();
-        $("#allImgs li").each(function(){
-            goodsPictures.push($(this).find("img").attr("src"));
-        });
-        $("#goodsPictures").val(goodsPictures.join(","));
-        $("#publishGoodsForm").submit();
-    }
 </script>
 </html>
 
